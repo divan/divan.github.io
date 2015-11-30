@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta property="og:title" content=" ISU Events Statistics &middot;  " />
+  
+  <meta property="og:site_name" content="" />
+  <meta property="og:url" content="http://localhost:1313/posts/20151128_ISU_stats/" />
+  
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:article:published_time" content="2015-11-28T08:36:54-07:00" />
+  
+  
+
+  <title>
+     ISU Events Statistics &middot;  
+  </title>
+
+  <link rel="stylesheet" href="http://localhost:1313css/bootstrap.min.css" />
+  <link rel="stylesheet" href="http://localhost:1313css/main.css" />
+  <link rel="stylesheet" href="http://localhost:1313css/highlight.css" />
+  <link rel="stylesheet" href="http://localhost:1313css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="http://localhost:1313images/favicon.ico" />
+  <link rel="apple-touch-icon" href="http://localhost:1313images/apple-touch-icon.png" />
+  
+</head>
+<body>
+    <header class="global-header">
+    <section class="header-text">
+      <h1><a href="http://localhost:1313"></a></h1>
+      
+      <div class="sns-links hidden-print">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+
+      
+      <a href="http://localhost:1313" class="btn-header btn-back hidden-xs">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        &nbsp;Home
+      </a>
+      
+      
+    </section>
+  </header>
+  <main class="container">
+
+
+<article>
+  <header>
+    <h1 class="text-primary">ISU Events Statistics</h1>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2015-11-28T08:36:54-07:00">
+          Nov 28, 2015
+        </time>
+      </div>
+      <div class="pull-right">
+        
+      </div>
+    </div>
+  </header>
+  <section>
+    
+
+<h1 id="intro:cdcd48f0046b8c293cb9d9854a7b4f96">Intro</h1>
+
+<p>Have you ever wondered how many quads where executed in all ISU competitions ever? Or, maybe, which throw in pair skating is most problematic? Perhaps, you want to see statistics for skaters of your nation, or even, you have skills in statistical analysis and want to have nice diagrams on ISU results of overall time?</p>
+
+<p>Well, I may have a solution for you.</p>
+
+<p>Since when Judgement System was introduced, it was really nice to have detailed scores and points, which can be easily analyzed by human. There was just one little problem - the scores available to the public are in PDF format, which is printer-friendly, but it’s not parseable by computer programs.</p>
+
+<p>You can’t just download all PDFs and add them to Excel or R Studio or whatever, to do the analysis. Parseable data was available only to the ISU technicians, and used mainly to calculate standings or internally to analyze rules changes’ effects.</p>
+
+<p>Now, let me introduce a tool that automatically downloads all PDF scores ever produced in the official ISU events, carefully parses them and generates dataset, available for import into data analysis software.</p>
+
+<h1 id="results:cdcd48f0046b8c293cb9d9854a7b4f96">Results</h1>
+
+<h2 id="quads:cdcd48f0046b8c293cb9d9854a7b4f96">Quads</h2>
+
+<p>I start with quads, as the most debatable and attracting topic in figure skating since eighties.
+Let’s first look on the quads count per year, from <sup>2006</sup>&frasl;<sub>07</sub> to <sup>2014</sup>&frasl;<sub>15</sub>:</p>
+
+<p><img src="/images/quads.png" alt="Quads" /></p>
+
+<p>The trend line is obvious - the number of quads increasing year after year. We see notable decrease of quad attempts in 2009, just before Olympics in Vancouver. But then, ISU changed the rules to give skaters more incentives to try quads in the compettions without worrying of loosing too much on failed jump, so the quads ascending continued.</p>
+
+<p>Again, we see slight descent of trending line right before Olympics 2014. This difference is interesting in particular, so let’s visualise it.</p>
+
+<h1 id="analysys:cdcd48f0046b8c293cb9d9854a7b4f96">Analysys</h1>
+
+<p>Now, let’s download all PDF scores ever produced on the official ISU events, and check what we can get out of it.
+The data actually not large - scores for all elements in all ISU competitions since 2006, in flatten CSV form (which has lot of redundant data) weights only ~21MB. In compressed form 1.7MB, so it even could be easily sent by e-mail to friend.</p>
+
+<p>Brief note, flatten CSV format is a Comma Separated Values - is a common format for datasets, because of it’s simplicity and ability to be easily read both by human and machines. You can import it into Excel or use more advanced tools like R Studio, to process data in statistical-friendly R language. We will use latter.</p>
+
+<p>If you’re unfamiliar with R studio, here is a nice introduction. Also you must have some basic statistics knowledge to get interesting results - if you know the difference between ‘average’ and ‘mean’, you’re fine here. :)</p>
+
+<p>Let’s load data into R Studio using data.csv() command:
+<code>df = read.csv(“~/Downloads/all.csv”)</code></p>
+
+<p>Variable df now holds our data. Each line represents single executed element and contains all information available - name of event, year, skater name, nationality and gender, name of element, GOE, base value and so on.</p>
+
+<h1 id="code:cdcd48f0046b8c293cb9d9854a7b4f96">Code</h1>
+
+<p>Code is open-source, licensed under MIT license, so you can freely use it for non-commercial purpose. It written in Go, and binaries are build for Windows, MacOS X, Linux and even FreeBSD platforms. It quite well tested and documented.</p>
+
+<p>Program itself is a command line based application, which accepts directory or list of PDFs to analyze.</p>
+
+<p>This program is guaranteed to work with PDF documents generated by ISUCalcFS program, with default settings. It’s well tested on ISU events’ scores, but may fail with scores generated by your local judging system installation.</p>
+
+<p>You may open an issue (in github.com) and provide me a link your PDF file, so I can take a look. Alternatively, if you’re technical person, you may fix it and send me a pull request. It would be great to keep in touch with developers, passionate in figure skating, anyway ;)</p>
+
+  </section>
+  <footer>
+    
+    <section class="author-info row">
+      <div class="author-avatar col-md-2">
+        
+      </div>
+      <div class="author-meta col-md-6">
+        
+        
+      </div>
+      
+    </section>
+    <ul class="pager">
+      
+      <li class="previous"><a href="http://localhost:1313/posts/20151127_Test/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      
+      
+      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+  </main>
+  <footer class="container global-footer">
+    <div class="copyright-note pull-left">
+      
+    </div>
+    <div class="sns-links hidden-print">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <script src="http://localhost:1313js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+<script data-no-instant>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>
+
