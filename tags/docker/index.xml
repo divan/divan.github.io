@@ -10,7 +10,7 @@
     <atom:link href="https://divan.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Integration testing in Go using docker</title>
+      <title>Integration testing in Go using Docker</title>
       <link>https://divan.github.io/posts/integration_testing/</link>
       <pubDate>Mon, 07 Dec 2015 08:36:54 -0700</pubDate>
       
@@ -82,7 +82,7 @@ import (
     &#34;testing&#34;
 )&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;We place build tag &lt;code&gt;integration&lt;/code&gt; here to make sure this test will run only when explicitly asked with &lt;code&gt;--tags=integration&lt;/code&gt; flag. Yes, the test itself is fast, but still requires an external tool (docker), so we&amp;rsquo;d better separate integration tests and unit tests.&lt;/p&gt;
+&lt;p&gt;We place build tag &lt;code&gt;integration&lt;/code&gt; here to make sure this test will run only when explicitly asked with &lt;code&gt;--tags=integration&lt;/code&gt; flag. Yes, the test itself is fast, but still requires an external tool (Docker), so we&amp;rsquo;d better separate integration tests and unit tests.&lt;/p&gt;
 
 &lt;p&gt;By the way, we could protect in with &lt;a href=&#34;https://golang.org/pkg/testing/#Short&#34;&gt;testing.Short&lt;/a&gt; flag, but the behavior is opposite in this case - long tests run by default.&lt;/p&gt;
 
@@ -91,7 +91,7 @@ if testing.Short() {
         t.Skip(&#34;skipping test in short mode.&#34;)
 }&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;running-docker-container:23b513b340b05e75befe17e12589dce1&#34;&gt;Running docker container&lt;/h3&gt;
+&lt;h3 id=&#34;running-docker-container:23b513b340b05e75befe17e12589dce1&#34;&gt;Running Docker container&lt;/h3&gt;
 
 &lt;p&gt;Before running our tests, we need to start our dependencies. There are a few packages to work with &lt;a href=&#34;https://docs.docker.com/engine/reference/api/docker_remote_api/&#34;&gt;Docker Remote API&lt;/a&gt; for Go, I will use the &lt;a href=&#34;http://github.com/fsouza/go-dockerclient&#34;&gt;one from fsouza&lt;/a&gt;, which I successfully using for quite a long time. Install it with:&lt;/p&gt;
 

@@ -3,7 +3,7 @@
 <head prefix="og: http://ogp.me/ns#">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-  <meta property="og:title" content=" Integration testing in Go using docker &middot;  divan&#39;s blog" />
+  <meta property="og:title" content=" Integration testing in Go using Docker &middot;  divan&#39;s blog" />
   
   <meta property="og:site_name" content="divan&#39;s blog" />
   <meta property="og:url" content="https://divan.github.io/posts/integration_testing/" />
@@ -22,7 +22,7 @@
   
 
   <title>
-     Integration testing in Go using docker &middot;  divan&#39;s blog
+     Integration testing in Go using Docker &middot;  divan&#39;s blog
   </title>
 
   <link rel="stylesheet" href="https://divan.github.io/css/bootstrap.min.css" />
@@ -77,7 +77,7 @@
 
 <article>
   <header>
-    <h1 class="text-primary">Integration testing in Go using docker</h1>
+    <h1 class="text-primary">Integration testing in Go using Docker</h1>
     <div class="post-meta clearfix">
       <div class="post-date pull-left">
         Posted on
@@ -164,7 +164,7 @@ import (
     "testing"
 )</code></pre>
 
-<p>We place build tag <code>integration</code> here to make sure this test will run only when explicitly asked with <code>--tags=integration</code> flag. Yes, the test itself is fast, but still requires an external tool (docker), so we&rsquo;d better separate integration tests and unit tests.</p>
+<p>We place build tag <code>integration</code> here to make sure this test will run only when explicitly asked with <code>--tags=integration</code> flag. Yes, the test itself is fast, but still requires an external tool (Docker), so we&rsquo;d better separate integration tests and unit tests.</p>
 
 <p>By the way, we could protect in with <a href="https://golang.org/pkg/testing/#Short">testing.Short</a> flag, but the behavior is opposite in this case - long tests run by default.</p>
 
@@ -173,7 +173,7 @@ if testing.Short() {
         t.Skip("skipping test in short mode.")
 }</code></pre>
 
-<h3 id="running-docker-container:23b513b340b05e75befe17e12589dce1">Running docker container</h3>
+<h3 id="running-docker-container:23b513b340b05e75befe17e12589dce1">Running Docker container</h3>
 
 <p>Before running our tests, we need to start our dependencies. There are a few packages to work with <a href="https://docs.docker.com/engine/reference/api/docker_remote_api/">Docker Remote API</a> for Go, I will use the <a href="http://github.com/fsouza/go-dockerclient">one from fsouza</a>, which I successfully using for quite a long time. Install it with:</p>
 
