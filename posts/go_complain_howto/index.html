@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta property="og:title" content=" How to complain about Go &middot;  divan&#39;s blog" />
+  
+  <meta property="og:site_name" content="divan&#39;s blog" />
+  <meta property="og:url" content="https://divan.github.io/posts/go_complain_howto/" />
+  
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:article:published_time" content="2015-12-14T08:36:54-03:00" />
+  
+  <meta property="og:article:tag" content="golang" />
+  
+  
+
+  <title>
+     How to complain about Go &middot;  divan&#39;s blog
+  </title>
+
+  <link rel="stylesheet" href="https://divan.github.io/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.github.io/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.github.io/images/apple-touch-icon.png" />
+  
+</head>
+<body>
+    <header class="global-header">
+    <section class="header-text">
+      <h1><a href="https://divan.github.io/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+	  
+      <div class="tag-line">
+        random thoughts on Go, software and sports
+      </div>
+      
+      <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+      
+      <a href="https://divan.github.io/" class="btn-header btn-back hidden-xs">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        &nbsp;Home
+      </a>
+      
+      
+    </section>
+  </header>
+  <main class="container">
+
+
+<article>
+  <header>
+    <h1 class="text-primary">How to complain about Go</h1>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2015-12-14T08:36:54-03:00">
+          Dec 14, 2015
+        </time>
+      </div>
+      <div class="pull-right">
+        
+        <span class="post-tag small"><a href="https://divan.github.io//tags/golang">#golang</a></span>
+        
+      </div>
+    </div>
+  </header>
+  <section>
+    
+
+<p>Over the years of existence of Go programming language, the articles with it&rsquo;s critique was always popular, bringing a lot of discussion from both sides. Recently, <a href="https://github.com/ksimka">Maksim Kochkin</a> even created GitHub repo with <a href="https://github.com/ksimka/go-is-not-good">curated list</a> of articles complaining about golang&rsquo;s imperfection.</p>
+
+<p>So, is it true that ranting about Go flaws is a trend nowadays? With carefully gathered links in the repository above, we can check this! :) Unfortunately, there are only 17 articles in the list, which is a bit disappointing because it&rsquo;s not enough for fine statistical analysis, but we can use this anyway.</p>
+
+<p>Here is a trending line for the <a href="https://docs.google.com/spreadsheets/d/1qKFykmm0yapLq1FKuouvqVZkWo-HHCfJnrTikqRoAfs/edit#gid=1956718702">number of Go complaints written per year</a>:</p>
+
+<p><img src="/images/go_rants_trend.png" alt="Trending" /></p>
+
+<p>The trending is obvious - from 1 in 2009 to 5 in 2015. Hopefully, the next 2016 year will continue this trend line.</p>
+
+<p>But what I liked most about this list - it&rsquo;s a brief resume on the major authors&rsquo; points. We can measure the popularity of users&rsquo; complaints by counting aggregated points. Again, let&rsquo;s do it in our Google Sheet document, which is written in Google, and probably involves a lot of production Go code to let us enjoy this:</p>
+
+<p><img src="/images/go_rants_top.png" alt="Trending" /></p>
+
+<p>Let me write again the top-5 winners:</p>
+
+<ul>
+<li>error handling / no exceptions</li>
+<li>no generics</li>
+<li>stuck in 70&rsquo;s</li>
+<li>no OOP</li>
+<li>too opinionated</li>
+</ul>
+
+<p>Again, it&rsquo;s a bit disappointing that absolute winner (&ldquo;error handling&rdquo;) is mentioned only 7 times. Many thousands of people are using Go every day and only 7 put their major complaint into words in the form of a blog post? This flank definitely needs more support.</p>
+
+<p>If you don&rsquo;t like Go, you may contribute here. Especially if you tried Go before you started complaining about its design. But how to start the  article to make a proper effect? Take a look at these 5 top complaints and choose on which one you want elaborate.</p>
+
+<p>Keep in mind, <em>&ldquo;error handling&rdquo;</em> and <em>&ldquo;no generics&rdquo;</em> are absolute winners - you have absolutely no excuse not to add them to your list. Next, be careful with <em>&ldquo;no OOP&rdquo;</em> because it&rsquo;s easy to attack by quoting Alan Kay. <em>&ldquo;Too opinionated&rdquo;</em> is a good choice, but should be carefully argued so you don&rsquo;t look like a grouchy geek rather than a thoughtful hacker. <em>&ldquo;Stuck in 70&rsquo;s&rdquo;</em> works best if you want not only complain about Go but popularize another modern and objectively good programming language.</p>
+
+<p>But what if it&rsquo;s not enough? There are 41 more other complaints scored 1 or 2 in the list, not including ones you can make up on your own! So, to help you make a choice, here are some rules and guidelines on how to properly complain about Go, depending on you previous background and experience.</p>
+
+<p>For example, if you come from&hellip;</p>
+
+<h2 id="python:959aee67c1d0f41b07629a76d2bb3194">&hellip;Python</h2>
+
+<p>We all love Python, so the attack vector should be on maturity and abundance of libraries. NumPy is a must have point - Go still don&rsquo;t have scientific library of that quality. Not sure how SpaceX is able to use Go without one, but whatever, NumPy sells well.</p>
+
+<p>Try to not mention mature libraries like Twisted, Requests and various solutions for solving the 10K problem. Just don&rsquo;t mention it. Instead, try to disprove relatively high memory usage in Python. For example, you can say that Go code after goroutines leakage is comparable by memory with Python. Some from Mozilla said this, so can you.</p>
+
+<p>As a bonus, mention that Go slice indexing doesn&rsquo;t have convenient -1 index. &ldquo;Is compiled&rdquo; also works here, without any explanation. Just because.</p>
+
+<h2 id="c:959aee67c1d0f41b07629a76d2bb3194">&hellip;C++</h2>
+
+<p>If you&rsquo;re C++ developer, you are in the most vulnerable position, because Go was created as an answer to the C++ problems. Which easily can be muted or presented as powerful features.</p>
+
+<p>Start by demonizing GC. Everyone knows that Garbage Collection is evil and every CPU tact matters. Even if you write simple REST-backend in C++ and it takes 5 months of your life - you have speed and no-GC blissfulness.</p>
+
+<p>As a logical continuation - tell that Go is not good for embedded. Don&rsquo;t mention that authors explicitly said that it was never meant as a language for embedded. It&rsquo;s a great point. And if your commenters will send you links to <a href="http://embd.kidoman.io">Embd</a>, <a href="http://gobot.io">Gobot</a> or <a href="https://github.com/golang/mobile">gomobile</a>, just say that it&rsquo;s not True Embedded™ or just disable comments.</p>
+
+<p>And, of course, all rants about how Go restricting you from the shooting in the foot are great here. Go doesn&rsquo;t make you feel clever than your coworker that bangs his head against the wall trying to understand your code. Why do you need such a language after all?</p>
+
+<h2 id="rust:959aee67c1d0f41b07629a76d2bb3194">&hellip;Rust</h2>
+
+<p>Despite the fact that there aren&rsquo;t many people in the wild who can claim &ldquo;background in Rust&rdquo;, there are still a bunch of people from C++ background who are totally in love with Rust. They didn&rsquo;t try it in production or even for pet projects, but that&rsquo;s not important. So, many points valid for C++ developers will work for you also. Don&rsquo;t forget <em>&ldquo;zero-cost abstraction&rdquo;</em> phrase after mentioning how evil GC is.</p>
+
+<p>Cargo is considered to be a good solution for dependency management, so attack this side of Go aggressively. No chance to lose here. Also, your key points should be Go&rsquo;s simple type system and lack of pattern matching. Basically, everything that differs in Go from Rust will work here. And that&rsquo;s a lot, so you can write a solid longread. Or two.</p>
+
+<h2 id="java:959aee67c1d0f41b07629a76d2bb3194">&hellip;Java</h2>
+
+<p>After mentioning generics and exceptions, punch them in the guts and smash them by comparing Java&rsquo;s IDE with Go&rsquo;s IDE. Of course, there is no Go IDE, because Go is too simple to require one, but it&rsquo;s &ldquo;advanced&rdquo; vs &ldquo;not advances&rdquo; and you&rsquo;re a winner here.</p>
+
+<p>Next, write about the lack of good debugger (integrated into IDE, of course). How can someone write even simple code without a debugger? Will work for Java readers, for sure.</p>
+
+<p>And the whole range of &lsquo;features&rsquo; that you can use to make people understand why Go is bad - from lack of JVM to <em>&ldquo;lack of basic data structures&rdquo;</em>.</p>
+
+<h2 id="ruby:959aee67c1d0f41b07629a76d2bb3194">&hellip;Ruby</h2>
+
+<p>If you come from Ruby, but don&rsquo;t really like Go, I probably won&rsquo;t help you. Go is quite popular in Ruby community and many Ruby developers, being non-arrogant and pragmatic, fall into Go pretty easily, so you&rsquo;re in trouble. Even Basecamp, the guys that made Ruby on Rails, <a href="https://signalvnoise.com/posts/3897-go-at-basecamp">love Go</a> and use it inside. Sorry.</p>
+
+<h2 id="d:959aee67c1d0f41b07629a76d2bb3194">&hellip;D</h2>
+
+<p>Without doubts, your main argument (after generics and exceptions, of course) should be the name of Google. It&rsquo;s pretty much obvious that  popularity of Go is simply a result of huge money support by Google. Probably Google pays people to write about Go, to organize conferences and meetups. When D have a company that can do the same for D, the world will understand that Go&rsquo;s popularity is a fake.</p>
+
+<p>Also, Go is not a real system programming language. You can&rsquo;t write your own memory allocator with Go. So switch to D. Please.</p>
+
+<h2 id="perl:959aee67c1d0f41b07629a76d2bb3194">&hellip;Perl</h2>
+
+<p>Emm..</p>
+
+<h2 id="c-1:959aee67c1d0f41b07629a76d2bb3194">&hellip;C#</h2>
+
+<p>Probably the best strategy here is to attack the simplicity of Go. Simplicity equals primitivity, everyone knows. There are so many good solutions for modern programming language theory you learn in the college course of C#, but people behind Go just were not aware of them. Don&rsquo;t hesitate to learn them. You can&rsquo;t do pretty much anything with a language that simple as Go.</p>
+
+<p>Also, mention the most relevant things - no Visual Studio support (<a href="https://github.com/microsoft/vscode-go">Visual Studio Code&rsquo;s Go plugin</a> doesn&rsquo;t count). No debugger in IDE, of course. And no DirectX support, that&rsquo;s important.</p>
+
+<h2 id="haskell:959aee67c1d0f41b07629a76d2bb3194">&hellip;Haskell</h2>
+
+<p>If you come from Haskell, I should give you any advice. You already must be professional in mocking Go. It&rsquo;s in Haskell 101 course. New Haskell books contain special chapter &ldquo;How to laugh on Go&rdquo;, after all.</p>
+
+<p>Even if you <a href="https://honza.ca/2015/11/language-choice">intuitively understand</a> that Go is way more practical than Haskell and entry barrier really matters - keep insisting that it has &ldquo;objectively poor design&rdquo;. Because everyone knows which language has objectively good design.</p>
+
+<h1 id="conclusion:959aee67c1d0f41b07629a76d2bb3194">Conclusion</h1>
+
+<p>I hope this article was useful and will find its readers. In 2016, we need more articles with rants on Go - at least 6 to keep the trend. Some of the articles in the list above written by students and schoolboys, so if you just started CS class and don&rsquo;t have any real-life experience - don&rsquo;t hesitate to tell the world how bad Go is. After all, the viral effect of the articles with criticism is well known - colleagues and managers send you the link as a prove that you shouldn&rsquo;t use Go in production, without even reading or analyzing the content. The title is usually enough, don&rsquo;t be afraid.</p>
+
+<p>Or.. you can write some good code in the language that works best for your case.</p>
+
+  </section>
+  <footer>
+    <section class="author-info row">
+      <div class="author-avatar col-md-2">
+        
+        <img alt="Author Avatar" src="/images/avatar.jpg" />
+        
+      </div>
+      <div class="author-meta col-md-6">
+        
+        
+        <div class="author-bio">Gopher. Figure skating enthusiast.</div>
+        
+      </div>
+      
+      <div class="author-contact col-md-4">
+        <a href="mailto:ivan.daniluk@gmail.com">
+          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          &nbsp;Contact me
+        </a>
+      </div>
+      
+    </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a href="https://divan.github.io/posts/integration_testing/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      
+      
+      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+  </main>
+  <footer class="container global-footer">
+    <div class="copyright-note pull-left">
+      
+    </div>
+    <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <script src="https://divan.github.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-70805978-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  
+  
+</body>
+</html>
+
