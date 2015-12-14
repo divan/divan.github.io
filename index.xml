@@ -17,7 +17,7 @@
       <guid>https://divan.github.io/posts/go_complain_howto/</guid>
       <description>
 
-&lt;p&gt;Over the years of existence of Go programming language, the articles with it&amp;rsquo;s critique was always popular, bringing a lot of discussion from both sides. Recently, &lt;a href=&#34;https://github.com/ksimka&#34;&gt;Maksim Kochkin&lt;/a&gt; even created GitHub repo with &lt;a href=&#34;https://github.com/ksimka/go-is-not-good&#34;&gt;curated list&lt;/a&gt; of articles complaining about golang&amp;rsquo;s imperfection.&lt;/p&gt;
+&lt;p&gt;Over the years of existence of Go programming language, the articles with its critique was always popular, bringing a lot of discussion from both sides. Recently, &lt;a href=&#34;https://github.com/ksimka&#34;&gt;Maksim Kochkin&lt;/a&gt; even created GitHub repo with &lt;a href=&#34;https://github.com/ksimka/go-is-not-good&#34;&gt;curated list&lt;/a&gt; of articles complaining about golang&amp;rsquo;s imperfection.&lt;/p&gt;
 
 &lt;p&gt;So, is it true that ranting about Go flaws is a trend nowadays? With carefully gathered links in the repository above, we can check this! :) Unfortunately, there are only 17 articles in the list, which is a bit disappointing because it&amp;rsquo;s not enough for fine statistical analysis, but we can use this anyway.&lt;/p&gt;
 
@@ -25,9 +25,9 @@
 
 &lt;p&gt;&lt;img src=&#34;https://divan.github.io/images/go_rants_trend.png&#34; alt=&#34;Trending&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;The trending is obvious - from 1 in 2009 to 5 in 2015. Hopefully, the next 2016 year will continue this trend line.&lt;/p&gt;
+&lt;p&gt;The trending is obvious - from one in 2009 to five in 2015. Hopefully, the next 2016 year will continue this trend line.&lt;/p&gt;
 
-&lt;p&gt;But what I liked most about this list - it&amp;rsquo;s a brief resume on the major authors&amp;rsquo; points. We can measure the popularity of users&amp;rsquo; complaints by counting aggregated points. Again, let&amp;rsquo;s do it in our Google Sheet document, which is written in Google, and probably involves a lot of production Go code to let us enjoy this:&lt;/p&gt;
+&lt;p&gt;But what I liked most about this list - is a brief resume on the major authors&amp;rsquo; points. We can measure the popularity of users&amp;rsquo; complaints by counting aggregated points. Again, let&amp;rsquo;s do it in our Google Sheet document, which is written in Google, and probably involves a lot of production Go code to let us enjoy this:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://divan.github.io/images/go_rants_top.png&#34; alt=&#34;Trending&#34; /&gt;&lt;/p&gt;
 
@@ -41,7 +41,7 @@
 &lt;li&gt;too opinionated&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Again, it&amp;rsquo;s a bit disappointing that absolute winner (&amp;ldquo;error handling&amp;rdquo;) is mentioned only 7 times. Many thousands of people are using Go every day and only 7 put their major complaint into words in the form of a blog post? This flank definitely needs more support.&lt;/p&gt;
+&lt;p&gt;Again, it&amp;rsquo;s a bit disappointing that absolute winner (&lt;em&gt;&amp;ldquo;error handling&amp;rdquo;&lt;/em&gt;) is mentioned only 7 times. Many thousands of people are using Go every day and only 7 put their major complaint into words in the form of a blog post? This flank definitely needs more support.&lt;/p&gt;
 
 &lt;p&gt;If you don&amp;rsquo;t like Go, you may contribute here. Especially if you tried Go before you started complaining about its design. But how to start the  article to make a proper effect? Take a look at these 5 top complaints and choose on which one you want elaborate.&lt;/p&gt;
 
@@ -53,43 +53,43 @@
 
 &lt;h2 id=&#34;python:959aee67c1d0f41b07629a76d2bb3194&#34;&gt;&amp;hellip;Python&lt;/h2&gt;
 
-&lt;p&gt;We all love Python, so the attack vector should be on maturity and abundance of libraries. NumPy is a must have point - Go still don&amp;rsquo;t have scientific library of that quality. Not sure how SpaceX is able to use Go without one, but whatever, NumPy sells well.&lt;/p&gt;
+&lt;p&gt;We all love Python, so the attack vector should be on the maturity and abundance of libraries. NumPy is a must have point - Go still don&amp;rsquo;t have a scientific library of that quality. Not sure how SpaceX is able to use Go without one, but whatever, NumPy sells well.&lt;/p&gt;
 
-&lt;p&gt;Try to not mention mature libraries like Twisted, Requests and various solutions for solving the 10K problem. Just don&amp;rsquo;t mention it. Instead, try to disprove relatively high memory usage in Python. For example, you can say that Go code after goroutines leakage is comparable by memory with Python. Some from Mozilla said this, so can you.&lt;/p&gt;
+&lt;p&gt;Try not to mention mature libraries like Twisted, Requests and various solutions for solving the 10K problem. Just don&amp;rsquo;t mention it. Instead, try to disprove relatively high memory usage in Python. For example, you can say that Python memory usage after goroutines leakage is competitive with Go. Someone from Mozilla &lt;a href=&#34;https://docs.google.com/presentation/d/1LO_WI3N-3p2Wp9PDWyv5B6EGFZ8XTOTNJ7Hd40WOUHo/mobilepresent?pli=1&amp;amp;slide=id.g70b0035b2_1_119&#34;&gt;said this&lt;/a&gt;, so can you.&lt;/p&gt;
 
-&lt;p&gt;As a bonus, mention that Go slice indexing doesn&amp;rsquo;t have convenient -1 index. &amp;ldquo;Is compiled&amp;rdquo; also works here, without any explanation. Just because.&lt;/p&gt;
+&lt;p&gt;As a bonus, mention that Go slice indexing doesn&amp;rsquo;t have convenient -1 index. &lt;em&gt;&amp;ldquo;Is compiled&amp;rdquo;&lt;/em&gt; flaw also works here, without any explanation. Just because.&lt;/p&gt;
 
 &lt;h2 id=&#34;c:959aee67c1d0f41b07629a76d2bb3194&#34;&gt;&amp;hellip;C++&lt;/h2&gt;
 
 &lt;p&gt;If you&amp;rsquo;re C++ developer, you are in the most vulnerable position, because Go was created as an answer to the C++ problems. Which easily can be muted or presented as powerful features.&lt;/p&gt;
 
-&lt;p&gt;Start by demonizing GC. Everyone knows that Garbage Collection is evil and every CPU tact matters. Even if you write simple REST-backend in C++ and it takes 5 months of your life - you have speed and no-GC blissfulness.&lt;/p&gt;
+&lt;p&gt;Start by demonizing GC. Everyone knows that Garbage Collection is an evil and every CPU tact matters. Even if you write simple REST-backend in C++ and it takes 6 months of your life to accomplish it - you still have speed and no-GC blissfulness. Stick with that.&lt;/p&gt;
 
-&lt;p&gt;As a logical continuation - tell that Go is not good for embedded. Don&amp;rsquo;t mention that authors explicitly said that it was never meant as a language for embedded. It&amp;rsquo;s a great point. And if your commenters will send you links to &lt;a href=&#34;http://embd.kidoman.io&#34;&gt;Embd&lt;/a&gt;, &lt;a href=&#34;http://gobot.io&#34;&gt;Gobot&lt;/a&gt; or &lt;a href=&#34;https://github.com/golang/mobile&#34;&gt;gomobile&lt;/a&gt;, just say that it&amp;rsquo;s not True Embedded™ or just disable comments.&lt;/p&gt;
+&lt;p&gt;As a logical continuation - tell that Go is not good for embedded. Don&amp;rsquo;t mention that authors explicitly said that it was never meant as a language for embedded. It&amp;rsquo;s a great point anyway. And if your commenters will send you links to &lt;a href=&#34;http://embd.kidoman.io&#34;&gt;Embd&lt;/a&gt;, &lt;a href=&#34;http://gobot.io&#34;&gt;Gobot&lt;/a&gt; or &lt;a href=&#34;https://github.com/golang/mobile&#34;&gt;gomobile&lt;/a&gt;, just say that it&amp;rsquo;s not True Embedded™ or just disable comments.&lt;/p&gt;
 
-&lt;p&gt;And, of course, all rants about how Go restricting you from the shooting in the foot are great here. Go doesn&amp;rsquo;t make you feel clever than your coworker that bangs his head against the wall trying to understand your code. Why do you need such a language after all?&lt;/p&gt;
+&lt;p&gt;And, of course, all rants about how Go restricting you from shooting yourself in the foot are also great here. Go doesn&amp;rsquo;t make you feel clever than your coworker that bangs his head against the wall trying to understand your code. Why do you need such a language after all?&lt;/p&gt;
 
 &lt;h2 id=&#34;rust:959aee67c1d0f41b07629a76d2bb3194&#34;&gt;&amp;hellip;Rust&lt;/h2&gt;
 
-&lt;p&gt;Despite the fact that there aren&amp;rsquo;t many people in the wild who can claim &amp;ldquo;background in Rust&amp;rdquo;, there are still a bunch of people from C++ background who are totally in love with Rust. They didn&amp;rsquo;t try it in production or even for pet projects, but that&amp;rsquo;s not important. So, many points valid for C++ developers will work for you also. Don&amp;rsquo;t forget &lt;em&gt;&amp;ldquo;zero-cost abstraction&amp;rdquo;&lt;/em&gt; phrase after mentioning how evil GC is.&lt;/p&gt;
+&lt;p&gt;Despite the fact that there aren&amp;rsquo;t many people in the wild who can claim &amp;ldquo;background in Rust&amp;rdquo;, there are still a bunch of people from C++ background who are totally in love with Rust. They didn&amp;rsquo;t try it in production or even for pet projects, but that&amp;rsquo;s not important. Pure love doesn&amp;rsquo;t need logic. So, many points valid for C++ developers will work for you also. Don&amp;rsquo;t forget &lt;em&gt;&amp;ldquo;zero-cost abstraction&amp;rdquo;&lt;/em&gt; phrase after mentioning how evil GC is.&lt;/p&gt;
 
 &lt;p&gt;Cargo is considered to be a good solution for dependency management, so attack this side of Go aggressively. No chance to lose here. Also, your key points should be Go&amp;rsquo;s simple type system and lack of pattern matching. Basically, everything that differs in Go from Rust will work here. And that&amp;rsquo;s a lot, so you can write a solid longread. Or two.&lt;/p&gt;
 
 &lt;h2 id=&#34;java:959aee67c1d0f41b07629a76d2bb3194&#34;&gt;&amp;hellip;Java&lt;/h2&gt;
 
-&lt;p&gt;After mentioning generics and exceptions, punch them in the guts and smash them by comparing Java&amp;rsquo;s IDE with Go&amp;rsquo;s IDE. Of course, there is no Go IDE, because Go is too simple to require one, but it&amp;rsquo;s &amp;ldquo;advanced&amp;rdquo; vs &amp;ldquo;not advances&amp;rdquo; and you&amp;rsquo;re a winner here.&lt;/p&gt;
+&lt;p&gt;After mentioning generics and exceptions, punch them in the guts and smash them by comparing Java&amp;rsquo;s IDE with Go&amp;rsquo;s IDE. Of course, there is no Go IDE, because Go is too simple to require one, but it&amp;rsquo;s bad also. Double kick. It&amp;rsquo;s &amp;ldquo;advanced&amp;rdquo; vs &amp;ldquo;primitive&amp;rdquo; and you&amp;rsquo;re a winner here.&lt;/p&gt;
 
-&lt;p&gt;Next, write about the lack of good debugger (integrated into IDE, of course). How can someone write even simple code without a debugger? Will work for Java readers, for sure.&lt;/p&gt;
+&lt;p&gt;Next, write about the lack of good debugger (integrated into IDE, of course). How can someone write even simple code without a debugger? Don&amp;rsquo;t ask if you really need debugger in Go that much as you need it in Java and why. Stay away from this subject, it&amp;rsquo;s slippery.&lt;/p&gt;
 
-&lt;p&gt;And the whole range of &amp;lsquo;features&amp;rsquo; that you can use to make people understand why Go is bad - from lack of JVM to &lt;em&gt;&amp;ldquo;lack of basic data structures&amp;rdquo;&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;And the whole range of &amp;lsquo;features&amp;rsquo; that you can use to make people understand why Go is bad - from lack of JVM to &lt;em&gt;&amp;ldquo;lack of basic data structures&amp;rdquo;&lt;/em&gt;. Take your time and improvise while your IDE starts.&lt;/p&gt;
 
 &lt;h2 id=&#34;ruby:959aee67c1d0f41b07629a76d2bb3194&#34;&gt;&amp;hellip;Ruby&lt;/h2&gt;
 
-&lt;p&gt;If you come from Ruby, but don&amp;rsquo;t really like Go, I probably won&amp;rsquo;t help you. Go is quite popular in Ruby community and many Ruby developers, being non-arrogant and pragmatic, fall into Go pretty easily, so you&amp;rsquo;re in trouble. Even Basecamp, the guys that made Ruby on Rails, &lt;a href=&#34;https://signalvnoise.com/posts/3897-go-at-basecamp&#34;&gt;love Go&lt;/a&gt; and use it inside. Sorry.&lt;/p&gt;
+&lt;p&gt;If you come from Ruby and don&amp;rsquo;t really like Go, I probably won&amp;rsquo;t help you. Go is quite popular in Ruby community and many Ruby developers, being non-arrogant and pragmatic, fall into Go pretty easily, so you&amp;rsquo;re in trouble. Even Basecamp, the guys that made Ruby on Rails, &lt;a href=&#34;https://signalvnoise.com/posts/3897-go-at-basecamp&#34;&gt;love Go&lt;/a&gt; and use it inside. Sorry.&lt;/p&gt;
 
 &lt;h2 id=&#34;d:959aee67c1d0f41b07629a76d2bb3194&#34;&gt;&amp;hellip;D&lt;/h2&gt;
 
-&lt;p&gt;Without doubts, your main argument (after generics and exceptions, of course) should be the name of Google. It&amp;rsquo;s pretty much obvious that  popularity of Go is simply a result of huge money support by Google. Probably Google pays people to write about Go, to organize conferences and meetups. When D have a company that can do the same for D, the world will understand that Go&amp;rsquo;s popularity is a fake.&lt;/p&gt;
+&lt;p&gt;Without any doubts, your main argument (after generics and exceptions, of course) should be the name of Google. It&amp;rsquo;s pretty much obvious that popularity of Go is simply a result of a huge money support by Google. Of course, Google pays people a lot to write articles about Go and to organize conferences and meetups. They are so rich, that next year Go community will have &lt;a href=&#34;https://github.com/golang/go/wiki/Conferences&#34;&gt;6 international conferences&lt;/a&gt; including one in &lt;a href=&#34;http://www.gophercon.ae/&#34;&gt;Dubai&lt;/a&gt;! When D have a company that can do the same for D, the world will understand that Go&amp;rsquo;s popularity is a fake.&lt;/p&gt;
 
 &lt;p&gt;Also, Go is not a real system programming language. You can&amp;rsquo;t write your own memory allocator with Go. So switch to D. Please.&lt;/p&gt;
 
@@ -99,21 +99,23 @@
 
 &lt;h2 id=&#34;c-1:959aee67c1d0f41b07629a76d2bb3194&#34;&gt;&amp;hellip;C#&lt;/h2&gt;
 
-&lt;p&gt;Probably the best strategy here is to attack the simplicity of Go. Simplicity equals primitivity, everyone knows. There are so many good solutions for modern programming language theory you learn in the college course of C#, but people behind Go just were not aware of them. Don&amp;rsquo;t hesitate to learn them. You can&amp;rsquo;t do pretty much anything with a language that simple as Go.&lt;/p&gt;
+&lt;p&gt;Probably the best strategy here is to attack the simplicity of Go. Simplicity equals primitivity, everyone knows in MS world. Also Go is made by Google, not by MS, so it&amp;rsquo;s doomed. There are so many good solutions for modern programming language theory you learn in the college course of C#! But poor people behind Go just are not aware of them. Don&amp;rsquo;t hesitate to teach them. You can&amp;rsquo;t do pretty much anything with a language that primitive as Go.&lt;/p&gt;
 
 &lt;p&gt;Also, mention the most relevant things - no Visual Studio support (&lt;a href=&#34;https://github.com/microsoft/vscode-go&#34;&gt;Visual Studio Code&amp;rsquo;s Go plugin&lt;/a&gt; doesn&amp;rsquo;t count). No debugger in IDE, of course. And no DirectX support, that&amp;rsquo;s important.&lt;/p&gt;
 
 &lt;h2 id=&#34;haskell:959aee67c1d0f41b07629a76d2bb3194&#34;&gt;&amp;hellip;Haskell&lt;/h2&gt;
 
-&lt;p&gt;If you come from Haskell, I should give you any advice. You already must be professional in mocking Go. It&amp;rsquo;s in Haskell 101 course. New Haskell books contain special chapter &amp;ldquo;How to laugh on Go&amp;rdquo;, after all.&lt;/p&gt;
+&lt;p&gt;If you come from Haskell, I shouldn&amp;rsquo;t give you any advice. You already must be a professional in mocking Go. It&amp;rsquo;s in Haskell 101 course. New Haskell books contain special chapter &amp;ldquo;How to laugh on Go&amp;rdquo;, after all.&lt;/p&gt;
 
 &lt;p&gt;Even if you &lt;a href=&#34;https://honza.ca/2015/11/language-choice&#34;&gt;intuitively understand&lt;/a&gt; that Go is way more practical than Haskell and entry barrier really matters - keep insisting that it has &amp;ldquo;objectively poor design&amp;rdquo;. Because everyone knows which language has objectively good design.&lt;/p&gt;
 
 &lt;h1 id=&#34;conclusion:959aee67c1d0f41b07629a76d2bb3194&#34;&gt;Conclusion&lt;/h1&gt;
 
-&lt;p&gt;I hope this article was useful and will find its readers. In 2016, we need more articles with rants on Go - at least 6 to keep the trend. Some of the articles in the list above written by students and schoolboys, so if you just started CS class and don&amp;rsquo;t have any real-life experience - don&amp;rsquo;t hesitate to tell the world how bad Go is. After all, the viral effect of the articles with criticism is well known - colleagues and managers send you the link as a prove that you shouldn&amp;rsquo;t use Go in production, without even reading or analyzing the content. The title is usually enough, don&amp;rsquo;t be afraid.&lt;/p&gt;
+&lt;p&gt;I hope this article will find its readers. In 2016, we need more articles with rants on Go - at least 6 to keep the trend. Some of the articles in the list above written by students and schoolboys, so if you just started CS class and don&amp;rsquo;t have any real-life experience - don&amp;rsquo;t hesitate to tell the world how bad Go is.&lt;/p&gt;
 
-&lt;p&gt;Or.. you can write some good code in the language that works best for your case.&lt;/p&gt;
+&lt;p&gt;After all, the viral effect of the articles with criticism is well known - colleagues and managers send you the link as a prove that you shouldn&amp;rsquo;t use Go in production, without even reading or analyzing its content. The title is usually enough, so don&amp;rsquo;t be afraid.&lt;/p&gt;
+
+&lt;p&gt;Or.. you can just write some good code in the language that works best for your case.&lt;/p&gt;
 </description>
     </item>
     
