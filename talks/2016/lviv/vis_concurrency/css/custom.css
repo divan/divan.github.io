@@ -1,0 +1,69 @@
+.float_left {
+  display: inline-block;
+  float: left;
+  text-align: center;
+}
+
+blockquote.small {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+blockquote.medium {
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.small {
+  font-size: 15px;
+  line-height:18px;
+}
+
+.medium {
+  font-size: 20px;
+  line-height: 22px;
+}
+
+pre.code {
+  width: 100%;
+  font-size: 15px;
+  line-height:18px;
+}
+
+.supersmall {
+  font-size: 9px !important;
+  line-height:9px !important;
+}
+
+pre.medium {
+  font-size: 21px;
+  line-height: 24px;
+  width: 100%;
+}
+
+pre.math {
+  font-size:24px;
+  width:100%;
+  background: white;
+  color: black;
+}
+
+.loaded_enterprise .state-background {
+  /* background: rgba( 0, 0, 0, 0.6 ); */
+}
+
+.loaded_apache .state-background {
+  /* background: rgba( 0, 0, 0, 0.6 ); */
+}
+
+.boom .state-background {
+  /* background: rgba( 0, 0, 0, 0.6 ); */
+}
+
+.white_bg {
+  background: white !important;
+}
+
+.github-fork-ribbon {
+  line-height: 9px;
+}

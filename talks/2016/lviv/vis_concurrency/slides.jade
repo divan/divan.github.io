@@ -1,0 +1,251 @@
+.slides
+	section
+		br
+		h1 Visualizing Concurrency
+		h3 Go concurrency visually explained
+		br
+		h5 Lviv, January 23,  2016
+		h5 Ivan Danyliuk
+			a(style="line-height:34px",href="https:/twitter/@idanyliuk",target="_blank") @idanyliuk
+	section
+		h2 Modern world is concurrent
+		ul
+			li Moore&apos;s Law is dead
+			li Multi-core CPUs
+			li ...
+	section
+		h3 Software is not...
+		img(src="images/cpu.gif",width="80%")
+
+	section
+		h2 What is concurrency?
+		a(href='https://en.wikipedia.org/wiki/Concurrency_(computer_science)', target='_blank') Concurrency (Wikipedia)
+		blockquote(style='width:90%')
+			| In computer science, concurrency ... is a property of systems in which several computations are executing simultaneously, and potentially interacting with each other.
+	section
+		h3 Rob Pike - Concurrency is not parallelism
+		br
+		#ytplayer.ytapiplayer(data-youtube-url='http://www.youtube.com/v/cN_DpYBzKso?enablejsapi=1&version=3&border=0')
+	section
+		h2 Concurrency vs parallelism
+		ul
+			li Parallelism is simply running things in parallel.
+			li Concurrency is a way of structuring programs.
+			li Concurrent program can run either on single core or multiple cores.
+	section
+		h2 Concurrency in Go
+		ul
+			li Based on Tony Hoare&apos;s CSP&apos;78 paper
+			li Channels
+			li Goroutines
+			li Select
+
+	section
+		h3 Hello, concurrent world
+		pre(style='width: 50%; float: left')
+			code.golang
+				include ./code/hello01.go
+		div.fragment.grow(style='width: 50%; float: right')
+			canvas(data-sample='hello01', style='display:inline')
+
+	section
+		h3 Timer
+		pre
+			code.golang
+				include ./code/timer_single.go
+
+	section
+		h3 Recurrent timers
+		pre(style='width: 50%; float: left')
+			code.golang
+				include ./code/timer01.go
+		div.fragment.grow(style='width: 50%; float: right')
+			canvas(data-sample='timer01', style='display:inline')
+
+	section
+		h3 Ping-pong
+		pre(style='width: 50%; float: left')
+			code.golang
+				include ./code/pingpong01.go
+		div.fragment.grow(style='width: 50%; float: right')
+			canvas(data-sample='pingpong01', style='display:inline')
+
+	mixin slide(title, sample)
+		section
+			h3= title
+			div
+				canvas(data-sample=sample, style='display:inline')
+	+slide("Ping-pong", "pingpong01_full")
+
+	section
+		h3 Ping-pong #3
+		pre
+			code.golang
+				include ./code/pingpong03.go
+	+slide("Ping-pong #3", "pingpong03")
+
+	section
+		h3 Ping-pong #100
+		pre
+			code.golang
+				include ./code/pingpong100.go
+	+slide("Ping-pong #100", "pingpong100")
+
+	section
+		h3 Fan-in
+		pre
+			code.golang
+				include ./code/fanin.go
+	+slide("Fan in", "fanin")
+
+	section
+		h3 Servers
+		pre
+			code.golang
+				include ./code/server01.go
+	+slide("Servers", "server01")
+
+	section
+		h3 Servers
+		pre(style='width: 43%; float: left; padding: 5px')
+			code.golang
+				include ./code/server02_part1.go
+		pre(style='width: 55%; float: right; padding: 5px')
+			code.golang
+				include ./code/server02_part2.go
+	+slide("Servers", "server02")
+
+	section
+		h3 Workers
+		pre(style='width: 40%; float: left; padding: 5px')
+			code.golang
+				include ./code/workers01_part1.go
+		pre(style='width: 55%; float: right; padding: 5px')
+			code.golang
+				include ./code/workers01_part2.go
+	+slide("Workers", "workers01")
+
+	section
+		h3 Workers
+		pre(style='width: 40%; float: left; padding: 5px')
+			code.golang
+				include ./code/workers01_part1.go
+		pre(style='width: 55%; float: right; padding: 5px')
+			code.golang
+				include ./code/workers01_part2.go
+	+slide("Workers", "workers02")
+
+	section
+		h3 Server+Worker
+		pre(style='width: 43%; float: left; padding: 5px')
+			code.golang
+				include ./code/server03_part1.go
+		pre(style='width: 55%; float: right; padding: 5px')
+			code.golang
+				include ./code/server03_part2.go
+	+slide("Server+Worker", "server03")
+
+	section
+		h3 Concurrent prime sieve
+		pre(style='width: 43%; float: left; padding: 5px')
+			code.golang
+				include ./code/primesieve_part1.go
+		pre(style='width: 55%; float: right; padding: 5px')
+			code.golang
+				include ./code/primesieve_part2.go
+	+slide("Concurrent prime sieve", "primesieve")
+
+	section
+		h3 GOMAXPROCS
+		img(src="images/gomaxprocs.png")
+	section
+		h3 GOMAXPROCS
+		pre(style='width: 43%; float: left; padding: 5px')
+			code.golang
+				include ./code/gomaxprocs_part1.go
+		pre(style='width: 55%; float: right; padding: 5px')
+			code.golang
+				include ./code/gomaxprocs_part2.go
+
+	+slide("GOMAXPROCS = 1", "gomaxprocs1")
+	+slide("GOMAXPROCS = 24", "gomaxprocs24")
+	section
+		h3 Goroutines leak
+	+slide("Goroutines leak", "leakage")
+
+	section
+		h3 Go Concurrency Tracer
+		ul
+			li Modify source AST
+			li Run and analyze trace
+			li Render w/ WebGL via Three.js
+
+	section
+		h3 Go Concurrency Tracer
+		h5 It turns this:
+		pre
+			code.golang
+				include ./code/hello01_clean.go
+	section
+		h3 Go Concurrency Tracer
+		h5 Into this:
+		pre
+			code.golang
+				include ./code/hello01_modified.go
+	section
+		h3 Go Concurrency Tracer
+		h5 Next, analyze raw trace:
+		pre
+			code.js
+				include ./code/data.js
+	section
+		h3 Sample usage
+		h5
+			a(href="http://nathanleclaire.com/blog/2014/04/05/implementing-a-concurrent-floodfill-with-golang/", target="_blank") Implementing a Concurrent Floodfill with Golang
+		img(src="images/floodfill.png")
+
+	section
+		h3 Sample usage
+		img(src="images/sshot2.png")
+
+	section
+		h3 Sample usage
+		img(src="images/sshot1.png")
+	+slide("FloodFill", "floodfill")
+
+	section
+		h3 TODO
+		ul
+			li Make it work with any Go program
+			li Vizualize using Oculus Rift
+
+	section
+		h3 Concurrency vs Parallelism
+		ul
+			li What is parallelism?
+			li What is concurrency?
+			li Let's see now...
+
+	+slide("That is parallelism", "parallelism01")
+	+slide("That is parallelism", "parallelism02")
+	+slide("And that is concurrency", "primesieve")
+	+slide("That is concurrency", "pingpong100")
+	+slide("That is concurrency", "server02")
+	+slide("That is concurrency", "workers01")
+	+slide("That is concurrency", "workers02")
+	section
+		h3 Links
+		ul
+			li
+				a(href="http://talks.golang.org/2012/concurrency.slide",target="_blank") Rob Pike - Go Concurrency Patterns
+			li
+				a(href="http://talks.golang.org/2012/waza.slide",target="_blank") Rob Pike - Concurrency is not Parallelism
+			li 
+				a(href="https://talks.golang.org/2013/advconc.slide",target="_blank") Sameer Ajmani - Advanced Go Concurrency Patterns
+	section
+		br
+		br
+		br
+		br
+		br
+		h1 Thank you
