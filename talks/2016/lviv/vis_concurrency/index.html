@@ -19,6 +19,9 @@
           <h5>Lviv, January 23,  2016</h5>
           <h5>Ivan Danyliuk<a style="line-height:34px" href="https:/twitter/@idanyliuk" target="_blank">@idanyliuk</a></h5>
         </section>
+        <section><br/><br/><br/><br/><br/><br/><br/>
+          <p><i>Note, it's viewed best on 1440 by 900 resolution.</i></p>
+        </section>
         <section>
           <h2>Modern world is concurrent</h2>
           <ul>
@@ -49,10 +52,16 @@
         <section>
           <h2>Concurrency in Go</h2>
           <ul>
-            <li>Based on Tony Hoare&apos;s CSP&apos;78 paper</li>
+            <li>
+              Based on 
+              <a href="https://en.wikipedia.org/wiki/Communicating_sequential_processes">Tony Hoare&apos;s CSP&apos;78</a>
+              paper
+            </li>
             <li>Channels</li>
             <li>Goroutines</li>
             <li>Select</li>
+            <li>Range</li>
+            <li>GOMAXPROCS</li>
           </ul>
         </section>
         <section>
@@ -151,7 +160,7 @@ func player(table chan int) {
         </section>
                 <section>
                   <h3>Ping-pong</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="pingpong01_full" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -181,7 +190,7 @@ func player(table chan int) {
         </section>
                 <section>
                   <h3>Ping-pong #3</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="pingpong03" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -211,7 +220,7 @@ func player(table chan int) {
         </section>
                 <section>
                   <h3>Ping-pong #100</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="pingpong100" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -249,7 +258,7 @@ func main() {
         </section>
                 <section>
                   <h3>Fan in</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="fanin" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -277,7 +286,7 @@ func main() {
         </section>
                 <section>
                   <h3>Servers</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="server01" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -330,7 +339,7 @@ func server(l net.Listener, ch chan string) {
         </section>
                 <section>
                   <h3>Servers</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="server02" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -370,7 +379,7 @@ func pool(wg *sync.WaitGroup, n int) {
         </section>
                 <section>
                   <h3>Workers</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="workers01" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -410,7 +419,7 @@ func pool(wg *sync.WaitGroup, n int) {
         </section>
                 <section>
                   <h3>Workers</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="workers02" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -462,7 +471,7 @@ func pool(ch chan string, n int) {
         </section>
                 <section>
                   <h3>Server+Worker</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="server03" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -502,7 +511,7 @@ func Filter(ch <-chan int, out chan<- int, prime int) {
         </section>
                 <section>
                   <h3>Concurrent prime sieve</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="primesieve" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -554,22 +563,26 @@ func main() {
         </section>
                 <section>
                   <h3>GOMAXPROCS = 1</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="gomaxprocs1" style="display:inline"></canvas>
                   </div>
                 </section>
+        <section>
+          <h3>GOMAXPROCS</h3><br/><br/><br/><br/>
+          <h3>Same code</h3>
+        </section>
                 <section>
                   <h3>GOMAXPROCS = 24</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="gomaxprocs24" style="display:inline"></canvas>
                   </div>
                 </section>
-        <section>
+        <section><br/><br/><br/><br/><br/>
           <h3>Goroutines leak</h3>
         </section>
                 <section>
                   <h3>Goroutines leak</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="leakage" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -661,7 +674,7 @@ func _encode(v _cmd) {
         </section>
                 <section>
                   <h3>FloodFill</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="floodfill" style="display:inline"></canvas>
                   </div>
                 </section>
@@ -682,43 +695,43 @@ func _encode(v _cmd) {
         </section>
                 <section>
                   <h3>That is parallelism</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="parallelism01" style="display:inline"></canvas>
                   </div>
                 </section>
                 <section>
                   <h3>That is parallelism</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="parallelism02" style="display:inline"></canvas>
                   </div>
                 </section>
                 <section>
                   <h3>And that is concurrency</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="primesieve" style="display:inline"></canvas>
                   </div>
                 </section>
                 <section>
                   <h3>That is concurrency</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="pingpong100" style="display:inline"></canvas>
                   </div>
                 </section>
                 <section>
                   <h3>That is concurrency</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="server02" style="display:inline"></canvas>
                   </div>
                 </section>
                 <section>
                   <h3>That is concurrency</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="workers01" style="display:inline"></canvas>
                   </div>
                 </section>
                 <section>
                   <h3>That is concurrency</h3>
-                  <div>
+                  <div><i style="font-size: 0.8em; position: absolute">R - restart, S/F - slow/fast, mouse - zoom/pan/rotate</i>
                     <canvas data-sample="workers02" style="display:inline"></canvas>
                   </div>
                 </section>

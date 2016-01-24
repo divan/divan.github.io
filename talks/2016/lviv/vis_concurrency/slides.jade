@@ -8,6 +8,16 @@
 		h5 Ivan Danyliuk
 			a(style="line-height:34px",href="https:/twitter/@idanyliuk",target="_blank") @idanyliuk
 	section
+		br
+		br
+		br
+		br
+		br
+		br
+		br
+		p
+			i Note, it's viewed best on 1440 by 900 resolution.
+	section
 		h2 Modern world is concurrent
 		ul
 			li Moore&apos;s Law is dead
@@ -35,10 +45,15 @@
 	section
 		h2 Concurrency in Go
 		ul
-			li Based on Tony Hoare&apos;s CSP&apos;78 paper
+			li
+				| Based on 
+				| <a href="https://en.wikipedia.org/wiki/Communicating_sequential_processes">Tony Hoare&apos;s CSP&apos;78</a>
+				| paper
 			li Channels
 			li Goroutines
 			li Select
+			li Range
+			li GOMAXPROCS
 
 	section
 		h3 Hello, concurrent world
@@ -74,6 +89,7 @@
 		section
 			h3= title
 			div
+				i(style="font-size: 0.8em; position: absolute") R - restart, S/F - slow/fast, mouse - zoom/pan/rotate
 				canvas(data-sample=sample, style='display:inline')
 	+slide("Ping-pong", "pingpong01_full")
 
@@ -168,8 +184,20 @@
 				include ./code/gomaxprocs_part2.go
 
 	+slide("GOMAXPROCS = 1", "gomaxprocs1")
+	section
+		h3 GOMAXPROCS
+		br
+		br
+		br
+		br
+		h3 Same code
 	+slide("GOMAXPROCS = 24", "gomaxprocs24")
 	section
+		br
+		br
+		br
+		br
+		br
 		h3 Goroutines leak
 	+slide("Goroutines leak", "leakage")
 
