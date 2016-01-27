@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Go Concurrency</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+body {
+	font-family: Monospace;
+	margin: 0px;
+	overflow: hidden;
+}
+
+div#restart {
+	position: absolute;
+	width: 100px;
+	height: 40px;
+}
+div#speed {
+	position: absolute;
+	left: 60px;
+	width: 60px;
+	height: 40px;
+}
+</style>
+<script src="../js/three.min.js"></script>
+<script src="../js/OrbitControls.js"></script>
+<script src="../js/stats.js"></script>
+<script src="../js/tween.js"></script>
+<script src="../js/sugar.js"></script>
+<script src="../js/gothree.js"></script>
+
+<script src="data.js"></script>
+
+<script src="../js/geometries/TextGeometry.js"></script>
+<script src="../js/utils/FontUtils.js"></script>
+<script src="../fonts/helvetiker_regular.typeface.js"></script>
+<link rel="stylesheet" href="../js/zenburn.css">
+
+</head>
+<body>
+<div id="restart"><button onclick="restart()">Restart</button></div>
+<div id="speed">
+	<button onclick="speedup()">+</button>
+	<button onclick="slowdown()">-</button>
+</div>
+<center><i style="font-size: 16px">r - restart, s/f - slow/fast, mouse - zoom, pan, rotate</i></center>
+<div id="render"></div>
+
+<script src="main.js"></script>
+<script src="../js/highlight.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+</body>
+</html>
