@@ -101,7 +101,7 @@
 
 <p>You&rsquo;ve probably heard that story about NPM community and <a href="https://www.npmjs.com/package/left-pad">LeftPad</a> package, that broke thousands JavaScript projects worldwide. There was a nice follow-up article titled <a href="http://www.haneycodes.net/npm-left-pad-have-we-forgotten-how-to-program/">&ldquo;Have We Forget How To Program&rdquo;</a> and one guy even created <a href="http://left-pad.io">left-pad.io</a> - Left-Pad As A Service web service. People got a lot of fun discussing this story.</p>
 
-<p>I personally find this story amazing, because there is no single point of failure, but rather a set of thing and coincidences resulted in a disaster. Every person I spoke about left-pad story sees it through it&rsquo;s own lens of concern. Some blame JS-community, some talks about how important vendoring is nowadays and others stands for absolutist views of the DRY principle.</p>
+<p>I personally find this story amazing, because there is no single point of failure, but rather a set of things and coincidences resulted in a disaster. Every person I spoke about left-pad story sees it through it&rsquo;s own lens of concern. Some blame JS-community, some talks about how important vendoring is nowadays and others stands for absolutist views of the DRY principle.</p>
 
 <p>For me my lens were the chances of getting into something similar in Go ecosystem. Of course, after initial thinking, I came to resolution that there is nothing to worry about - Go community doesn&rsquo;t tend to create packages for every single simple function over there. Yes, someone inspired by NPM LeftPad story created <a href="https://github.com/keltia/leftpad">similar package for Go</a> - but the fact it was created after that fiasco story only confirms my  thoughts.</p>
 
@@ -206,11 +206,11 @@ Run with -v option to see detailed stats for dependencies.
 
 <p>Anyway, it&rsquo;s always possible to manually inspect detailed output and filter small enough dependencies by yourself.</p>
 
-<p>Also, please, don&rsquo;t rely on these numbers heavily. It&rsquo;s likely to be somehow incorrect in some cases. Yes, it&rsquo;s tested with simple cases, but there are lot of cases, where it&rsquo;s even impossible to tell what is a &ldquo;correct&rdquo; value. For example, how do you calculate Cumulative number of lines for two functions with circular depency? There are also probably some bugs I didn&rsquo;t catch (hey, it survived 10 refactorings in 3 days!), so feel free to open an issue or send a PR.</p>
+<p>Also, please, don&rsquo;t rely on these numbers heavily. It&rsquo;s likely to be somehow incorrect in some cases. Yes, it&rsquo;s tested with simple cases, but there are lot of cases, where it&rsquo;s even impossible to tell what is a &ldquo;correct&rdquo; value. For example, how do you calculate Cumulative number of lines for two functions with circular dependency? There are also probably some bugs I didn&rsquo;t catch (hey, it survived 10 refactorings in 3 days!), so feel free to open an issue or send a PR.</p>
 
 <h1 id="stdlib:ccd3f74ebf4261596c9359f9d8d5dd41">Stdlib</h1>
 
-<p>Depscheck also can work with stdlib packages. Normally it threats stdlib imports as &lsquo;internal&rsquo; and doesn&rsquo;t analyze/report them. But you can explicitly ask for that using <code>-stdlib</code> command line flag. Suggestions are silenced in this mode because stdlib is smarter than this tool. Anyway, it can give interesting insights into your package or application.</p>
+<p>Depscheck also can work with stdlib packages. Normally it treats stdlib imports as &lsquo;internal&rsquo; and doesn&rsquo;t analyze/report them. But you can explicitly ask for that using <code>-stdlib</code> command line flag. Suggestions are silenced in this mode because stdlib is smarter than this tool. Anyway, it can give interesting insights into your package or application.</p>
 
 <p>For example, here is the sample output for checking against stdlib <code>time</code> package (though, you can use -stdlib flag for any package, not only stdlib):</p>
 
@@ -244,7 +244,7 @@ time: 4 packages, 294 LOC, 50 calls, 17 depth, 3 depth int.
 +---------+---------+-------+-------+--------+-------+----------+
 </code></pre>
 
-<p>You may even run it against the whole stdlib and build some statistics in R Studio or your favorite statistics tool. Let&rsquo;s use <code>go list std</code> command to get all stdlib packages names and feed them to <em>depcheck</em>: There is a special <code>-totalonly</code> flag, which tells depscheck to output only totals oneliner, which is easily parseable:</p>
+<p>You may even run it against the whole stdlib and build some charts in RStudio or your favorite statistics tool. Let&rsquo;s use <code>go list std</code> command to get all stdlib packages names and feed them to <em>depcheck</em>. There is a special <code>-totalonly</code> flag, which tells depscheck to output only totals oneliner, which is easily parseable:</p>
 
 <pre><code>$ for i in $(go list std); do depscheck -stdlib -totalonly $i; done
 archive/tar: 13 packages, 3328 LOC, 174 calls, 5 depth, 78 depth int.
