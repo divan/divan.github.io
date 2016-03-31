@@ -11,10 +11,10 @@
     
     <item>
       <title>LeftPad and Go: can tooling help?</title>
-      <link>https://divan.github.io/posts/160331_depscheck/</link>
+      <link>https://divan.github.io/posts/leftpad_and_go/</link>
       <pubDate>Thu, 31 Mar 2016 04:30:29 +0300</pubDate>
       
-      <guid>https://divan.github.io/posts/160331_depscheck/</guid>
+      <guid>https://divan.github.io/posts/leftpad_and_go/</guid>
       <description>
 
 &lt;p&gt;You&amp;rsquo;ve probably heard that story about NPM community and &lt;a href=&#34;https://www.npmjs.com/package/left-pad&#34;&gt;LeftPad&lt;/a&gt; package, that broke thousands JavaScript projects worldwide. There was a nice follow-up article titled &lt;a href=&#34;http://www.haneycodes.net/npm-left-pad-have-we-forgotten-how-to-program/&#34;&gt;&amp;ldquo;Have We Forget How To Program&amp;rdquo;&lt;/a&gt; and one guy even created &lt;a href=&#34;http://left-pad.io&#34;&gt;left-pad.io&lt;/a&gt; - Left-Pad As A Service web service. People got a lot of fun discussing this story.&lt;/p&gt;
