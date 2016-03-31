@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta property="og:title" content=" LeftPad and Go: can tooling help? &middot;  divan&#39;s blog" />
+  
+  <meta property="og:site_name" content="divan&#39;s blog" />
+  <meta property="og:url" content="https://divan.github.io/posts/160331_depscheck/" />
+  
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:article:published_time" content="2016-03-31T04:30:29&#43;03:00" />
+  
+  <meta property="og:article:tag" content="golang" />
+  
+  <meta property="og:article:tag" content="tooling" />
+  
+  
+
+  <title>
+     LeftPad and Go: can tooling help? &middot;  divan&#39;s blog
+  </title>
+
+  <link rel="stylesheet" href="https://divan.github.io/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.github.io/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.github.io/images/apple-touch-icon.png" />
+  
+</head>
+<body>
+    <header class="global-header">
+    <section class="header-text">
+      <h1><a href="https://divan.github.io/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+	  
+      <div class="tag-line">
+        random thoughts on Go, software and sports
+      </div>
+      
+      <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+      
+      <a href="https://divan.github.io/" class="btn-header btn-back hidden-xs">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        &nbsp;Home
+      </a>
+      
+      
+    </section>
+  </header>
+  <main class="container">
+
+
+<article>
+  <header>
+    <h1 class="text-primary">LeftPad and Go: can tooling help?</h1>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2016-03-31T04:30:29&#43;03:00">
+          Mar 31, 2016
+        </time>
+      </div>
+      <div class="pull-right">
+        
+        <span class="post-tag small"><a href="https://divan.github.io//tags/golang">#golang</a></span>
+        
+        <span class="post-tag small"><a href="https://divan.github.io//tags/tooling">#tooling</a></span>
+        
+      </div>
+    </div>
+  </header>
+  <section>
+    
+
+<p>You&rsquo;ve probably heard that story about NPM community and <a href="https://www.npmjs.com/package/left-pad">LeftPad</a> package, that broke thousands JavaScript projects worldwide. There was a nice follow-up article titled <a href="http://www.haneycodes.net/npm-left-pad-have-we-forgotten-how-to-program/">&ldquo;Have We Forget How To Program&rdquo;</a> and one guy even created <a href="http://left-pad.io">left-pad.io</a> - Left-Pad As A Service web service. People got a lot of fun discussing this story.</p>
+
+<p>I personally find this story amazing, because there is no single point of failure, but rather a set of thing and coincidences resulted in a disaster. Every person I spoke about left-pad story sees it through it&rsquo;s own lens of concern. Some blame JS-community, some talks about how important vendoring is nowadays and others stands for absolutist views of the DRY principle.</p>
+
+<p>For me my lens were the chances of getting into something similar in Go ecosystem. Of course, after initial thinking, I came to resolution that there is nothing to worry about - Go community doesn&rsquo;t tend to create packages for every single simple function over there. Yes, someone inspired by NPM LeftPad story created <a href="https://github.com/keltia/leftpad">similar package for Go</a> - but the fact it was created after that fiasco story only confirms my  thoughts.</p>
+
+<p>Moreover, there is even a <a href="http://go-proverbs.github.io/">Go proverb</a> dedicated to this specific thing:</p>
+
+<blockquote>
+<p>A little copying is better than a little dependency.</p>
+</blockquote>
+
+<p>If you struggle to understand how it applies with DRY and why it&rsquo;s a wise point, I suggest you check out <a href="https://www.youtube.com/watch?v=PAAkCSZUG1c">this video</a> on a subject.</p>
+
+<p>But one thought was spinning in my head - can we do better and use tooling to check for the &lsquo;little dependency&rsquo;? I believe that tooling is a great way to enforce some good practices and views, and <code>go fmt</code> is a greates evidence of it. Why can&rsquo;t we make a tool that would check package imports and suggest to <em>&ldquo;take a look at this small LeftPad dependency of only one small function&rdquo;</em>?</p>
+
+<p>Meet <a href="https://github.com/divan/depscheck">depscheck</a>.</p>
+
+<h1 id="depscheck:ccd3f74ebf4261596c9359f9d8d5dd41">DepsCheck</h1>
+
+<p>So, that&rsquo;s how <strong>depscheck</strong> was born. I spent a weekend, learning how to work with go/{ast,parser,types,loader} packages and after 10-th refactoring finally came up with a tool that was doing exactly I wanted to.</p>
+
+<p>Here is a description for GitHub:</p>
+
+<blockquote>
+<p>DepsCheck - Dependency checker for Golang (Go) packages. Prints stats and suggests to remove small LeftPad-like imports if any</p>
+</blockquote>
+
+<p>It analyzes package or arbitrary *.go files using AST-parser and calculates some stats about dependencies. Namely, number of calls/selectors of dependency, funcs/methods&rsquo; LOC (Lines Of Code), Cumulative LOCs (whenever possible, dropping it for recursion), Depth (number of nested calls to more external dependencies) and DepthInternal(the same, but for internal function calls). In most cases it&rsquo;s enough to make some calculations and analysis to find <em>&lsquo;small dependencies&rsquo;</em>.</p>
+
+<h3 id="quick-intro:ccd3f74ebf4261596c9359f9d8d5dd41">Quick Intro</h3>
+
+<p>Here is quick intro and dogfooding demo of the tool.</p>
+
+<p>First, install the tool:</p>
+
+<pre><code>go get github.com/divan/depscheck
+</code></pre>
+
+<p>Then invoke as simple as:</p>
+
+<pre><code>depscheck -v github.com/divan/depscheck
+</code></pre>
+
+<p><img src="https://github.com/divan/depscheck/raw/master/demo/depscheck.png" alt="Demo" /></p>
+
+<p>There is a detailed table view of dependencies usage, totals and breakdown by packages, and in the end, the tool says - hey, your dependencies are sane. It means, no dependencies of suspiciously small usage size.</p>
+
+<p>In case it finds potential candidate for copying into your codebase and removing from the dependency list, it outputs something like this:</p>
+
+<pre><code>$ depscheck github.com/divan/expvarmon
+github.com/divan/expvarmon: 4 packages, 1022 LOC, 93 calls, 11 depth, 23 depth int.
+ - Package byten (github.com/pyk/byten) is a good candidate for removing from dependencies.
+   Only 19 LOC used, in 1 calls, with 2 level of nesting
+ - Package ranges (github.com/bsiegert/ranges) is a good candidate for removing from dependencies.
+   Only 29 LOC used, in 1 calls, with 0 level of nesting
+Run with -v option to see detailed stats for dependencies.
+</code></pre>
+
+<p>And by the way, in an example above it totally make sense. Rerunning with <code>-v</code> options to see the detials, it&rsquo;s easy to see that package only uses single flat function from <code>ranges</code> of 29 lines of code - ranges.Parse, and it can be easily copied to my codebase, if license permits, of course. It removes the whole bunch of burden in case I&rsquo;ll need to vendor dependencies or use some vendoring tools.</p>
+
+<p>Of course, this suggestion doesn&rsquo;t mean you have to do it. It just asks you to pay attention to these particular imports if you want to make your codebase a little bit better. It&rsquo;s up to me to decide what to do with this import. The tools suggestions are recommendation only.</p>
+
+<h3 id="how-small-is-small-dependency:ccd3f74ebf4261596c9359f9d8d5dd41">How small is small dependency</h3>
+
+<p>You may ask now - how do you determine if the dependency is small enough to be a candidate for elimination? Good question, and I don&rsquo;t have one single source of truth here, so I&rsquo;ve implemented it based on my view of common sense here. To be short, here is the responsible method at the moment of writing this article:</p>
+
+<pre><code>// CanBeAvoided attempts to classify if package usage is small enough
+// to suggest user avoid this package as a dependency and
+// instead copy/embed it's code into own project (if license permits).
+func (p *PackageStat) CanBeAvoided() bool {
+	// If this dependency is using another dependencies,
+	// it's almost for sure - no. For internal dependency, let's
+	// allow just two level of nesting.
+	if p.Depth &gt; 0 {
+		return false
+	}
+	if p.DepthInternal &gt; 2 {
+		return false
+	}
+
+	if p.DepsCount &gt; 3 {
+		return false
+	}
+
+	// Because 42
+	if p.LOCCum &gt; 42 {
+		return false
+	}
+
+	return true
+}
+</code></pre>
+
+<p>As you can see, it&rsquo;s pretty straightforward, no machine learning here. Just hardcore universal constants :) It&rsquo;s not perfect, but hey, at least, it can detect LeftPad package, mentioned above!</p>
+
+<pre><code>$ depscheck leftpad.go
+main: 1 packages, 17 LOC, 1 calls, 0 depth, 1 depth int.
+ - Package leftpad (github.com/keltia/leftpad) is a good candidate for removing from dependencies.
+   Only 17 LOC used, in 1 calls, with 1 level of nesting
+Run with -v option to see detailed stats for dependencies.
+</code></pre>
+
+<p>I&rsquo;m looking forward to hear suggestions on how to do it better. Maybe it&rsquo;s worth to calculate total LOC of the package and look at the percentage of LOC involved? Feel free to tell your view on how small is &ldquo;small dependency&rdquo; could be from the perspective of the machine.</p>
+
+<p>Anyway, it&rsquo;s always possible to manually inspect detailed output and filter small enough dependencies by yourself.</p>
+
+<p>Also, please, don&rsquo;t rely on these numbers heavily. It&rsquo;s likely to be somehow incorrect in some cases. Yes, it&rsquo;s tested with simple cases, but there are lot of cases, where it&rsquo;s even impossible to tell what is a &ldquo;correct&rdquo; value. For example, how do you calculate Cumulative number of lines for two functions with circular depency? There are also probably some bugs I didn&rsquo;t catch (hey, it survived 10 refactorings in 3 days!), so feel free to open an issue or send a PR.</p>
+
+<h1 id="stdlib:ccd3f74ebf4261596c9359f9d8d5dd41">Stdlib</h1>
+
+<p>Depscheck also can work with stdlib packages. Normally it threats stdlib imports as &lsquo;internal&rsquo; and doesn&rsquo;t analyze/report them. But you can explicitly ask for that using <code>-stdlib</code> command line flag. Suggestions are silenced in this mode because stdlib is smarter than this tool. Anyway, it can give interesting insights into your package or application.</p>
+
+<p>For example, here is the sample output for checking against stdlib <code>time</code> package (though, you can use -stdlib flag for any package, not only stdlib):</p>
+
+<pre><code>$ depscheck -stdlib -v time
+time: 4 packages, 294 LOC, 50 calls, 17 depth, 3 depth int.
++---------+-------+----------+--------+-------+-----+--------+-------+----------+
+|   PKG   | RECV  |   NAME   |  TYPE  | COUNT | LOC | LOCCUM | DEPTH | DEPTHINT |
++---------+-------+----------+--------+-------+-----+--------+-------+----------+
+| errors  |       | New      | func   |    31 |   2 |      2 |     0 |        0 |
+| runtime |       | GOROOT   | func   |     2 |   6 |      6 |     0 |        0 |
+| sync    | *Once | Do       | method |     1 |  11 |     90 |     2 |        3 |
+|         |       | Once     | type   |     1 |     |        |       |          |
+| syscall |       | ENOENT   | const  |     1 |     |        |       |          |
+|         |       | O_RDONLY | const  |     2 |     |        |       |          |
+|         |       | SIGCHLD  | const  |     1 |     |        |       |          |
+|         |       | Close    | func   |     2 |   6 |      6 |     0 |        0 |
+|         |       | Getenv   | func   |     2 |  20 |    149 |    13 |        0 |
+|         |       | Getpid   | func   |     1 |   4 |      4 |     0 |        0 |
+|         |       | Kill     | func   |     1 |   1 |      1 |     0 |        0 |
+|         |       | Open     | func   |     2 |  13 |     13 |     0 |        0 |
+|         |       | Read     | func   |     2 |  14 |     16 |     2 |        0 |
+|         |       | Seek     | func   |     1 |   7 |      7 |     0 |        0 |
++---------+-------+----------+--------+-------+-----+--------+-------+----------+
++---------+---------+-------+-------+--------+-------+----------+
+|   PKG   |  PATH   | COUNT | CALLS | LOCCUM | DEPTH | DEPTHINT |
++---------+---------+-------+-------+--------+-------+----------+
+| errors  | errors  |     1 |    31 |      2 |     0 |        0 |
+| runtime | runtime |     1 |     2 |      6 |     0 |        0 |
+| sync    | sync    |     2 |     2 |     90 |     2 |        3 |
+| syscall | syscall |    10 |    15 |    196 |    15 |        0 |
++---------+---------+-------+-------+--------+-------+----------+
+</code></pre>
+
+<p>You may even run it against the whole stdlib and build some statistics in R Studio or your favorite statistics tool. Let&rsquo;s use <code>go list std</code> command to get all stdlib packages names and feed them to <em>depcheck</em>: There is a special <code>-totalonly</code> flag, which tells depscheck to output only totals oneliner, which is easily parseable:</p>
+
+<pre><code>$ for i in $(go list std); do depscheck -stdlib -totalonly $i; done
+archive/tar: 13 packages, 3328 LOC, 174 calls, 5 depth, 78 depth int.
+archive/zip: 13 packages, 2284 LOC, 184 calls, 24 depth, 84 depth int.
+bufio: 4 packages, 84 LOC, 60 calls, 0 depth, 0 depth int.
+bytes: 4 packages, 699 LOC, 79 calls, 0 depth, 26 depth int.
+compress/bzip2: 3 packages, 58 LOC, 19 calls, 0 depth, 4 depth int.
+compress/flate: 7 packages, 255 LOC, 52 calls, 3 depth, 10 depth int.
+compress/gzip: 8 packages, 622 LOC, 72 calls, 1 depth, 36 depth int.
+compress/lzw: 4 packages, 42 LOC, 25 calls, 1 depth, 3 depth int.
+compress/zlib: 7 packages, 877 LOC, 59 calls, 1 depth, 47 depth int.
+container/heap: 1 packages, 0 LOC, 13 calls, 0 depth, 0 depth int.
+container/list: 0 packages, 0 LOC, 0 calls, 0 depth, 0 depth int.
+container/ring: 0 packages, 0 LOC, 0 calls, 0 depth, 0 depth int.
+crypto: 3 packages, 88 LOC, 6 calls, 0 depth, 2 depth int.
+crypto/aes: 4 packages, 109 LOC, 5 calls, 0 depth, 3 depth int.
+crypto/cipher: 4 packages, 21 LOC, 12 calls, 0 depth, 1 depth int.
+crypto/des: 3 packages, 100 LOC, 9 calls, 0 depth, 2 depth int.
+crypto/dsa: 3 packages, 6021 LOC, 89 calls, 0 depth, 409 depth int.
+crypto/ecdsa: 9 packages, 4059 LOC, 94 calls, 2 depth, 269 depth int.
+crypto/elliptic: 3 packages, 2677 LOC, 298 calls, 4 depth, 180 depth int.
+crypto/hmac: 3 packages, 19 LOC, 15 calls, 0 depth, 1 depth int.
+crypto/md5: 3 packages, 5 LOC, 5 calls, 0 depth, 0 depth int.
+...
+</code></pre>
+
+<p>A couple of manipulations to convert it to CSV and here is the histogram of number of imported packages in stdlib:</p>
+
+<p><img src="/images/stdlib_deps.png" alt="Histogram" /></p>
+
+<p>So, feel free to play with this statistics. Maybe you&rsquo;ll find it useful.</p>
+
+<h1 id="conclusion:ccd3f74ebf4261596c9359f9d8d5dd41">Conclusion</h1>
+
+<p>I constantly admire the long-striking power of the core ideas around Go design. Simple grammar and spec allowed me to build this tool in a weekend, without any prior experience of working with AST representation of source code. It&rsquo;s inherently hard, but the guys behind Go&rsquo;s source code parsing packages are doing amazing job. I benefit every single day by different linters, bundled together in <a href="https://github.com/alecthomas/gometalinter">GoMetaLinter</a> package (a must have thing!), and these static code analysis tools are making our code better.</p>
+
+<p>Now I also feel a little bit safer because that Go proverb mentioned in the beginning is now materialized in a depscheck tool. And hopefully, it will make us, as a community, one more step further from the slightest possibility to fall into the trend that resulted in that LeftPad fiasco.</p>
+
+<p>Happy coding!</p>
+
+  </section>
+  <footer>
+    <section class="author-info row">
+      <div class="author-avatar col-md-2">
+        
+        <img alt="Author Avatar" src="/images/avatar.jpg" />
+        
+      </div>
+      <div class="author-meta col-md-6">
+        
+        
+		<div class="author-bio">Gopher. Figure skating enthusiast.<br />
+			Follow me at <a href="https://twitter.com/idanyliuk" target="_blank">@idanyliuk</a>
+		</div>
+        
+      </div>
+      
+      <div class="author-contact col-md-4">
+        <a href="mailto:ivan.daniluk@gmail.com">
+          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          &nbsp;Contact me
+        </a>
+      </div>
+      
+    </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a href="https://divan.github.io/posts/go_concurrency_visualize/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      
+      
+      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+  </main>
+  <footer class="container global-footer">
+    <div class="copyright-note pull-left">
+      
+    </div>
+    <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <script src="https://divan.github.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-70805978-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  
+  
+</body>
+</html>
+
