@@ -13,10 +13,6 @@
   
   <meta property="og:article:published_time" content="2016-03-31T04:30:29&#43;03:00" />
   
-  <meta property="og:article:tag" content="golang" />
-  
-  <meta property="og:article:tag" content="tooling" />
-  
   
 
   <title>
@@ -89,10 +85,6 @@
       </div>
       <div class="pull-right">
         
-        <span class="post-tag small"><a href="https://divan.github.io//tags/golang">#golang</a></span>
-        
-        <span class="post-tag small"><a href="https://divan.github.io//tags/tooling">#tooling</a></span>
-        
       </div>
     </div>
   </header>
@@ -158,7 +150,7 @@ github.com/divan/expvarmon: 4 packages, 1022 LOC, 93 calls, 11 depth, 23 depth i
 Run with -v option to see detailed stats for dependencies.
 </code></pre>
 
-<p>And by the way, in an example above it totally make sense. Rerunning with <code>-v</code> options to see the detials, it&rsquo;s easy to see that package only uses single flat function from <code>ranges</code> of 29 lines of code - ranges.Parse, and it can be easily copied to my codebase, if license permits, of course. It removes the whole bunch of burden in case I&rsquo;ll need to vendor dependencies or use some vendoring tools.</p>
+<p>And by the way, in an example above it totally make sense. Rerunning with <code>-v</code> options to see the details, it&rsquo;s easy to see that package only uses single flat function from <code>ranges</code> of 29 lines of code - ranges.Parse, and it can be easily copied to my codebase, if license permits, of course. It removes the whole bunch of burden in case I&rsquo;ll need to vendor dependencies or use some vendoring tools.</p>
 
 <p>Of course, this suggestion doesn&rsquo;t mean you have to do it. It just asks you to pay attention to these particular imports if you want to make your codebase a little bit better. It&rsquo;s up to me to decide what to do with this import. The tools suggestions are recommendation only.</p>
 
