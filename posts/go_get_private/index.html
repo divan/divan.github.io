@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta property="og:title" content=" go get for private repos in docker &middot;  divan&#39;s blog" />
+  
+  <meta property="og:site_name" content="divan&#39;s blog" />
+  <meta property="og:url" content="https://divan.github.io/posts/go_get_private/" />
+  
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:article:published_time" content="2016-06-01T19:28:46&#43;02:00" />
+  
+  <meta property="og:article:tag" content="golang" />
+  
+  
+
+  <title>
+     go get for private repos in docker &middot;  divan&#39;s blog
+  </title>
+
+  <link rel="stylesheet" href="https://divan.github.io/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.github.io/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.github.io/images/apple-touch-icon.png" />
+  
+</head>
+<body>
+    <header class="global-header">
+    <section class="header-text">
+      <h1><a href="https://divan.github.io/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+	  
+      <div class="tag-line">
+        random thoughts on Go, software and sports
+      </div>
+      
+      <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+      
+      <a href="https://divan.github.io/" class="btn-header btn-back hidden-xs">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        &nbsp;Home
+      </a>
+      
+      
+    </section>
+  </header>
+  <main class="container">
+
+
+<article>
+  <header>
+    <h1 class="text-primary">go get for private repos in docker</h1>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2016-06-01T19:28:46&#43;02:00">
+          Jun 1, 2016
+        </time>
+      </div>
+      <div class="pull-right">
+        
+        <span class="post-tag small"><a href="https://divan.github.io//tags/golang">#golang</a></span>
+        
+      </div>
+    </div>
+  </header>
+  <section>
+    
+
+<p>As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing scenarios exists. One of them is automating repeatable build process using containers along with using dependencies in private repositories.</p>
+
+<p>Go-getting private repositories by itself is often a <a href="https://github.com/golang/go/issues/9697">source of confusion</a> when using <code>go get</code>, but it has easy workaround by adding two lines to your <code>.gitconfig</code>:</p>
+
+<pre><code>[url &quot;git@github.com:&quot;]
+	insteadOf = https://github.com/
+</code></pre>
+
+<p>or as a oneliner:</p>
+
+<pre><code>git config --global url.&quot;git@github.com:&quot;.insteadOf &quot;https://github.com/&quot;
+</code></pre>
+
+<p>But it gets more complicated when you try to make the whole build process work inside the container. I will use Docker as an example, as it&rsquo;s most popular container at the moment.</p>
+
+<h2 id="the-problem">The problem</h2>
+
+<p>Imagine, you have two <strong>private</strong> packages <code>github.com/company/foo</code> and <code>github.com/company/bar</code>, where <code>foo</code> imports <code>bar</code>. You may have other external dependencies, and you vendor them into vendor/ directory, but for your own packages there is no much sense in vendoring them, so you want to <code>go get</code> them:</p>
+
+<pre><code>foo.go:
+...
+import &quot;github.com/company/bar&quot;
+...
+</code></pre>
+
+<p>In normal workflow, you setup GOPATH, your SSH keys, .gitconfig and you&rsquo;re done - simple <code>go get github.com/company/foo</code> will work and download both packages:</p>
+
+<pre><code>$ go get -v github.com/company/foo
+github.com/company/foo (download)
+github.com/company/bar (download)
+</code></pre>
+
+<p>But now, you want to make the build process reproducible on any machine, even on CI instance, so you pack everything in the Docker container. You will probably use simple Dockerfile based on official <code>golang</code> image:</p>
+
+<p><strong>Dockerfile</strong>:</p>
+
+<pre><code>FROM golang:1.6
+
+ADD . /go/src/github.com/company/foo
+CMD cd /go/src/github.com/company/foo; go get github.com/company/bar &amp;&amp; go build -o /go/bin/foo
+</code></pre>
+
+<p><strong>Build script</strong></p>
+
+<pre><code>docker build -t foo-build . 			# build image
+docker run --name=foo-build foo-build		# compile binary
+docker cp foo-build:/foo foo			# copy binary to fs
+docker rm -f foo-build				# remove container
+docker rmi -f foo-build				# remove image
+</code></pre>
+
+<p>This setup <strong>will not</strong> work because Docker container used for building (foo-build) doesn&rsquo;t contain <code>bar</code> dependency, SSH keys and proper gitconfig. And, apparently, it&rsquo;s not trivial simply to add the keys - you have to deal with a bunch of obstacles, mainly on the SSH side. So, let&rsquo;s go through quickly and setup working solution.</p>
+
+<h2 id="the-solution">The solution</h2>
+
+<h3 id="ssh-vs-https">ssh vs https</h3>
+
+<p>First of all, on the building stage (<code>docker run ...</code>) you will encounter the following error message:</p>
+
+<pre><code># cd .; git clone https://github.com/company/bar /go/src/github.com/company/bar
+Cloning into '/go/src/github.com/company/bar'...
+fatal: could not read Username for 'https://github.com': No such device or address
+package github.com/company/bar: exit status 128
+</code></pre>
+
+<p>What does it mean, is that your access to github is granted using SSH keys, but <code>git</code> command, which is invoked by <code>go get</code>, is trying to clone repository using HTTPS form and you don&rsquo;t have credentials set up.</p>
+
+<p>Workaround for this is easy, and described in the beginning of this post, so we just have to add this to our Dockerfile right before calling <code>go get</code>:</p>
+
+<pre><code>RUN echo &quot;[url \&quot;git@github.com:\&quot;]\n\tinsteadOf = https://github.com/&quot; &gt;&gt; /root/.gitconfig
+</code></pre>
+
+<h3 id="keys">Keys</h3>
+
+<p>The next error you&rsquo;ll see is host key verification error:</p>
+
+<pre><code># cd .; git clone https://github.com/company/bar /go/src/github.com/company/bar
+Cloning into '/go/src/github.com/company/bar'...
+Host key verification failed.
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+package github.com/company/bar: exit status 128
+</code></pre>
+
+<p>Well, it&rsquo;s simply because our Docker container doesn&rsquo;t have SSH keys yet. And the right approach is not trivial, so let&rsquo;s go through it.</p>
+
+<p>First of all, we want every developer or CI to use it&rsquo;s own keys for accessing private repo. If person has access to <code>foo</code>, she&rsquo;s definitely has an access to <code>bar</code> and the keys are usually in <code>~/.ssh/id_rsa</code> file.</p>
+
+<p><strong>You can&rsquo;t copy keys into container, though.</strong> Dockerfile&rsquo;s ADD and COPY commands can copy files from the current directory only, so you can&rsquo;t just add <code>ADD ~/.ssh/ /root/ssh</code> to your Dockerfile. One of the solutions is to write wrapper script that will copy private key to local directory and then to the container, but it&rsquo;s still not very safe and elegant solution.</p>
+
+<p>What we can do, is to mount volume using docker&rsquo;s <code>-v</code> command line flag. The first approach will be probably to mount the whole <code>~/.ssh</code> directory, but it&rsquo;s tricky</p>
+
+<pre><code>docker run --name=foo-build -v ~/.ssh:/root/.ssh foo-build
+</code></pre>
+
+<p>This command will work as expected on MacOS X (using latest Docker Beta, at least), but not on Linux box. The reason is the files ownership for <code>~/.ssh/config</code> file. The <code>ssh</code> (which is invoked by <code>git</code>, which is invoked by <code>go get</code>) expects this file to have the same user ownership as a running user. Inside the container the user is <code>root</code>, but the mounted directory most probably has ownership of your normal Linux user, say, <code>developer</code> and inside the container it looks like:</p>
+
+<pre><code>$ ls ~/.ssh/config
+-rw-r--r--  1 1000  1000  147 Jun  1 19:20 /root/.ssh/config
+</code></pre>
+
+<p>making SSH to complain and abort:</p>
+
+<pre><code>Bad owner or permissions on ~/.ssh/config
+</code></pre>
+
+<p><em>(On MacOS X it&rsquo;s different because of VM used for docker - it&rsquo;s internally a Linux box and root user is used by default, I guess)</em></p>
+
+<p>The solution is to mount only the key and work around host checking issue later:</p>
+
+<pre><code>docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa foo-build
+</code></pre>
+
+<p>Error will be the same, though, but rerunning it with <code>-t</code> option, we&rsquo;ll see the reason:</p>
+
+<pre><code>$ docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa -t foo-build
+The authenticity of host 'github.com (192.30.252.128)' can't be established.
+RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48.
+Are you sure you want to continue connecting (yes/no)?
+</code></pre>
+
+<p>Of course, we don&rsquo;t want to interact manually with ssh prompt, so we have to find a way to force it. There is an SSH client option for that, called StrictHostChecking.</p>
+
+<h3 id="stricthostchecking">StrictHostChecking</h3>
+
+<p>Typically, you have file named <code>~/.ssh/known_hosts</code>, which holds information about, well, known hosts. But in our container, there is no such file, so we have to use the client option to supress those checks. The easiest way to do this is to put this option into the <code>~/.ssh/config</code> file - yes, the one we had ownership problems with.</p>
+
+<p>But, we only need one option, so it&rsquo;s ok to create this file on the fly inside the container. Add to Dockerfile:</p>
+
+<pre><code>RUN mkdir /root/.ssh &amp;&amp; echo &quot;StrictHostKeyChecking no&quot; &gt; /root/.ssh/config
+</code></pre>
+
+<p>Rerun the <code>docker run</code> step and you&rsquo;ll finally have success!</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>The final Dockerfile:</p>
+
+<pre><code>FROM golang:1.6
+
+RUN echo &quot;[url \&quot;git@github.com:\&quot;]\n\tinsteadOf = https://github.com/&quot; &gt;&gt; /root/.gitconfig
+RUN mkdir /root/.ssh &amp;&amp; echo &quot;StrictHostKeyChecking no &quot; &gt; /root/.ssh/config
+ADD .  /go/src/github.com/company/foo
+CMD cd /go/src/github.com/company/foo &amp;&amp; go get github.com/company/bar &amp;&amp; go build -o /foo
+</code></pre>
+
+<p>and the build steps:</p>
+
+<pre><code>docker build -t foo-build .
+docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa foo-build
+docker cp foo-build:/foo foo
+docker rm -f foo-build
+docker rmi -f foo-build	
+</code></pre>
+
+<p>You may put those steps to the Makefile or custom build script, and can safely use it locally or in CI or whatever.</p>
+
+<p>Private SSH key is copied once into the temporary container, used for building, which is removed immediately. Nice and safe solution.</p>
+
+  </section>
+  <footer>
+    <section class="author-info row">
+      <div class="author-avatar col-md-2">
+        
+        <img alt="Author Avatar" src="/images/avatar.jpg" />
+        
+      </div>
+      <div class="author-meta col-md-6">
+        
+        
+		<div class="author-bio">Gopher. Figure skating enthusiast.<br />
+			Follow me at <a href="https://twitter.com/idanyliuk" target="_blank">@idanyliuk</a>
+		</div>
+        
+      </div>
+      
+      <div class="author-contact col-md-4">
+        <a href="mailto:ivan.daniluk@gmail.com">
+          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          &nbsp;Contact me
+        </a>
+      </div>
+      
+    </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a href="https://divan.github.io/posts/leftpad_and_go/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      
+      
+      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+  </main>
+  <footer class="container global-footer">
+    <div class="copyright-note pull-left">
+      
+    </div>
+    <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <script src="https://divan.github.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-70805978-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  
+  
+</body>
+</html>
+

@@ -13,6 +13,10 @@
   
   <meta property="og:article:published_time" content="2016-03-31T04:30:29&#43;03:00" />
   
+  <meta property="og:article:tag" content="golang" />
+  
+  <meta property="og:article:tag" content="tooling" />
+  
   
 
   <title>
@@ -85,6 +89,10 @@
       </div>
       <div class="pull-right">
         
+        <span class="post-tag small"><a href="https://divan.github.io//tags/golang">#golang</a></span>
+        
+        <span class="post-tag small"><a href="https://divan.github.io//tags/tooling">#tooling</a></span>
+        
       </div>
     </div>
   </header>
@@ -109,7 +117,7 @@
 
 <p>Meet <a href="https://github.com/divan/depscheck">depscheck</a>.</p>
 
-<h1 id="depscheck:ccd3f74ebf4261596c9359f9d8d5dd41">DepsCheck</h1>
+<h1 id="depscheck">DepsCheck</h1>
 
 <p>So, that&rsquo;s how <strong>depscheck</strong> was born. I spent a weekend, learning how to work with go/{ast,parser,types,loader} packages and after 10-th refactoring finally came up with a tool that was doing exactly I wanted to.</p>
 
@@ -121,7 +129,7 @@
 
 <p>It analyzes package or arbitrary *.go files using AST-parser and calculates some stats about dependencies. Namely, number of calls/selectors of dependency, funcs/methods&rsquo; LOC (Lines Of Code), Cumulative LOCs (whenever possible, dropping it for recursion), Depth (number of nested calls to more external dependencies) and DepthInternal(the same, but for internal function calls). In most cases it&rsquo;s enough to make some calculations and analysis to find <em>&lsquo;small dependencies&rsquo;</em>.</p>
 
-<h3 id="quick-intro:ccd3f74ebf4261596c9359f9d8d5dd41">Quick Intro</h3>
+<h3 id="quick-intro">Quick Intro</h3>
 
 <p>Here is quick intro and dogfooding demo of the tool.</p>
 
@@ -154,7 +162,7 @@ Run with -v option to see detailed stats for dependencies.
 
 <p>Of course, this suggestion doesn&rsquo;t mean you have to do it. It just asks you to pay attention to these particular imports if you want to make your codebase a little bit better. It&rsquo;s up to me to decide what to do with this import. The tools suggestions are recommendation only.</p>
 
-<h3 id="how-small-is-small-dependency:ccd3f74ebf4261596c9359f9d8d5dd41">How small is small dependency</h3>
+<h3 id="how-small-is-small-dependency">How small is small dependency</h3>
 
 <p>You may ask now - how do you determine if the dependency is small enough to be a candidate for elimination? Good question, and I don&rsquo;t have one single source of truth here, so I&rsquo;ve implemented it based on my view of common sense here. To be short, here is the responsible method at the moment of writing this article:</p>
 
@@ -200,7 +208,7 @@ Run with -v option to see detailed stats for dependencies.
 
 <p>Also, please, don&rsquo;t rely on these numbers heavily. It&rsquo;s likely to be somehow incorrect in some cases. Yes, it&rsquo;s tested with simple cases, but there are lot of cases, where it&rsquo;s even impossible to tell what is a &ldquo;correct&rdquo; value. For example, how do you calculate Cumulative number of lines for two functions with circular dependency? There are also probably some bugs I didn&rsquo;t catch (hey, it survived 10 refactorings in 3 days!), so feel free to open an issue or send a PR.</p>
 
-<h1 id="stdlib:ccd3f74ebf4261596c9359f9d8d5dd41">Stdlib</h1>
+<h1 id="stdlib">Stdlib</h1>
 
 <p>Depscheck also can work with stdlib packages. Normally it treats stdlib imports as &lsquo;internal&rsquo; and doesn&rsquo;t analyze/report them. But you can explicitly ask for that using <code>-stdlib</code> command line flag. Suggestions are silenced in this mode because stdlib is smarter than this tool. Anyway, it can give interesting insights into your package or application.</p>
 
@@ -269,7 +277,7 @@ crypto/md5: 3 packages, 5 LOC, 5 calls, 0 depth, 0 depth int.
 
 <p>So, feel free to play with this statistics. Maybe you&rsquo;ll find it useful.</p>
 
-<h1 id="conclusion:ccd3f74ebf4261596c9359f9d8d5dd41">Conclusion</h1>
+<h1 id="conclusion">Conclusion</h1>
 
 <p>I constantly admire the long-striking power of the core ideas around Go design. Simple grammar and spec allowed me to build this tool in a weekend, without any prior experience of working with AST representation of source code. It&rsquo;s inherently hard, but the guys behind Go&rsquo;s source code parsing packages are doing amazing job. I benefit every single day by different linters, bundled together in <a href="https://github.com/alecthomas/gometalinter">GoMetaLinter</a> package (a must have thing!), and these static code analysis tools are making our code better.</p>
 
@@ -320,7 +328,7 @@ crypto/md5: 3 packages, 5 LOC, 5 calls, 0 depth, 0 depth int.
       <li class="previous"><a href="https://divan.github.io/posts/go_concurrency_visualize/"><span aria-hidden="true">&larr;</span> Older</a></li>
       
       
-      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      <li class="next"><a href="https://divan.github.io/posts/go_get_private/">Newer <span aria-hidden="true">&rarr;</span></a></li>
       
     </ul>
   </footer>

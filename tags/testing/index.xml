@@ -35,7 +35,7 @@
 &lt;li&gt;&lt;a href=&#34;https://bitbucket.org/liamstask/goose/&#34;&gt;goose&lt;/a&gt; tool for migrations&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;docker:23b513b340b05e75befe17e12589dce1&#34;&gt;Docker&lt;/h2&gt;
+&lt;h2 id=&#34;docker&#34;&gt;Docker&lt;/h2&gt;
 
 &lt;p&gt;So, yes, we will use &lt;a href=&#34;https://www.docker.com&#34;&gt;Docker&lt;/a&gt; to handle all external dependencies (MySQL database in our case), and that&amp;rsquo;s exactly the case where Docker shines. Nowadays internet is &lt;a href=&#34;http://ctankersley.com/2014/09/30/docker-a-misunderstood-tool/&#34;&gt;full&lt;/a&gt; of &lt;a href=&#34;http://www.rkn.io/2014/09/26/no-silver-bullets/&#34;&gt;articles&lt;/a&gt; and &lt;a href=&#34;https://speakerdeck.com/rjschwei/docker-not-a-silver-bullet&#34;&gt;talks&lt;/a&gt; telling that Docker is not a &amp;lsquo;silver bullet&amp;rsquo;, and &lt;a href=&#34;https://valdhaus.co/writings/docker-misconceptions/&#34;&gt;putting&lt;/a&gt; a &lt;a href=&#34;http://sirupsen.com/production-docker/&#34;&gt;lot of criticism&lt;/a&gt; on many docker use cases. Of course, they&amp;rsquo;re absolutely right and many of their points are valid, but in this particular case it&amp;rsquo;s exactly the case where you should use Docker. It gives us everything we need - repeatability, isolation, speed, and portability.&lt;/p&gt;
 
@@ -70,7 +70,7 @@ CMD [«mysqld_safe»]&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The actual name of container and database is not important here, so we use &lt;code&gt;mydb&lt;/code&gt; and &lt;code&gt;mydb_test&lt;/code&gt; - simply a convention.&lt;/p&gt;
 
-&lt;h2 id=&#34;go-tests:23b513b340b05e75befe17e12589dce1&#34;&gt;Go tests&lt;/h2&gt;
+&lt;h2 id=&#34;go-tests&#34;&gt;Go tests&lt;/h2&gt;
 
 &lt;p&gt;Now, it&amp;rsquo;s time to write some Go code. Remember, we want our test to be portable and issued with &lt;code&gt;go test&lt;/code&gt; command only. Let&amp;rsquo;s start our service_test.go:&lt;/p&gt;
 
@@ -91,7 +91,7 @@ if testing.Short() {
         t.Skip(&#34;skipping test in short mode.&#34;)
 }&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;running-docker-container:23b513b340b05e75befe17e12589dce1&#34;&gt;Running Docker container&lt;/h3&gt;
+&lt;h3 id=&#34;running-docker-container&#34;&gt;Running Docker container&lt;/h3&gt;
 
 &lt;p&gt;Before running our tests, we need to start our dependencies. There are a few packages to work with &lt;a href=&#34;https://docs.docker.com/engine/reference/api/docker_remote_api/&#34;&gt;Docker Remote API&lt;/a&gt; for Go, I will use the &lt;a href=&#34;http://github.com/fsouza/go-dockerclient&#34;&gt;one from fsouza&lt;/a&gt;, which I successfully using for quite a long time. Install it with:&lt;/p&gt;
 
@@ -189,7 +189,7 @@ func waitStarted(client *docker.Client, id string, maxWait time.Duration) error 
 
 &lt;p&gt;Basically, it&amp;rsquo;s enough to work with our container, but here is another issue comes in - if you run MacOS X or Windows, you use Docker via the proxy virtual machine with tiny linux, &lt;code&gt;docker-machine&lt;/code&gt; (or its predecessor, &lt;code&gt;boot2docker&lt;/code&gt;). It means you should use docker-machine&amp;rsquo;s IP address and not real container IP, which is not exposed outside of the docker-host linux VM.&lt;/p&gt;
 
-&lt;h3 id=&#34;tuning-for-portability:23b513b340b05e75befe17e12589dce1&#34;&gt;Tuning for portability&lt;/h3&gt;
+&lt;h3 id=&#34;tuning-for-portability&#34;&gt;Tuning for portability&lt;/h3&gt;
 
 &lt;p&gt;Again, let&amp;rsquo;s just write code to accomplish that, as it&amp;rsquo;s quite trivial:&lt;/p&gt;
 
@@ -230,7 +230,7 @@ func DockerMachineIP() string {
 
 &lt;p&gt;At this point, the amount of supporting code becomes quite notable, and it&amp;rsquo;s better to move all docker related code into separate a subpackage, perhaps in internal/ directory. Let&amp;rsquo;s name it &lt;code&gt;internal/dockertest&lt;/code&gt;. The source of this package can be &lt;a href=&#34;http://pastebin.com/faUUN0M1&#34;&gt;found here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h3 id=&#34;running-from-tests:23b513b340b05e75befe17e12589dce1&#34;&gt;Running from tests&lt;/h3&gt;
+&lt;h3 id=&#34;running-from-tests&#34;&gt;Running from tests&lt;/h3&gt;
 
 &lt;p&gt;Now, all we need is to import our &lt;code&gt;internal/dockertest&lt;/code&gt; subpackage and start MySQL with a single line:&lt;/p&gt;
 
@@ -244,7 +244,7 @@ defer deferFn()&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Pass &lt;code&gt;dsn&lt;/code&gt; to sql.Open() or your own service init function, and your code will connect to the database inside the container.
 Note, that StartMysql() returns also a defer function, which will properly stop and remove container. Our test code knows nothing about underlying mechanisms. It just works as if it was a normal MySQL resource.&lt;/p&gt;
 
-&lt;h3 id=&#34;testing-http-endpoints:23b513b340b05e75befe17e12589dce1&#34;&gt;Testing http endpoints&lt;/h3&gt;
+&lt;h3 id=&#34;testing-http-endpoints&#34;&gt;Testing http endpoints&lt;/h3&gt;
 
 &lt;p&gt;Next step is to test http-endpoints. We may want to test response codes, proper error messages, expected headers or data format and so on. And, following our desire to not depend on any external testing scripts, we want to run all the tests within the Go code. And Go allows us to do so using net/http/httptest package.&lt;/p&gt;
 
@@ -331,7 +331,7 @@ Convey(&#34;List should return one user with name &#39;Test user&#39;&#34;, func
     So(users[0], ShouldResemble, user)
 })&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;conclusion:23b513b340b05e75befe17e12589dce1&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
 &lt;p&gt;As you may see, Go not only make testing a lot easiers but also make use of BDD and TDD methodologies very easy to follow and opens new possibilities for cross-platform integration- and acceptance- testing.&lt;/p&gt;
 
