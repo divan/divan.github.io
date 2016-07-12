@@ -76,6 +76,34 @@
   
   <article>
   <header>
+    <h2><a href="https://divan.github.io/posts/go_get_private/">go get for private repos in docker</a></h2>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2016-06-01T19:28:46&#43;02:00">
+          Jun 1, 2016
+        </time>
+      </div>
+    </div>
+  </header>
+  <div>
+    As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing scenarios exists. One of them is automating repeatable build process using containers along with using dependencies in private repositories. Go-getting private repositories by itself is often a source of confusion when using go get, but it has easy workaround by adding two lines to your .gitconfig: [url &quot;git@github.com:&quot;] insteadOf = https://github.com/ or as a oneliner: git config --global url.&quot;git@github.com:&quot;.insteadOf &quot;https://github.com/&quot; But it gets more complicated when you try to make the whole build process work inside the container.
+  </div>
+  
+  <footer>
+    <ul class="pager">
+      <li class="next"><a href="https://divan.github.io/posts/go_get_private/">Read more <span aria-hidden="true">&raquo;</span></a></li>
+    </ul>
+  </footer>
+  
+</article>
+
+  
+  
+  <hr/>
+  
+  <article>
+  <header>
     <h2><a href="https://divan.github.io/posts/leftpad_and_go/">LeftPad and Go: can tooling help?</a></h2>
     <div class="post-meta clearfix">
       <div class="post-date pull-left">

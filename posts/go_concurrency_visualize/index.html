@@ -107,7 +107,7 @@
 
 <p>So, let&rsquo;s start with the very basic &ldquo;Hello, Concurrent World&rdquo; example, to get ourselves familiar with the concept of my attempt.</p>
 
-<h3 id="hello-concurrent-world:cacee17578a8ad02e42a5a54daf9c476">Hello, Concurrent world</h3>
+<h3 id="hello-concurrent-world">Hello, Concurrent world</h3>
 
 <p>The code is quite simple - single channel, single goroutine, one write, one read.</p>
 
@@ -131,7 +131,7 @@ func main() {
 
 <p>Here the blue lines represent goroutines running down through time. Thin blue lines connecting &lsquo;main&rsquo; and &lsquo;go #19&rsquo; are marks for start and stop goroutine, revealing parent-children relation and, finally, red arrow shows us the send/recv action. While it&rsquo;s actually two separate actions, I try to animate as a single event &ldquo;send from A to B&rdquo;. The &ldquo;#19&rdquo; in the goroutine name is the actual goroutine internal ID, obtained from runtime with a trick suggested by Scott Mansfield in <a href="http://blog.sgmansfield.com/2015/12/goroutine-ids/">&ldquo;Goroutine IDs&rdquo;</a> article.</p>
 
-<h3 id="timers:cacee17578a8ad02e42a5a54daf9c476">Timers</h3>
+<h3 id="timers">Timers</h3>
 
 <p>In fact, you can build a simple timer with this approach - create a channel, start goroutine which writes to this channel after given duration and returns this channel to the caller of your func. The caller then blocks on reading from the channel for the exact amount of time. Let&rsquo;s run such timer 24 times and try to visualize it.</p>
 
@@ -160,7 +160,7 @@ func main() {
 
 <p>Pretty neat, right? Let&rsquo;s move on.</p>
 
-<h3 id="ping-pong:cacee17578a8ad02e42a5a54daf9c476">Ping-pong</h3>
+<h3 id="ping-pong">Ping-pong</h3>
 
 <p>This nice concurrency example was found in a great talk by googler Sameer Ajmani <a href="https://talks.golang.org/2013/advconc.slide#1">&ldquo;Advanced Go Concurrency Patterns&rdquo;</a>. Of course, this pattern isn&rsquo;t very advanced, but for those who only get themselves familiar with Go concurrency it may look quite fresh and interesting.</p>
 
@@ -216,7 +216,7 @@ We can see here that each player takes its turn sequentially and you may wonder 
 The FIFO order is now obvious, isn&rsquo;t it? We can spawn a million goroutines (they&rsquo;re cheap), but for our goal that would be overkill.
 Let&rsquo;s see something different to play with. For example, common messaging patterns.</p>
 
-<h3 id="fan-in:cacee17578a8ad02e42a5a54daf9c476">Fan-In</h3>
+<h3 id="fan-in">Fan-In</h3>
 
 <p>One of the popular patterns in the concurrent world is a so called <em>fan-in</em> pattern. It&rsquo;s the opposite of the <em>fan-out</em> pattern, which we will cover later. To be short, fan-in is a function reading from the multiple inputs and multiplexing all into the single channel.</p>
 
@@ -259,7 +259,7 @@ func main() {
 <img src="/demos/gifs/fanin.gif" alt="Fan-In Pattern" />
 As we can see, first <em>producer</em> generates values each 100 milliseconds, and second one - each 250 milliseconds, but <em>reader</em> receives values from both producers immediately. Effectively, multiplexing happens in a range loop in <em>main</em>.</p>
 
-<h3 id="workers:cacee17578a8ad02e42a5a54daf9c476">Workers</h3>
+<h3 id="workers">Workers</h3>
 
 <p>The opposite pattern to <em>fan-in</em> is a <em>fan-out</em> or <em>workers</em> pattern. Multiple goroutines can read from a single channel, distributing an amount of work between CPU cores, hence the <em>workers</em> name. In Go, this pattern is easy to implement - just start a number of goroutines with channel as parameter, and just send values to that channel - distributing and multiplexing will be done by Go runtime, automagically :)</p>
 
@@ -380,7 +380,7 @@ Nice. Of course, we can set number of workers and subworkers to much higher valu
 
 <p>There are even cooler fan-out patterns do exist, like the dynamic amount of workers/subworkers, with sending channels over channels, but the idea of fan-out should be clear for now.</p>
 
-<h3 id="servers:cacee17578a8ad02e42a5a54daf9c476">Servers</h3>
+<h3 id="servers">Servers</h3>
 
 <p>Next common pattern is similar to fan-out, but with goroutines spawned for the short period of time, just to accomplish some task. It&rsquo;s typically used for implementing servers - create a listener, run accept() in a loop and start goroutine for each accepted connection. It&rsquo;s very expressive and allows to implement server handlers as simple as possible. Take a look at this simple example:</p>
 
@@ -458,7 +458,7 @@ func main() {
 <img src="/demos/gifs/servers2.gif" alt="Servers 2" />
 Quite demonstrative, isn&rsquo;t it? But it&rsquo;s easy to see that our <em>logger</em> goroutine can quickly become a bottleneck if the number of requests increase and logging action take some time (preparing and encoding data, for example). We can use an already known fan-out pattern. Let&rsquo;s do it.</p>
 
-<h3 id="server-worker:cacee17578a8ad02e42a5a54daf9c476">Server + Worker</h3>
+<h3 id="server-worker">Server + Worker</h3>
 
 <p>Server with worker example is a bit advanced version of the logger. It not only does some work but sends the result of its work back to the pool using <em>results</em> channel. Not a big deal, but it extends our logger example to something more practical.</p>
 
@@ -532,7 +532,7 @@ func main() {
 <img src="/demos/gifs/servers3.gif" alt="Server + Worker" />
 We distributed work between 4 goroutines, effectively improving the throughput of the logger, but from this animation, we can see that logger still may be the source of problems. Thousands of connections converge in a single channel before being distributed and it may result in a logger being bottleneck again. But, of course, it will happen on much higher loads.</p>
 
-<h3 id="concurrent-prime-sieve:cacee17578a8ad02e42a5a54daf9c476">Concurrent Prime Sieve</h3>
+<h3 id="concurrent-prime-sieve">Concurrent Prime Sieve</h3>
 
 <p>Enough fan-in/fan-out fun. Let&rsquo;s see more sophisticated concurrency algorithms. One of my favorite examples is a Concurrent Prime Sieve, found in <a href="https://talks.golang.org/2012/concurrency.slide">&ldquo;Go Concurrency Patterns&rdquo;</a> talk. Prime Sieve, or <a href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve of Eratosthenes</a> is an ancient algorithm for finding prime number up to the given limit. It works by eliminating multiples of all primes in a sequential manner. Naive algorithm is not really efficient, especially on multicore machines.</p>
 
@@ -578,7 +578,7 @@ func main() {
 <img src="/demos/gifs/primesieve.gif" alt="PrimeSieve" />
 Feel free to play with this animation in interactive mode. I like how illustrative it is - it really can help understand this algorithm better. The <em>generate</em> goroutine emits every integer number, starting from 2, and each new goroutine filters out only specific prime multiples - 2, 3, 5, 7&hellip;, sending first found prime to <em>main</em>. If you rotate it to see from the top, you&rsquo;ll see all numbers being sent from goroutines to main are prime numbers. Beautiful algorithm, especially in 3D.</p>
 
-<h3 id="gomaxprocs:cacee17578a8ad02e42a5a54daf9c476">GOMAXPROCS</h3>
+<h3 id="gomaxprocs">GOMAXPROCS</h3>
 
 <p>Now, let&rsquo;s go back to our workers example. Remember, I told that it was run with GOMAXPROCS=4? That&rsquo;s because all these animations are not art work, they are real traces of real programs.</p>
 
@@ -598,7 +598,7 @@ The time speed in these animations are different (I wanted all animations to fit
 
 <p>It&rsquo;s important to understand, though, that increasing GOMAXPROCS not always boosts performance, and there cases when it actually makes it worse.</p>
 
-<h3 id="goroutines-leak:cacee17578a8ad02e42a5a54daf9c476">Goroutines leak</h3>
+<h3 id="goroutines-leak">Goroutines leak</h3>
 
 <p>What else we can demonstrate from concurrent things in Go? The one thing that comes to my mind is a goroutines leak. A leak can happen, for example, if you <a href="http://openmymind.net/Leaking-Goroutines/">start goroutine but it falls out of scope</a>. Or you simply forget to add finish condition, and run a for {} loop.</p>
 
@@ -610,7 +610,7 @@ The time speed in these animations are different (I wanted all animations to fit
 <img src="/demos/gifs/leak.gif" alt="Leak" />
 I feel pain even simply by looking at this :) All those lines are wasted resources and a ticking bomb for your program.</p>
 
-<h3 id="parallelism-is-not-concurrency:cacee17578a8ad02e42a5a54daf9c476">Parallelism is not Concurrency</h3>
+<h3 id="parallelism-is-not-concurrency">Parallelism is not Concurrency</h3>
 
 <p>The last thing I want to illustrate is a difference between parallelism and concurrency. This topic is <a href="https://existentialtype.wordpress.com/2011/03/17/parallelism-is-not-concurrency/">well</a> <a href="https://ghcmutterings.wordpress.com/2009/10/06/parallelism-concurrency/">covered</a>, and there is a <a href="https://www.youtube.com/watch?v=cN_DpYBzKso">great talk by Rob Pike</a> on the subject. One of the #mustwatch videos, really.</p>
 
@@ -655,7 +655,7 @@ So, this is parallelism. Many things running in parallel.</p>
 
 <p><img src="/demos/gifs/pingpong100.gif" alt="Ping-Pong 100" /></p>
 
-<h3 id="how-it-was-made:cacee17578a8ad02e42a5a54daf9c476">How it was made</h3>
+<h3 id="how-it-was-made">How it was made</h3>
 
 <p>To create these animations, I wrote two programs: <em>gotracer</em> and <em>gothree.js</em> library.
 First, gotracer does the following:</p>

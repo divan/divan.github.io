@@ -35,7 +35,7 @@
 
 &lt;p&gt;Meet &lt;a href=&#34;https://github.com/divan/depscheck&#34;&gt;depscheck&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h1 id=&#34;depscheck:ccd3f74ebf4261596c9359f9d8d5dd41&#34;&gt;DepsCheck&lt;/h1&gt;
+&lt;h1 id=&#34;depscheck&#34;&gt;DepsCheck&lt;/h1&gt;
 
 &lt;p&gt;So, that&amp;rsquo;s how &lt;strong&gt;depscheck&lt;/strong&gt; was born. I spent a weekend, learning how to work with go/{ast,parser,types,loader} packages and after 10-th refactoring finally came up with a tool that was doing exactly I wanted to.&lt;/p&gt;
 
@@ -47,7 +47,7 @@
 
 &lt;p&gt;It analyzes package or arbitrary *.go files using AST-parser and calculates some stats about dependencies. Namely, number of calls/selectors of dependency, funcs/methods&amp;rsquo; LOC (Lines Of Code), Cumulative LOCs (whenever possible, dropping it for recursion), Depth (number of nested calls to more external dependencies) and DepthInternal(the same, but for internal function calls). In most cases it&amp;rsquo;s enough to make some calculations and analysis to find &lt;em&gt;&amp;lsquo;small dependencies&amp;rsquo;&lt;/em&gt;.&lt;/p&gt;
 
-&lt;h3 id=&#34;quick-intro:ccd3f74ebf4261596c9359f9d8d5dd41&#34;&gt;Quick Intro&lt;/h3&gt;
+&lt;h3 id=&#34;quick-intro&#34;&gt;Quick Intro&lt;/h3&gt;
 
 &lt;p&gt;Here is quick intro and dogfooding demo of the tool.&lt;/p&gt;
 
@@ -76,11 +76,11 @@ github.com/divan/expvarmon: 4 packages, 1022 LOC, 93 calls, 11 depth, 23 depth i
 Run with -v option to see detailed stats for dependencies.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And by the way, in an example above it totally make sense. Rerunning with &lt;code&gt;-v&lt;/code&gt; options to see the detials, it&amp;rsquo;s easy to see that package only uses single flat function from &lt;code&gt;ranges&lt;/code&gt; of 29 lines of code - ranges.Parse, and it can be easily copied to my codebase, if license permits, of course. It removes the whole bunch of burden in case I&amp;rsquo;ll need to vendor dependencies or use some vendoring tools.&lt;/p&gt;
+&lt;p&gt;And by the way, in an example above it totally make sense. Rerunning with &lt;code&gt;-v&lt;/code&gt; options to see the details, it&amp;rsquo;s easy to see that package only uses single flat function from &lt;code&gt;ranges&lt;/code&gt; of 29 lines of code - ranges.Parse, and it can be easily copied to my codebase, if license permits, of course. It removes the whole bunch of burden in case I&amp;rsquo;ll need to vendor dependencies or use some vendoring tools.&lt;/p&gt;
 
 &lt;p&gt;Of course, this suggestion doesn&amp;rsquo;t mean you have to do it. It just asks you to pay attention to these particular imports if you want to make your codebase a little bit better. It&amp;rsquo;s up to me to decide what to do with this import. The tools suggestions are recommendation only.&lt;/p&gt;
 
-&lt;h3 id=&#34;how-small-is-small-dependency:ccd3f74ebf4261596c9359f9d8d5dd41&#34;&gt;How small is small dependency&lt;/h3&gt;
+&lt;h3 id=&#34;how-small-is-small-dependency&#34;&gt;How small is small dependency&lt;/h3&gt;
 
 &lt;p&gt;You may ask now - how do you determine if the dependency is small enough to be a candidate for elimination? Good question, and I don&amp;rsquo;t have one single source of truth here, so I&amp;rsquo;ve implemented it based on my view of common sense here. To be short, here is the responsible method at the moment of writing this article:&lt;/p&gt;
 
@@ -126,7 +126,7 @@ Run with -v option to see detailed stats for dependencies.
 
 &lt;p&gt;Also, please, don&amp;rsquo;t rely on these numbers heavily. It&amp;rsquo;s likely to be somehow incorrect in some cases. Yes, it&amp;rsquo;s tested with simple cases, but there are lot of cases, where it&amp;rsquo;s even impossible to tell what is a &amp;ldquo;correct&amp;rdquo; value. For example, how do you calculate Cumulative number of lines for two functions with circular dependency? There are also probably some bugs I didn&amp;rsquo;t catch (hey, it survived 10 refactorings in 3 days!), so feel free to open an issue or send a PR.&lt;/p&gt;
 
-&lt;h1 id=&#34;stdlib:ccd3f74ebf4261596c9359f9d8d5dd41&#34;&gt;Stdlib&lt;/h1&gt;
+&lt;h1 id=&#34;stdlib&#34;&gt;Stdlib&lt;/h1&gt;
 
 &lt;p&gt;Depscheck also can work with stdlib packages. Normally it treats stdlib imports as &amp;lsquo;internal&amp;rsquo; and doesn&amp;rsquo;t analyze/report them. But you can explicitly ask for that using &lt;code&gt;-stdlib&lt;/code&gt; command line flag. Suggestions are silenced in this mode because stdlib is smarter than this tool. Anyway, it can give interesting insights into your package or application.&lt;/p&gt;
 
@@ -195,7 +195,7 @@ crypto/md5: 3 packages, 5 LOC, 5 calls, 0 depth, 0 depth int.
 
 &lt;p&gt;So, feel free to play with this statistics. Maybe you&amp;rsquo;ll find it useful.&lt;/p&gt;
 
-&lt;h1 id=&#34;conclusion:ccd3f74ebf4261596c9359f9d8d5dd41&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
 &lt;p&gt;I constantly admire the long-striking power of the core ideas around Go design. Simple grammar and spec allowed me to build this tool in a weekend, without any prior experience of working with AST representation of source code. It&amp;rsquo;s inherently hard, but the guys behind Go&amp;rsquo;s source code parsing packages are doing amazing job. I benefit every single day by different linters, bundled together in &lt;a href=&#34;https://github.com/alecthomas/gometalinter&#34;&gt;GoMetaLinter&lt;/a&gt; package (a must have thing!), and these static code analysis tools are making our code better.&lt;/p&gt;
 
