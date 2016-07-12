@@ -1,0 +1,67 @@
+// vi: set ts=2 :
+doctype html(lang='en.png')
+head
+	meta(charset='utf-8')
+	title Visualising concurrency in Go
+	meta(name='apple-mobile-web-app-capable', content='yes')
+	meta(name='apple-mobile-web-app-status-bar-style', content='black-translucent')
+	link(rel='stylesheet', href='css/main.css')
+	link(rel='stylesheet', href='css/theme/black.css')
+	link(rel='stylesheet', href='css/custom.css')
+	link(rel='stylesheet', href='lib/css/zenburn.css')
+	body
+		div.reveal
+			.state-background
+			include slides
+			.progress
+			span
+		script(src='lib/js/head.min.js')
+		script.
+			head.js(
+			"lib/js/jquery.min.js",
+			"lib/js/jquery.hotkeys.js",
+			"lib/js/underscore.min.js",
+			"lib/js/swfobject.js",
+			"lib/js/dat.gui.js",
+			"lib/js/EventEmitter.js",
+			"lib/js/three.min.js",
+			"js/gothree_helper.js",
+			"lib/js/tween.js",
+			"js/gothree.js",
+			"lib/js/OrbitControls.js",
+			'lib/js/TextGeometry.js',
+			'lib/js/FontUtils.js',
+			'lib/font/helvetiker_regular.typeface.js',
+			"lib/js/three/EffectComposer.js",
+			"lib/js/three/RenderPass.js",
+			"lib/js/three/BloomPass.js",
+			"lib/js/three/ShaderPass.js",
+			"lib/js/three/MaskPass.js",
+			"js/sugar.js",
+			// js files needed for WebGL specific samples (excluding three js)
+			"lib/js/J3DI.js",
+			"lib/js/J3DIMath.js",
+			"lib/js/webgl-utils.js",
+			"lib/js/webgl-debug.js",
+			// App specific js
+			"js/reveal.js",
+			"js/stats_bootstrap.js",
+			"js/samples.js",
+			function() {
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+			controls: false,
+			progress: false,
+			history: true,
+			mouseWheel: false,
+			transition: 'linear', // default/cube/page/concave/linear(2d)
+			// Optional libraries used to extend on reveal.js
+			dependencies: [
+			{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+			{ src: 'lib/js/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+			{ src: 'lib/js/data-markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+			]
+			});
+			});
+

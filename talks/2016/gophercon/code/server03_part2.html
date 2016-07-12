@@ -1,0 +1,19 @@
+<!-- HTML generated using hilite.me --><div style="background: #000000; overflow:auto;width:auto;border: none; border-width: 0px; padding: 0em; background: #111;"><pre style="margin: 0; line-height: 125%"><span style="color: #00cd00">func</span> <span style="color: #cccccc">worker(wch</span> <span style="color: #00cd00">chan</span> <span style="color: #00cd00">int</span><span style="color: #cccccc">,</span> <span style="color: #cccccc">results</span> <span style="color: #00cd00">chan</span> <span style="color: #00cd00">int</span><span style="color: #cccccc">)</span> <span style="color: #cccccc">{</span>
+	<span style="color: #cdcd00">for</span> <span style="color: #cccccc">{</span> <span style="color: #cccccc">results</span> <span style="color: #3399cc">&lt;-</span> <span style="color: #3399cc">&lt;-</span><span style="color: #cccccc">wch</span> <span style="color: #cccccc">}</span>
+<span style="color: #cccccc">}</span>
+
+<span style="color: #00cd00">func</span> <span style="color: #cccccc">parse(results</span> <span style="color: #00cd00">chan</span> <span style="color: #00cd00">int</span><span style="color: #cccccc">)</span> <span style="color: #cccccc">{</span>
+	<span style="color: #cdcd00">for</span> <span style="color: #cccccc">{</span> <span style="color: #3399cc">&lt;-</span><span style="color: #cccccc">results</span> <span style="color: #cccccc">}</span>
+<span style="color: #cccccc">}</span>
+
+<span style="color: #00cd00">func</span> <span style="color: #cccccc">pool(ch</span> <span style="color: #00cd00">chan</span> <span style="color: #00cd00">string</span><span style="color: #cccccc">,</span> <span style="color: #cccccc">n</span> <span style="color: #00cd00">int</span><span style="color: #cccccc">)</span> <span style="color: #cccccc">{</span>
+	<span style="color: #cccccc">wch</span> <span style="color: #3399cc">:=</span> <span style="color: #cd00cd">make</span><span style="color: #cccccc">(</span><span style="color: #00cd00">chan</span> <span style="color: #00cd00">int</span><span style="color: #cccccc">)</span>
+	<span style="color: #cccccc">results</span> <span style="color: #3399cc">:=</span> <span style="color: #cd00cd">make</span><span style="color: #cccccc">(</span><span style="color: #00cd00">chan</span> <span style="color: #00cd00">int</span><span style="color: #cccccc">)</span>
+	<span style="color: #cdcd00">for</span> <span style="color: #cccccc">i</span> <span style="color: #3399cc">:=</span> <span style="color: #cd00cd">0</span><span style="color: #cccccc">;</span> <span style="color: #cccccc">i</span> <span style="color: #cccccc">&lt;</span> <span style="color: #cccccc">n;</span> <span style="color: #cccccc">i</span><span style="color: #3399cc">++</span> <span style="color: #cccccc">{</span>
+		<span style="color: #cdcd00">go</span> <span style="color: #cccccc">worker(wch,</span> <span style="color: #cccccc">results)</span>
+	<span style="color: #cccccc">}</span>
+	<span style="color: #cdcd00">go</span> <span style="color: #cccccc">parse(results)</span>
+	<span style="color: #cdcd00">for</span> <span style="color: #cccccc">{</span>	<span style="color: #cccccc">wch</span> <span style="color: #3399cc">&lt;-</span> <span style="color: #3399cc">&lt;-</span><span style="color: #cccccc">ch</span> <span style="color: #cccccc">}</span>
+<span style="color: #cccccc">}</span>
+</pre></div>
+
