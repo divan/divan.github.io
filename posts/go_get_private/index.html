@@ -95,9 +95,9 @@
   <section>
     
 
-<p>As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing scenarios exists. One of them is automating repeatable build process using containers along with using dependencies in private repositories.</p>
+<p>As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing moments. One of them is automating repeatable build process using containers along with using dependencies in private repositories.</p>
 
-<p>Go-getting private repositories by itself is often a <a href="https://github.com/golang/go/issues/9697">source of confusion</a> when using <code>go get</code>, but it has easy workaround by adding two lines to your <code>.gitconfig</code>:</p>
+<p>Private repositories on Github are often is a <a href="https://github.com/golang/go/issues/9697">source of confusion</a> when using <code>go get</code>, but it has easy workaround by adding two lines to your <code>.gitconfig</code>:</p>
 
 <pre><code>[url &quot;git@github.com:&quot;]
 	insteadOf = https://github.com/
@@ -108,26 +108,24 @@
 <pre><code>git config --global url.&quot;git@github.com:&quot;.insteadOf &quot;https://github.com/&quot;
 </code></pre>
 
-<p>But it gets more complicated when you try to make the whole build process work inside the container. I will use Docker as an example, as it&rsquo;s most popular container at the moment.</p>
+<p>But the most confusing part is trying to make the whole build process work inside the container. I will use Docker as an example, as it&rsquo;s most popular container at the moment.</p>
 
 <h2 id="the-problem">The problem</h2>
 
-<p>Imagine, you have two <strong>private</strong> packages <code>github.com/company/foo</code> and <code>github.com/company/bar</code>, where <code>foo</code> imports <code>bar</code>. You may have other external dependencies, and you vendor them into vendor/ directory, but for your own packages there is no much sense in vendoring them, so you want to <code>go get</code> them:</p>
+<p>Imagine, you have two packages <code>github.com/company/foo</code> and <code>github.com/company/bar</code>, where <code>foo</code> imports <code>bar</code>:</p>
 
 <pre><code>foo.go:
-...
 import &quot;github.com/company/bar&quot;
-...
 </code></pre>
 
-<p>In normal workflow, you setup GOPATH, your SSH keys, .gitconfig and you&rsquo;re done - simple <code>go get github.com/company/foo</code> will work and download both packages:</p>
+<p>In normal workflow, you setup GOPATH, you SSH keys, gitconfig and you&rsquo;re done - simple <code>go get github.com/company/foo</code> will work and download both packages:</p>
 
 <pre><code>$ go get -v github.com/company/foo
 github.com/company/foo (download)
 github.com/company/bar (download)
 </code></pre>
 
-<p>But now, you want to make the build process reproducible on any machine, even on CI instance, so you pack everything in the Docker container. You will probably use simple Dockerfile based on official <code>golang</code> image:</p>
+<p>But now, you want to make the build process reproducible on any machine, even on CI instance, so you pack everything in Docker container. You will probably use simple Dockerfile based on official <code>golang</code>:</p>
 
 <p><strong>Dockerfile</strong>:</p>
 
@@ -139,14 +137,14 @@ CMD cd /go/src/github.com/company/foo; go get github.com/company/bar &amp;&amp; 
 
 <p><strong>Build script</strong></p>
 
-<pre><code>docker build -t foo-build . 			# build image
+<pre><code>docker build -t foo-build . 				# build image
 docker run --name=foo-build foo-build		# compile binary
-docker cp foo-build:/foo foo			# copy binary to fs
-docker rm -f foo-build				# remove container
-docker rmi -f foo-build				# remove image
+docker cp foo-build:/foo foo				# copy binary to fs
+docker rm -f foo-build						# remove container
+docker rmi -f foo-build						# remove image
 </code></pre>
 
-<p>This setup <strong>will not</strong> work because Docker container used for building (foo-build) doesn&rsquo;t contain <code>bar</code> dependency, SSH keys and proper gitconfig. And, apparently, it&rsquo;s not trivial simply to add the keys - you have to deal with a bunch of obstacles, mainly on the SSH side. So, let&rsquo;s go through quickly and setup working solution.</p>
+<p>This setup <strong>will not</strong> work because Docker container used for building (foo-build) doesn&rsquo;t container <code>bar</code> dependency, SSH keys and proper gitconfig. And, apparently, it&rsquo;s not trivial simply to add the keys - you have to deal with a bunch of obstacles, mainly on the SSH side. So, let&rsquo;s go through quickly and setup working solution.</p>
 
 <h2 id="the-solution">The solution</h2>
 
@@ -160,7 +158,7 @@ fatal: could not read Username for 'https://github.com': No such device or addre
 package github.com/company/bar: exit status 128
 </code></pre>
 
-<p>What does it mean, is that your access to github is granted using SSH keys, but <code>git</code> command, which is invoked by <code>go get</code>, is trying to clone repository using HTTPS form and you don&rsquo;t have credentials set up.</p>
+<p>What it does mean, is that your access to github is granted using SSH keys, but <code>git</code> command, which is invoked by <code>go get</code>, is trying to clone repository using HTTPS form and you don&rsquo;t have credentials set up.</p>
 
 <p>Workaround for this is easy, and described in the beginning of this post, so we just have to add this to our Dockerfile right before calling <code>go get</code>:</p>
 
@@ -185,14 +183,13 @@ package github.com/company/bar: exit status 128
 
 <p>First of all, we want every developer or CI to use it&rsquo;s own keys for accessing private repo. If person has access to <code>foo</code>, she&rsquo;s definitely has an access to <code>bar</code> and the keys are usually in <code>~/.ssh/id_rsa</code> file.</p>
 
-<p><strong>You can&rsquo;t copy keys into container, though.</strong> Dockerfile&rsquo;s ADD and COPY commands can copy files from the current directory only, so you can&rsquo;t just add <code>ADD ~/.ssh/ /root/ssh</code> to your Dockerfile. One of the solutions is to write wrapper script that will copy private key to local directory and then to the container, but it&rsquo;s still not very safe and elegant solution.</p>
+<p><strong>You can&rsquo;t copy keys into container, though.</strong> Dockerfile&rsquo;s ADD and COPY commands can copy files from the current directory only, so you can&rsquo;t just add <code>ADD ~/.ssh/ /root/ssh</code> to your Dockerfile. One of the solution is to write wrapper script that will copy private key to local directory and then to the container, but it&rsquo;s still not very safe and elegant solution.</p>
 
 <p>What we can do, is to mount volume using docker&rsquo;s <code>-v</code> command line flag. The first approach will be probably to mount the whole <code>~/.ssh</code> directory, but it&rsquo;s tricky</p>
 
-<pre><code>docker run --name=foo-build -v ~/.ssh:/root/.ssh foo-build
-</code></pre>
+<p><code>docker run --name=foo-build -v ~/.ssh:/root/.ssh foo-build</code></p>
 
-<p>This command will work as expected on MacOS X (using latest Docker Beta, at least), but not on Linux box. The reason is the files ownership for <code>~/.ssh/config</code> file. The <code>ssh</code> (which is invoked by <code>git</code>, which is invoked by <code>go get</code>) expects this file to have the same user ownership as a running user. Inside the container the user is <code>root</code>, but the mounted directory most probably has ownership of your normal Linux user, say, <code>developer</code> and inside the container it looks like:</p>
+<p>This command will work as expected on MacOS X (using latest Docker Beta, at least), but not in Linux box. The reason is the files ownership for <code>~/.ssh/config</code> file. The <code>ssh</code> (which is invoked by <code>git</code>, which is invoked by <code>go get</code>) expects this file to have the same user ownership as a running user. Inside the container the user is <code>root</code>, but the mounted directory most probably has ovnership of your normal Linux user, say, <code>developer</code> and inside the container it looks like:</p>
 
 <pre><code>$ ls ~/.ssh/config
 -rw-r--r--  1 1000  1000  147 Jun  1 19:20 /root/.ssh/config
@@ -203,9 +200,7 @@ package github.com/company/bar: exit status 128
 <pre><code>Bad owner or permissions on ~/.ssh/config
 </code></pre>
 
-<p><em>(On MacOS X it&rsquo;s different because of VM used for docker - it&rsquo;s internally a Linux box and root user is used by default, I guess)</em></p>
-
-<p>The solution is to mount only the key and work around host checking issue later:</p>
+<p>The solution is to mount only the key and workaround host checking later.</p>
 
 <pre><code>docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa foo-build
 </code></pre>
@@ -226,7 +221,7 @@ Are you sure you want to continue connecting (yes/no)?
 
 <p>But, we only need one option, so it&rsquo;s ok to create this file on the fly inside the container. Add to Dockerfile:</p>
 
-<pre><code>RUN mkdir /root/.ssh &amp;&amp; echo &quot;StrictHostKeyChecking no&quot; &gt; /root/.ssh/config
+<pre><code>RUN mkdir /root/.ssh &amp;&amp; echo &quot;StrictHostKeyChecking no &quot; &gt; /root/.ssh/config
 </code></pre>
 
 <p>Rerun the <code>docker run</code> step and you&rsquo;ll finally have success!</p>
@@ -299,7 +294,7 @@ docker rmi -f foo-build
       <li class="previous"><a href="https://divan.github.io/posts/leftpad_and_go/"><span aria-hidden="true">&larr;</span> Older</a></li>
       
       
-      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      <li class="next"><a href="https://divan.github.io/posts/gophercon16/">Newer <span aria-hidden="true">&rarr;</span></a></li>
       
     </ul>
   </footer>

@@ -6,8 +6,122 @@
     <description>Recent content in Golang on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 01 Jun 2016 19:28:46 +0200</lastBuildDate>
+    <lastBuildDate>Wed, 03 Aug 2016 19:28:46 +0200</lastBuildDate>
     <atom:link href="https://divan.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>My GopherCon experience</title>
+      <link>https://divan.github.io/posts/gophercon16/</link>
+      <pubDate>Wed, 03 Aug 2016 19:28:46 +0200</pubDate>
+      
+      <guid>https://divan.github.io/posts/gophercon16/</guid>
+      <description>
+
+&lt;p&gt;A couple of weeks ago I gave a talk at the largest Go conference, &lt;a href=&#34;http://gophercon.com&#34;&gt;GopherCon&lt;/a&gt;, in Denver. It was the first time I attended GopherCon at all, and the first time ever I spoke in English in front of 1400+ people, and it was an absolutely incredible experience. Here is my story.&lt;/p&gt;
+
+&lt;p&gt;My journey to GopherCon started on a cold winter day in the apartments in the center of Odessa, Ukraine, where I was living at that time. I was one of the organizers of the first Go meetup in Lviv (Ukraine) and have prepared one general talk about Go. We targeted mainly newcomers, so I wanted to make another talk that would share my passion and admiration of some of the coolest aspects of Go - concurrency.&lt;/p&gt;
+
+&lt;h3 id=&#34;idea&#34;&gt;Idea&lt;/h3&gt;
+
+&lt;p&gt;I started to think how to show the beauty and easiness of writing concurrent programs in Go. There are numerous blog posts and talks on this subject, but I wanted something more appealing for the absolute beginners. With my love for good visualizations, my thoughts slipped into an attempt to visualize concurrency in some fancy way. At the last &lt;a href=&#34;http://www.dotgo.eu&#34;&gt;dotGo&lt;/a&gt; conference in Paris, I was impressed by &lt;a href=&#34;https://www.youtube.com/watch?v=TI8OW22WZvQ&#34;&gt;Matt Aimonetti&amp;rsquo;s talk&lt;/a&gt; where he was using hardware with LEDs to demonstrate program flow. It was really nice and inspiring talk, so I decided to take this idea further and use a lot of LEDs to show goroutines and channels with colors and lights. That&amp;rsquo;s gonna be cool!&lt;/p&gt;
+
+&lt;p&gt;But pretty soon I realized that I simply don&amp;rsquo;t see a way how to show it in a clear and beautiful way. Colored lights is a cool idea, but it should convey and demonstrate concurrency concepts in a first place. That led me to rethink how I see concurrency flows in my mind and it was pretty much clear that I see it in 3D. After quick googling about &amp;ldquo;3D LEDs chains&amp;rdquo; I understood that at this moment my goal was not feasible with this approach.&lt;/p&gt;
+
+&lt;p&gt;Okay, let&amp;rsquo;s try another way. I&amp;rsquo;ll draw it myself with nice visualization tools we have nowadays! There are a bunch of super nice JS frameworks for visualizing complex things, so I should get what I want in a couple of nights of coding. But this attempt failed as well - all those frameworks are well suited for representing 2D data, or for very specific 3D charts, but not for the custom 3D visualizations. Everything was suggesting to take a closer look at WebGL, and the only feasible option was to implement my idea myself from scratch.&lt;/p&gt;
+
+&lt;h3 id=&#34;first-implementation&#34;&gt;First implementation&lt;/h3&gt;
+
+&lt;p&gt;Next weekend I&amp;rsquo;ve spent writing some JS code and learning &lt;a href=&#34;http://threejs.org&#34;&gt;Three.js&lt;/a&gt; framework, which was surprisingly cool. I must admit that writing JS code is a pain for me and I had to go the SPA every evening to get rid of a stress and muscular spasms. In a week or so, I had a very simple demo of ping-pong code example, taken from &lt;a href=&#34;https://www.youtube.com/watch?v=QDDwwePbDtw&#34;&gt;Sameer Ajmani talk&lt;/a&gt;. It was very simple, with concurrency steps and timings hardcoded manually, but it was enough to get excited.&lt;/p&gt;
+
+&lt;p&gt;Next challenge was to automate tracing concurrency steps and timings automatically from any Go program. My first attempt was to modify AST of the source and insert Println() calls saying something like &amp;ldquo;goroutine started&amp;rdquo;, &amp;ldquo;send to channel value X&amp;rdquo; and so on. After practicing some kung-fu with go/[ast,parser,types} packages, I came with the solution, but it was inherently flawed. It worked for very simple examples, where channels had the same name. For more complex examples I had to rename it manually, expand recursions and so on.&lt;/p&gt;
+
+&lt;p&gt;Anyway, it was enough to create slides for the talk for the meetup. I &lt;a href=&#34;http://divan.github.io/talks/2016/lviv/#/&#34;&gt;gave a talk&lt;/a&gt;, but it was quite bad, as I almost didn&amp;rsquo;t prepare and I was mostly busy with organization and preparing the first talk. So in a few days, on my way home, on a train, I wrote an article &lt;a href=&#34;https://divan.github.io/posts/go_concurrency_visualize/&#34;&gt;&amp;ldquo;Visualising Concurrency in Go&amp;rdquo;&lt;/a&gt; and published it next day.
+&lt;img src=&#34;https://divan.github.io/demos/gifs/primesieve.gif&#34; alt=&#34;PrimeSieve&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;article&#34;&gt;Article&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://divan.github.io/posts/go_concurrency_visualize/&#34;&gt;Article&lt;/a&gt; was very well received. I was surprised by the number of responses, retweets, likes and stars. I got a few job proposals, letters asking permission to republish it or translate into another language. One of the letters was from &lt;a href=&#34;https://twitter.com/ajstarks&#34;&gt;Anthony Starks&lt;/a&gt;, the author of amazing SVG library &lt;a href=&#34;https://github.com/ajstarks/svgo&#34;&gt;SVGo&lt;/a&gt;, who asked if I&amp;rsquo;m considering to propose this idea as a talk for GopherCon. I didn&amp;rsquo;t even consider myself as a speaker at the conference of that level, but next day I actually sent the proposal without any expectations.&lt;/p&gt;
+
+&lt;p&gt;In a few weeks, I got an email that my proposal has been accepted. I&amp;rsquo;m gonna be speaking at GopherCon! Wow!&lt;/p&gt;
+
+&lt;h3 id=&#34;preparing-to-gophercon&#34;&gt;Preparing to GopherCon&lt;/h3&gt;
+
+&lt;p&gt;I felt thrilled, pleased and scared at the same time. First of all, I&amp;rsquo;ve never given a talk in English before. In fact, I didn&amp;rsquo;t even speak English on a daily basis those days. Second, I had to rewrite my initial approach in order to open source it and present at the conference. Third, I was facing the uncertainty of how scary this experience would be for me - giving a talk at the local meetup and at the conference with 1500+ people it&amp;rsquo;s not the same.&lt;/p&gt;
+
+&lt;p&gt;The good thing is that I had time to prepare. More than 4 months of preparations! I even created a countdown on my watch, so I could track time left and prepare more efficiently.
+&lt;img src=&#34;https://divan.github.io/images/gophercon_watch.jpg&#34; alt=&#34;Gophercon Watch Counter&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Around that time I read &lt;a href=&#34;http://waitbutwhy.com/2016/03/doing-a-ted-talk-the-full-story.html&#34;&gt;a post&lt;/a&gt; in my favorite blog &lt;a href=&#34;http://waitbutwhy.com&#34;&gt;&amp;ldquo;Wait But Why?&amp;rdquo;&lt;/a&gt; about author&amp;rsquo;s experience of preparation to his TED talk. It was a funny post, with some very important observations. One of the favorite topics of the author, Tim Urban, is a procrastination (actual topic of his talk, by the way) and he wrote how he spent most of the time procrastinating instead of preparing for the conference.&lt;/p&gt;
+
+&lt;p&gt;Of course, I&amp;rsquo;m not like this. I have full 4 months ahead of me and I will use every day to do my best and prepare as best as I can!&lt;/p&gt;
+
+&lt;h3 id=&#34;preparing-to-gophercon-again&#34;&gt;Preparing to GopherCon, again&lt;/h3&gt;
+
+&lt;p&gt;Three months later I realized that I really have to stop procrastinating and start doing something.&lt;/p&gt;
+
+&lt;p&gt;Okay, I had a good excuse. Around that time I changed my job and moved to Barcelona to work at &lt;a href=&#34;http://typeform.com&#34;&gt;Typeform&lt;/a&gt;. An exciting experience, great team and the company, but also a lot of time stolen from my preparation plans and coding. My new approach for tracing concurrency events was based on Dmitry Vyukov&amp;rsquo;s &lt;a href=&#34;https://docs.google.com/document/u/1/d/1FP5apqzBgr7ahCCgFO-yoVhk4YZrNIDNf9RybngBc14/pub&#34;&gt;execution tracer&lt;/a&gt; and I actually did some initial coding. I also started speaking English on a daily basis which gave me some more confidence.&lt;/p&gt;
+
+&lt;p&gt;I also read a great book, &lt;a href=&#34;https://www.google.es/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0ahUKEwjAhLL4s6jOAhXJtRQKHXQ7DKkQFggeMAA&amp;amp;url=https:%2F%2Fwww.ted.com%2Fread%2Fted-talks-the-official-ted-guide-to-public-speaking&amp;amp;usg=AFQjCNGBEk2GD2D6TUVX9-h8OYeBI6rNYA&#34;&gt;&amp;ldquo;The Official TED guide to Public Speaking&amp;rdquo;&lt;/a&gt; by Chris Anderson, the head of TED. It was a delightful reading and I highly recommend this book for anyone who interested in public speaking, TED conferences or both. It contains very deep insights of what really matters in public speaking. One of the main takeaways I got from this book is just to be yourself.&lt;/p&gt;
+
+&lt;p&gt;I knew I&amp;rsquo;m gonna be speaking on the same stage with awesome speakers as Kelsey Hightower, Rob Pike and Dave Cheney, and I was not even close to them as a speaker. But I have an idea. An idea that people wanted to hear about. An idea that is somehow unique and interesting - that&amp;rsquo;s why my proposal was selected among others after all. I don&amp;rsquo;t have to try to be such an awesome speaker as Kelsey. Instead, I have to do it in my natural way. With my accent, my first timer&amp;rsquo;s nervousness and all this stuff. Just be yourself.&lt;/p&gt;
+
+&lt;p&gt;I was slowly moving forward, wrote some initial script for the talk, was improving code step by step, and my first kind of rehearsal was scheduled for the end of June to speak at &lt;a href=&#34;http://www.meetup.com/Golang-Barcelona/&#34;&gt;Golang BCN&lt;/a&gt; meetup. This meetup was held in our office, and it went quite well for me.
+&lt;img src=&#34;https://divan.github.io/images/gophercon_typeform.jpg&#34; alt=&#34;Typeform&#34; /&gt;
+I wasn&amp;rsquo;t nervous at all, but I felt like I had almost no connection with people. I was extremely concentrated on my text, reciting it from memory and it felt  almost the same if I would have spoken to the wall. I didn&amp;rsquo;t like it. Audience feels this lack of personal connection immediately. Anyway, that rehearsal gave me another boost of confidence.&lt;/p&gt;
+
+&lt;h3 id=&#34;before-gophercon&#34;&gt;Before GopherCon&lt;/h3&gt;
+
+&lt;p&gt;Few days before the flight to Denver. I&amp;rsquo;m practicing talk every day, but here are two problems - lack of private space where I can practice loudly enough and failed attempt to use &lt;a href=&#34;https://www.leapmotion.com&#34;&gt;Leap Motion&lt;/a&gt; controller to handle visualization with hands. Well, it was not completely failed - I added code that allows me to use this awesome sensor in my presentation long time ago, but I was extremely unsatisfied with the result. My hope was that it&amp;rsquo;s just a question of practice, but then I realized that approach I used to rotate and zoom visualization is too error prone - any accidental hand movement would mess the scene.&lt;/p&gt;
+
+&lt;p&gt;I solved the first problem by going to the sea in the late evening, and practicing talking to the sea - luckily, I live right near the beach and I have a luxury opportunity of having sunbath and swimming in the sea before going to work every day. Here is the view from my balcony:
+&lt;img src=&#34;https://divan.github.io/images/gophercon_barcelona.jpg&#34; alt=&#34;Barcelona&#34; /&gt;
+ And yeah, commute time to our awesome office is 12 minutes. And we are &lt;a href=&#34;http://typeform.com/careers&#34;&gt;hiring&lt;/a&gt; :)&lt;/p&gt;
+
+&lt;p&gt;Regarding the Leap Motion issue, I decided to drop this idea and use fallback plan - usual trackpad, which is also fine. Time to pack bags.&lt;/p&gt;
+
+&lt;h4 id=&#34;gophercon&#34;&gt;GopherCon!&lt;/h4&gt;
+
+&lt;p&gt;At this point, I want to make a pause and express my gratitude to the GopherCon org team. They did an awesome job to organize and plan my trip to Denver at the highest level. I was also proposed to have a mentor for my talk, and I happily agreed to have one, but in the end, I decided to go through by myself. The flight itself and accomodation were simply amazing - long transatlantic flight went like a breeze (I watched UEFA Euro Final live on the plane!), and the hotel, which was just in front of Colorado Convention Center, was excellent. Special kudos for the room key design. Still lives in my wallet.
+&lt;img src=&#34;https://divan.github.io/images/gophercon_key.jpg&#34; alt=&#34;Key&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally, I&amp;rsquo;m in Denver. My flight arrived in the afternoon and it was a day of official rehearsal, so I rushed directly to the Convention Center, found a right hall, met Dave, Brian, Eric and others. Rehearsal went not that good as I expected - I forgot some words, Leap Motion controller messed up the scene, but I got the idea of how the room and the stage look like, so it was worth it anyway. Now time to go to the hotel, practice talk a few more times in a hotel room and sleep well after the long flight and make sure that jet lag won&amp;rsquo;t be a problem tomorrow - I have a talk on the first day of the morning session!&lt;/p&gt;
+
+&lt;p&gt;Jet lag is much easier for me when flying from east to west, but it still breaks sleeping pattern. I woke up at 2:30am in a cold sweat - I had a dream that I overslept my talk. In a dream, brain doesn&amp;rsquo;t really know if it was for real or it was a dream, so the emotions were pretty real. Imagine my relief when I realised it was just a dream! Practicing talk in the morning again, breakfast, another practice in the room, time to go!&lt;/p&gt;
+
+&lt;p&gt;An hour before the talk. I should have been nervous, but I haven&amp;rsquo;t. It&amp;rsquo;s my first public speaking experience, but I&amp;rsquo;m pretty excited to show my project to such an amazing community. It&amp;rsquo;s probably was the most important thing for me - atmosphere and people were super welcoming, and it killed much of nervousness at its roots. Like why should I be nervous if those people are so welcoming and I feel like even if I&amp;rsquo;m failed they will support me and cheer in any case! It was priceless. The only strong feeling I remember is an inability to relax, to start enjoying other talks and conversations - maximum concentration for the next hour!&lt;/p&gt;
+
+&lt;p&gt;Finally, my turn! Kelsey is doing a great introduction, technicians are helping with a microphone, I&amp;rsquo;m placing my laptop onto the lectern, connecting Leap Motion (I decided to take a risk at the last moment!) and here we go! Not to mention my accent, I felt like my concentration paid off and I really enjoyed giving the talk. I memorized talk pretty well, so I could improvise a little bit, pay more attention to pauses and even try to make an eye contact with some people between the sentences. The bright lights of projectors made it difficult, but anyway, I felt great and when people burst into the laugh on a first joke, I felt even more confident. At the moment I&amp;rsquo;m writing this, there is not video published, so I&amp;rsquo;m safe to say it went well :) Anyhow, I really had fun doing this talk!
+&lt;img src=&#34;https://divan.github.io/images/gophercon_gopher.jpg&#34; alt=&#34;Gopher&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The moment I left the stage was incredible. I was still excited, but there were nothing to worry about anymore and I could finally relax and start fully enjoying the conference and other talks.
+In the next hours, I was approached by so many people and got so many kind words and responses. It was pleasant when people were coming to you just to say that your talk was great, but the most precious part of it is that the conversations were started naturally and I got a chance to meet so many awesome and talented people, I wouldn&amp;rsquo;t meet otherwise.&lt;/p&gt;
+
+&lt;p&gt;That was my only big upset of the conference - there are so many great people, and it&amp;rsquo;s simply impossible to have conversations with all of them. I mean, it&amp;rsquo;s technically impossible. If I spend only 10 minutes per conversation, in order to cover all gophers I need 10 min x 1400 = 14K min = 233 hours = 9.72 days of non-stop conversations! And people are the most important part of any conference and any community. At GopherCon you can randomly meet people in a deli line and one guy will be from IBM Watson, another girl will be from Docker or Intel and you can end up sitting at the same table with a vim-go creator or even with Go authors itself! It&amp;rsquo;s amazing.&lt;/p&gt;
+
+&lt;p&gt;The level of the conference organization and talks was also extremely high. One of the outstanding things was live captioning in real time. I&amp;rsquo;ve never seen that before and it looked like magic. :) There was a real person sitting in a special room, listening for what speakers talking and she was transcripting it in real time using special software!
+&lt;img src=&#34;https://divan.github.io/images/gophercon_caps.jpg&#34; alt=&#34;Caps&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The room was big and spacious, there was enough space for everyone and three gigantic screens made the experience comfortable even for the back rows of this huge hall.&lt;/p&gt;
+
+&lt;p&gt;I have really enjoyed many talks, the range of topics was quite broad - from the hardcore internals of Go runtime implementation to the community growth discussions and a character study of Go gopher :) Organizers did a great job on selecting proposals and I felt really honored to be on stage with THAT people.&lt;/p&gt;
+
+&lt;p&gt;Another special moment for me was a speaker&amp;rsquo;s dinner. I happened to be sitting at the same table as Rob Pike, Renee French, and Andrew Gerrand. Well, I&amp;rsquo;m not a fan or anything, but having dinner with such people is something I couldn&amp;rsquo;t even imagine. The place was pretty loud, and it was difficult to have a comfortable conversation, but anyway we talked not only about Go, but also about casual things, about Barcelona, figure skating, alcohol drinking culture, movies etc. And from my side, I really did enjoy the conversation, especially some answers and stories told. It wasn&amp;rsquo;t typical chit-chatting, for sure. So yeah, that dinner was quite special for me. Renee French drew (less than in a minute!) and presented to me that awesome picture of gopher doing figure skating! How talented she is!
+&lt;img src=&#34;https://divan.github.io/images/gophercon_fs.jpg&#34; alt=&#34;Gopher&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s been more than three weeks already, but it still seems like GopherCon was just yesterday. It affected my view and understanding of Go community - it&amp;rsquo;s got REAL now. I mean, it&amp;rsquo;s not the first Go conference I&amp;rsquo;ve been to, but it wasn&amp;rsquo;t just a Go conference, it was a time and place where Go community becomes real. Twitter nicknames convert to the real people, Slack conversations transform into the face to face talks with a good food or coffee, and the distance between Go users and Go creators literally disappears. Is it normal to go to the tech conference and meet so many incredibly inspiring people?&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s now impossible to stay aside from the Go community concerns, problems and projects. I felt myself as a part of Go community before, but now it&amp;rsquo;s much more personal and deeper. The culture of respect and trust we have seems like something natural, but I know how many efforts have been put into it and how hard sometimes it&amp;rsquo;s been for some people on a personal level. I feel like I and all people who attended the conference are much more attached to the community now, and it&amp;rsquo;s in our power to help it grow and thrive.&lt;/p&gt;
+
+&lt;p&gt;Here should go a huge list of thankyou&amp;rsquo;s.  To the GopherCon organizers to make this event happen and for the amazing job. To Go authors for making programming fun again, world a little bit happier and software a bit more robust. The core Go community members for moving our community through all growth problems and handling them gracefully. To WomenWhoGo chapters for bringing complex and important diversity questions onto the table and making our community better in general. To Anthony Starks for giving me initial push to send the proposal for GopherCon. To my friends who went to Denver to see and support me. To all members of Go community for being so open and welcoming, for creating an incredible amount of great software and packages. To newcomers in Go for not being afraid to dive into the new world and new community.
+&lt;img src=&#34;https://divan.github.io/images/gophercon_community.jpg&#34; alt=&#34;Thankyou&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Thank you for the chance to meet all of you!&lt;/p&gt;
+
+&lt;p&gt;PS. At the moment there is no official photos or videos available yet, I will update the post once they are published. So far, here is my slides: &lt;a href=&#34;http://divan.github.io/talks/2016/gophercon/#/&#34;&gt;http://divan.github.io/talks/2016/gophercon/#/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;PPS. The project itself has been open-sourced and available here: &lt;a href=&#34;https://github.com/divan/gotrace&#34;&gt;https://github.com/divan/gotrace&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>go get for private repos in docker</title>
@@ -17,9 +131,9 @@
       <guid>https://divan.github.io/posts/go_get_private/</guid>
       <description>
 
-&lt;p&gt;As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing scenarios exists. One of them is automating repeatable build process using containers along with using dependencies in private repositories.&lt;/p&gt;
+&lt;p&gt;As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing moments. One of them is automating repeatable build process using containers along with using dependencies in private repositories.&lt;/p&gt;
 
-&lt;p&gt;Go-getting private repositories by itself is often a &lt;a href=&#34;https://github.com/golang/go/issues/9697&#34;&gt;source of confusion&lt;/a&gt; when using &lt;code&gt;go get&lt;/code&gt;, but it has easy workaround by adding two lines to your &lt;code&gt;.gitconfig&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Private repositories on Github are often is a &lt;a href=&#34;https://github.com/golang/go/issues/9697&#34;&gt;source of confusion&lt;/a&gt; when using &lt;code&gt;go get&lt;/code&gt;, but it has easy workaround by adding two lines to your &lt;code&gt;.gitconfig&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;[url &amp;quot;git@github.com:&amp;quot;]
 	insteadOf = https://github.com/
@@ -30,26 +144,24 @@
 &lt;pre&gt;&lt;code&gt;git config --global url.&amp;quot;git@github.com:&amp;quot;.insteadOf &amp;quot;https://github.com/&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;But it gets more complicated when you try to make the whole build process work inside the container. I will use Docker as an example, as it&amp;rsquo;s most popular container at the moment.&lt;/p&gt;
+&lt;p&gt;But the most confusing part is trying to make the whole build process work inside the container. I will use Docker as an example, as it&amp;rsquo;s most popular container at the moment.&lt;/p&gt;
 
 &lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;
 
-&lt;p&gt;Imagine, you have two &lt;strong&gt;private&lt;/strong&gt; packages &lt;code&gt;github.com/company/foo&lt;/code&gt; and &lt;code&gt;github.com/company/bar&lt;/code&gt;, where &lt;code&gt;foo&lt;/code&gt; imports &lt;code&gt;bar&lt;/code&gt;. You may have other external dependencies, and you vendor them into vendor/ directory, but for your own packages there is no much sense in vendoring them, so you want to &lt;code&gt;go get&lt;/code&gt; them:&lt;/p&gt;
+&lt;p&gt;Imagine, you have two packages &lt;code&gt;github.com/company/foo&lt;/code&gt; and &lt;code&gt;github.com/company/bar&lt;/code&gt;, where &lt;code&gt;foo&lt;/code&gt; imports &lt;code&gt;bar&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;foo.go:
-...
 import &amp;quot;github.com/company/bar&amp;quot;
-...
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;In normal workflow, you setup GOPATH, your SSH keys, .gitconfig and you&amp;rsquo;re done - simple &lt;code&gt;go get github.com/company/foo&lt;/code&gt; will work and download both packages:&lt;/p&gt;
+&lt;p&gt;In normal workflow, you setup GOPATH, you SSH keys, gitconfig and you&amp;rsquo;re done - simple &lt;code&gt;go get github.com/company/foo&lt;/code&gt; will work and download both packages:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ go get -v github.com/company/foo
 github.com/company/foo (download)
 github.com/company/bar (download)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;But now, you want to make the build process reproducible on any machine, even on CI instance, so you pack everything in the Docker container. You will probably use simple Dockerfile based on official &lt;code&gt;golang&lt;/code&gt; image:&lt;/p&gt;
+&lt;p&gt;But now, you want to make the build process reproducible on any machine, even on CI instance, so you pack everything in Docker container. You will probably use simple Dockerfile based on official &lt;code&gt;golang&lt;/code&gt;:&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Dockerfile&lt;/strong&gt;:&lt;/p&gt;
 
@@ -61,14 +173,14 @@ CMD cd /go/src/github.com/company/foo; go get github.com/company/bar &amp;amp;&a
 
 &lt;p&gt;&lt;strong&gt;Build script&lt;/strong&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;docker build -t foo-build . 			# build image
+&lt;pre&gt;&lt;code&gt;docker build -t foo-build . 				# build image
 docker run --name=foo-build foo-build		# compile binary
-docker cp foo-build:/foo foo			# copy binary to fs
-docker rm -f foo-build				# remove container
-docker rmi -f foo-build				# remove image
+docker cp foo-build:/foo foo				# copy binary to fs
+docker rm -f foo-build						# remove container
+docker rmi -f foo-build						# remove image
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This setup &lt;strong&gt;will not&lt;/strong&gt; work because Docker container used for building (foo-build) doesn&amp;rsquo;t contain &lt;code&gt;bar&lt;/code&gt; dependency, SSH keys and proper gitconfig. And, apparently, it&amp;rsquo;s not trivial simply to add the keys - you have to deal with a bunch of obstacles, mainly on the SSH side. So, let&amp;rsquo;s go through quickly and setup working solution.&lt;/p&gt;
+&lt;p&gt;This setup &lt;strong&gt;will not&lt;/strong&gt; work because Docker container used for building (foo-build) doesn&amp;rsquo;t container &lt;code&gt;bar&lt;/code&gt; dependency, SSH keys and proper gitconfig. And, apparently, it&amp;rsquo;s not trivial simply to add the keys - you have to deal with a bunch of obstacles, mainly on the SSH side. So, let&amp;rsquo;s go through quickly and setup working solution.&lt;/p&gt;
 
 &lt;h2 id=&#34;the-solution&#34;&gt;The solution&lt;/h2&gt;
 
@@ -82,7 +194,7 @@ fatal: could not read Username for &#39;https://github.com&#39;: No such device 
 package github.com/company/bar: exit status 128
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;What does it mean, is that your access to github is granted using SSH keys, but &lt;code&gt;git&lt;/code&gt; command, which is invoked by &lt;code&gt;go get&lt;/code&gt;, is trying to clone repository using HTTPS form and you don&amp;rsquo;t have credentials set up.&lt;/p&gt;
+&lt;p&gt;What it does mean, is that your access to github is granted using SSH keys, but &lt;code&gt;git&lt;/code&gt; command, which is invoked by &lt;code&gt;go get&lt;/code&gt;, is trying to clone repository using HTTPS form and you don&amp;rsquo;t have credentials set up.&lt;/p&gt;
 
 &lt;p&gt;Workaround for this is easy, and described in the beginning of this post, so we just have to add this to our Dockerfile right before calling &lt;code&gt;go get&lt;/code&gt;:&lt;/p&gt;
 
@@ -107,14 +219,13 @@ package github.com/company/bar: exit status 128
 
 &lt;p&gt;First of all, we want every developer or CI to use it&amp;rsquo;s own keys for accessing private repo. If person has access to &lt;code&gt;foo&lt;/code&gt;, she&amp;rsquo;s definitely has an access to &lt;code&gt;bar&lt;/code&gt; and the keys are usually in &lt;code&gt;~/.ssh/id_rsa&lt;/code&gt; file.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;You can&amp;rsquo;t copy keys into container, though.&lt;/strong&gt; Dockerfile&amp;rsquo;s ADD and COPY commands can copy files from the current directory only, so you can&amp;rsquo;t just add &lt;code&gt;ADD ~/.ssh/ /root/ssh&lt;/code&gt; to your Dockerfile. One of the solutions is to write wrapper script that will copy private key to local directory and then to the container, but it&amp;rsquo;s still not very safe and elegant solution.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;You can&amp;rsquo;t copy keys into container, though.&lt;/strong&gt; Dockerfile&amp;rsquo;s ADD and COPY commands can copy files from the current directory only, so you can&amp;rsquo;t just add &lt;code&gt;ADD ~/.ssh/ /root/ssh&lt;/code&gt; to your Dockerfile. One of the solution is to write wrapper script that will copy private key to local directory and then to the container, but it&amp;rsquo;s still not very safe and elegant solution.&lt;/p&gt;
 
 &lt;p&gt;What we can do, is to mount volume using docker&amp;rsquo;s &lt;code&gt;-v&lt;/code&gt; command line flag. The first approach will be probably to mount the whole &lt;code&gt;~/.ssh&lt;/code&gt; directory, but it&amp;rsquo;s tricky&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;docker run --name=foo-build -v ~/.ssh:/root/.ssh foo-build
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;docker run --name=foo-build -v ~/.ssh:/root/.ssh foo-build&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;This command will work as expected on MacOS X (using latest Docker Beta, at least), but not on Linux box. The reason is the files ownership for &lt;code&gt;~/.ssh/config&lt;/code&gt; file. The &lt;code&gt;ssh&lt;/code&gt; (which is invoked by &lt;code&gt;git&lt;/code&gt;, which is invoked by &lt;code&gt;go get&lt;/code&gt;) expects this file to have the same user ownership as a running user. Inside the container the user is &lt;code&gt;root&lt;/code&gt;, but the mounted directory most probably has ownership of your normal Linux user, say, &lt;code&gt;developer&lt;/code&gt; and inside the container it looks like:&lt;/p&gt;
+&lt;p&gt;This command will work as expected on MacOS X (using latest Docker Beta, at least), but not in Linux box. The reason is the files ownership for &lt;code&gt;~/.ssh/config&lt;/code&gt; file. The &lt;code&gt;ssh&lt;/code&gt; (which is invoked by &lt;code&gt;git&lt;/code&gt;, which is invoked by &lt;code&gt;go get&lt;/code&gt;) expects this file to have the same user ownership as a running user. Inside the container the user is &lt;code&gt;root&lt;/code&gt;, but the mounted directory most probably has ovnership of your normal Linux user, say, &lt;code&gt;developer&lt;/code&gt; and inside the container it looks like:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ ls ~/.ssh/config
 -rw-r--r--  1 1000  1000  147 Jun  1 19:20 /root/.ssh/config
@@ -125,9 +236,7 @@ package github.com/company/bar: exit status 128
 &lt;pre&gt;&lt;code&gt;Bad owner or permissions on ~/.ssh/config
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;em&gt;(On MacOS X it&amp;rsquo;s different because of VM used for docker - it&amp;rsquo;s internally a Linux box and root user is used by default, I guess)&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;The solution is to mount only the key and work around host checking issue later:&lt;/p&gt;
+&lt;p&gt;The solution is to mount only the key and workaround host checking later.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa foo-build
 &lt;/code&gt;&lt;/pre&gt;
@@ -148,7 +257,7 @@ Are you sure you want to continue connecting (yes/no)?
 
 &lt;p&gt;But, we only need one option, so it&amp;rsquo;s ok to create this file on the fly inside the container. Add to Dockerfile:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;RUN mkdir /root/.ssh &amp;amp;&amp;amp; echo &amp;quot;StrictHostKeyChecking no&amp;quot; &amp;gt; /root/.ssh/config
+&lt;pre&gt;&lt;code&gt;RUN mkdir /root/.ssh &amp;amp;&amp;amp; echo &amp;quot;StrictHostKeyChecking no &amp;quot; &amp;gt; /root/.ssh/config
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Rerun the &lt;code&gt;docker run&lt;/code&gt; step and you&amp;rsquo;ll finally have success!&lt;/p&gt;
@@ -177,202 +286,6 @@ docker rmi -f foo-build
 &lt;p&gt;You may put those steps to the Makefile or custom build script, and can safely use it locally or in CI or whatever.&lt;/p&gt;
 
 &lt;p&gt;Private SSH key is copied once into the temporary container, used for building, which is removed immediately. Nice and safe solution.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>LeftPad and Go: can tooling help?</title>
-      <link>https://divan.github.io/posts/leftpad_and_go/</link>
-      <pubDate>Thu, 31 Mar 2016 04:30:29 +0300</pubDate>
-      
-      <guid>https://divan.github.io/posts/leftpad_and_go/</guid>
-      <description>
-
-&lt;p&gt;You&amp;rsquo;ve probably heard that story about NPM community and &lt;a href=&#34;https://www.npmjs.com/package/left-pad&#34;&gt;LeftPad&lt;/a&gt; package, that broke thousands JavaScript projects worldwide. There was a nice follow-up article titled &lt;a href=&#34;http://www.haneycodes.net/npm-left-pad-have-we-forgotten-how-to-program/&#34;&gt;&amp;ldquo;Have We Forget How To Program&amp;rdquo;&lt;/a&gt; and one guy even created &lt;a href=&#34;http://left-pad.io&#34;&gt;left-pad.io&lt;/a&gt; - Left-Pad As A Service web service. People got a lot of fun discussing this story.&lt;/p&gt;
-
-&lt;p&gt;I personally find this story amazing, because there is no single point of failure, but rather a set of things and coincidences resulted in a disaster. Every person I spoke about left-pad story sees it through it&amp;rsquo;s own lens of concern. Some blame JS-community, some talks about how important vendoring is nowadays and others stands for absolutist views of the DRY principle.&lt;/p&gt;
-
-&lt;p&gt;For me my lens were the chances of getting into something similar in Go ecosystem. Of course, after initial thinking, I came to resolution that there is nothing to worry about - Go community doesn&amp;rsquo;t tend to create packages for every single simple function over there. Yes, someone inspired by NPM LeftPad story created &lt;a href=&#34;https://github.com/keltia/leftpad&#34;&gt;similar package for Go&lt;/a&gt; - but the fact it was created after that fiasco story only confirms my  thoughts.&lt;/p&gt;
-
-&lt;p&gt;Moreover, there is even a &lt;a href=&#34;http://go-proverbs.github.io/&#34;&gt;Go proverb&lt;/a&gt; dedicated to this specific thing:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;A little copying is better than a little dependency.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;If you struggle to understand how it applies with DRY and why it&amp;rsquo;s a wise point, I suggest you check out &lt;a href=&#34;https://www.youtube.com/watch?v=PAAkCSZUG1c&#34;&gt;this video&lt;/a&gt; on a subject.&lt;/p&gt;
-
-&lt;p&gt;But one thought was spinning in my head - can we do better and use tooling to check for the &amp;lsquo;little dependency&amp;rsquo;? I believe that tooling is a great way to enforce some good practices and views, and &lt;code&gt;go fmt&lt;/code&gt; is a greates evidence of it. Why can&amp;rsquo;t we make a tool that would check package imports and suggest to &lt;em&gt;&amp;ldquo;take a look at this small LeftPad dependency of only one small function&amp;rdquo;&lt;/em&gt;?&lt;/p&gt;
-
-&lt;p&gt;Meet &lt;a href=&#34;https://github.com/divan/depscheck&#34;&gt;depscheck&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;depscheck&#34;&gt;DepsCheck&lt;/h1&gt;
-
-&lt;p&gt;So, that&amp;rsquo;s how &lt;strong&gt;depscheck&lt;/strong&gt; was born. I spent a weekend, learning how to work with go/{ast,parser,types,loader} packages and after 10-th refactoring finally came up with a tool that was doing exactly I wanted to.&lt;/p&gt;
-
-&lt;p&gt;Here is a description for GitHub:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;DepsCheck - Dependency checker for Golang (Go) packages. Prints stats and suggests to remove small LeftPad-like imports if any&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;It analyzes package or arbitrary *.go files using AST-parser and calculates some stats about dependencies. Namely, number of calls/selectors of dependency, funcs/methods&amp;rsquo; LOC (Lines Of Code), Cumulative LOCs (whenever possible, dropping it for recursion), Depth (number of nested calls to more external dependencies) and DepthInternal(the same, but for internal function calls). In most cases it&amp;rsquo;s enough to make some calculations and analysis to find &lt;em&gt;&amp;lsquo;small dependencies&amp;rsquo;&lt;/em&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;quick-intro&#34;&gt;Quick Intro&lt;/h3&gt;
-
-&lt;p&gt;Here is quick intro and dogfooding demo of the tool.&lt;/p&gt;
-
-&lt;p&gt;First, install the tool:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;go get github.com/divan/depscheck
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then invoke as simple as:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;depscheck -v github.com/divan/depscheck
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://github.com/divan/depscheck/raw/master/demo/depscheck.png&#34; alt=&#34;Demo&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;There is a detailed table view of dependencies usage, totals and breakdown by packages, and in the end, the tool says - hey, your dependencies are sane. It means, no dependencies of suspiciously small usage size.&lt;/p&gt;
-
-&lt;p&gt;In case it finds potential candidate for copying into your codebase and removing from the dependency list, it outputs something like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ depscheck github.com/divan/expvarmon
-github.com/divan/expvarmon: 4 packages, 1022 LOC, 93 calls, 11 depth, 23 depth int.
- - Package byten (github.com/pyk/byten) is a good candidate for removing from dependencies.
-   Only 19 LOC used, in 1 calls, with 2 level of nesting
- - Package ranges (github.com/bsiegert/ranges) is a good candidate for removing from dependencies.
-   Only 29 LOC used, in 1 calls, with 0 level of nesting
-Run with -v option to see detailed stats for dependencies.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And by the way, in an example above it totally make sense. Rerunning with &lt;code&gt;-v&lt;/code&gt; options to see the details, it&amp;rsquo;s easy to see that package only uses single flat function from &lt;code&gt;ranges&lt;/code&gt; of 29 lines of code - ranges.Parse, and it can be easily copied to my codebase, if license permits, of course. It removes the whole bunch of burden in case I&amp;rsquo;ll need to vendor dependencies or use some vendoring tools.&lt;/p&gt;
-
-&lt;p&gt;Of course, this suggestion doesn&amp;rsquo;t mean you have to do it. It just asks you to pay attention to these particular imports if you want to make your codebase a little bit better. It&amp;rsquo;s up to me to decide what to do with this import. The tools suggestions are recommendation only.&lt;/p&gt;
-
-&lt;h3 id=&#34;how-small-is-small-dependency&#34;&gt;How small is small dependency&lt;/h3&gt;
-
-&lt;p&gt;You may ask now - how do you determine if the dependency is small enough to be a candidate for elimination? Good question, and I don&amp;rsquo;t have one single source of truth here, so I&amp;rsquo;ve implemented it based on my view of common sense here. To be short, here is the responsible method at the moment of writing this article:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// CanBeAvoided attempts to classify if package usage is small enough
-// to suggest user avoid this package as a dependency and
-// instead copy/embed it&#39;s code into own project (if license permits).
-func (p *PackageStat) CanBeAvoided() bool {
-	// If this dependency is using another dependencies,
-	// it&#39;s almost for sure - no. For internal dependency, let&#39;s
-	// allow just two level of nesting.
-	if p.Depth &amp;gt; 0 {
-		return false
-	}
-	if p.DepthInternal &amp;gt; 2 {
-		return false
-	}
-
-	if p.DepsCount &amp;gt; 3 {
-		return false
-	}
-
-	// Because 42
-	if p.LOCCum &amp;gt; 42 {
-		return false
-	}
-
-	return true
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As you can see, it&amp;rsquo;s pretty straightforward, no machine learning here. Just hardcore universal constants :) It&amp;rsquo;s not perfect, but hey, at least, it can detect LeftPad package, mentioned above!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ depscheck leftpad.go
-main: 1 packages, 17 LOC, 1 calls, 0 depth, 1 depth int.
- - Package leftpad (github.com/keltia/leftpad) is a good candidate for removing from dependencies.
-   Only 17 LOC used, in 1 calls, with 1 level of nesting
-Run with -v option to see detailed stats for dependencies.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I&amp;rsquo;m looking forward to hear suggestions on how to do it better. Maybe it&amp;rsquo;s worth to calculate total LOC of the package and look at the percentage of LOC involved? Feel free to tell your view on how small is &amp;ldquo;small dependency&amp;rdquo; could be from the perspective of the machine.&lt;/p&gt;
-
-&lt;p&gt;Anyway, it&amp;rsquo;s always possible to manually inspect detailed output and filter small enough dependencies by yourself.&lt;/p&gt;
-
-&lt;p&gt;Also, please, don&amp;rsquo;t rely on these numbers heavily. It&amp;rsquo;s likely to be somehow incorrect in some cases. Yes, it&amp;rsquo;s tested with simple cases, but there are lot of cases, where it&amp;rsquo;s even impossible to tell what is a &amp;ldquo;correct&amp;rdquo; value. For example, how do you calculate Cumulative number of lines for two functions with circular dependency? There are also probably some bugs I didn&amp;rsquo;t catch (hey, it survived 10 refactorings in 3 days!), so feel free to open an issue or send a PR.&lt;/p&gt;
-
-&lt;h1 id=&#34;stdlib&#34;&gt;Stdlib&lt;/h1&gt;
-
-&lt;p&gt;Depscheck also can work with stdlib packages. Normally it treats stdlib imports as &amp;lsquo;internal&amp;rsquo; and doesn&amp;rsquo;t analyze/report them. But you can explicitly ask for that using &lt;code&gt;-stdlib&lt;/code&gt; command line flag. Suggestions are silenced in this mode because stdlib is smarter than this tool. Anyway, it can give interesting insights into your package or application.&lt;/p&gt;
-
-&lt;p&gt;For example, here is the sample output for checking against stdlib &lt;code&gt;time&lt;/code&gt; package (though, you can use -stdlib flag for any package, not only stdlib):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ depscheck -stdlib -v time
-time: 4 packages, 294 LOC, 50 calls, 17 depth, 3 depth int.
-+---------+-------+----------+--------+-------+-----+--------+-------+----------+
-|   PKG   | RECV  |   NAME   |  TYPE  | COUNT | LOC | LOCCUM | DEPTH | DEPTHINT |
-+---------+-------+----------+--------+-------+-----+--------+-------+----------+
-| errors  |       | New      | func   |    31 |   2 |      2 |     0 |        0 |
-| runtime |       | GOROOT   | func   |     2 |   6 |      6 |     0 |        0 |
-| sync    | *Once | Do       | method |     1 |  11 |     90 |     2 |        3 |
-|         |       | Once     | type   |     1 |     |        |       |          |
-| syscall |       | ENOENT   | const  |     1 |     |        |       |          |
-|         |       | O_RDONLY | const  |     2 |     |        |       |          |
-|         |       | SIGCHLD  | const  |     1 |     |        |       |          |
-|         |       | Close    | func   |     2 |   6 |      6 |     0 |        0 |
-|         |       | Getenv   | func   |     2 |  20 |    149 |    13 |        0 |
-|         |       | Getpid   | func   |     1 |   4 |      4 |     0 |        0 |
-|         |       | Kill     | func   |     1 |   1 |      1 |     0 |        0 |
-|         |       | Open     | func   |     2 |  13 |     13 |     0 |        0 |
-|         |       | Read     | func   |     2 |  14 |     16 |     2 |        0 |
-|         |       | Seek     | func   |     1 |   7 |      7 |     0 |        0 |
-+---------+-------+----------+--------+-------+-----+--------+-------+----------+
-+---------+---------+-------+-------+--------+-------+----------+
-|   PKG   |  PATH   | COUNT | CALLS | LOCCUM | DEPTH | DEPTHINT |
-+---------+---------+-------+-------+--------+-------+----------+
-| errors  | errors  |     1 |    31 |      2 |     0 |        0 |
-| runtime | runtime |     1 |     2 |      6 |     0 |        0 |
-| sync    | sync    |     2 |     2 |     90 |     2 |        3 |
-| syscall | syscall |    10 |    15 |    196 |    15 |        0 |
-+---------+---------+-------+-------+--------+-------+----------+
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You may even run it against the whole stdlib and build some charts in RStudio or your favorite statistics tool. Let&amp;rsquo;s use &lt;code&gt;go list std&lt;/code&gt; command to get all stdlib packages names and feed them to &lt;em&gt;depcheck&lt;/em&gt;. There is a special &lt;code&gt;-totalonly&lt;/code&gt; flag, which tells depscheck to output only totals oneliner, which is easily parseable:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ for i in $(go list std); do depscheck -stdlib -totalonly $i; done
-archive/tar: 13 packages, 3328 LOC, 174 calls, 5 depth, 78 depth int.
-archive/zip: 13 packages, 2284 LOC, 184 calls, 24 depth, 84 depth int.
-bufio: 4 packages, 84 LOC, 60 calls, 0 depth, 0 depth int.
-bytes: 4 packages, 699 LOC, 79 calls, 0 depth, 26 depth int.
-compress/bzip2: 3 packages, 58 LOC, 19 calls, 0 depth, 4 depth int.
-compress/flate: 7 packages, 255 LOC, 52 calls, 3 depth, 10 depth int.
-compress/gzip: 8 packages, 622 LOC, 72 calls, 1 depth, 36 depth int.
-compress/lzw: 4 packages, 42 LOC, 25 calls, 1 depth, 3 depth int.
-compress/zlib: 7 packages, 877 LOC, 59 calls, 1 depth, 47 depth int.
-container/heap: 1 packages, 0 LOC, 13 calls, 0 depth, 0 depth int.
-container/list: 0 packages, 0 LOC, 0 calls, 0 depth, 0 depth int.
-container/ring: 0 packages, 0 LOC, 0 calls, 0 depth, 0 depth int.
-crypto: 3 packages, 88 LOC, 6 calls, 0 depth, 2 depth int.
-crypto/aes: 4 packages, 109 LOC, 5 calls, 0 depth, 3 depth int.
-crypto/cipher: 4 packages, 21 LOC, 12 calls, 0 depth, 1 depth int.
-crypto/des: 3 packages, 100 LOC, 9 calls, 0 depth, 2 depth int.
-crypto/dsa: 3 packages, 6021 LOC, 89 calls, 0 depth, 409 depth int.
-crypto/ecdsa: 9 packages, 4059 LOC, 94 calls, 2 depth, 269 depth int.
-crypto/elliptic: 3 packages, 2677 LOC, 298 calls, 4 depth, 180 depth int.
-crypto/hmac: 3 packages, 19 LOC, 15 calls, 0 depth, 1 depth int.
-crypto/md5: 3 packages, 5 LOC, 5 calls, 0 depth, 0 depth int.
-...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A couple of manipulations to convert it to CSV and here is the histogram of number of imported packages in stdlib:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://divan.github.io/images/stdlib_deps.png&#34; alt=&#34;Histogram&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;So, feel free to play with this statistics. Maybe you&amp;rsquo;ll find it useful.&lt;/p&gt;
-
-&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
-
-&lt;p&gt;I constantly admire the long-striking power of the core ideas around Go design. Simple grammar and spec allowed me to build this tool in a weekend, without any prior experience of working with AST representation of source code. It&amp;rsquo;s inherently hard, but the guys behind Go&amp;rsquo;s source code parsing packages are doing amazing job. I benefit every single day by different linters, bundled together in &lt;a href=&#34;https://github.com/alecthomas/gometalinter&#34;&gt;GoMetaLinter&lt;/a&gt; package (a must have thing!), and these static code analysis tools are making our code better.&lt;/p&gt;
-
-&lt;p&gt;Now I also feel a little bit safer because that Go proverb mentioned in the beginning is now materialized in a depscheck tool. And hopefully, it will make us, as a community, one more step further from the slightest possibility to fall into the trend that resulted in that LeftPad fiasco.&lt;/p&gt;
-
-&lt;p&gt;Happy coding!&lt;/p&gt;
 </description>
     </item>
     
