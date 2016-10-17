@@ -1,0 +1,18 @@
+<!-- HTML generated using hilite.me --><div style="background: #000000; overflow:auto;width:auto;border: none; border-width: 0px; padding: 0em; background: #111;"><pre style="margin: 0; line-height: 125%"><span style="color: #00cd00">func</span> <span style="color: #cccccc">handler(c</span> <span style="color: #cccccc">net.Conn,</span> <span style="color: #cccccc">ch</span> <span style="color: #00cd00">chan</span> <span style="color: #00cd00">string</span><span style="color: #cccccc">)</span> <span style="color: #cccccc">{</span>
+	<span style="color: #cccccc">ch</span> <span style="color: #3399cc">&lt;-</span> <span style="color: #cd00cd">11</span> <span style="color: #000080">// something</span>
+	<span style="color: #cccccc">c.Write([]</span><span style="color: #cd00cd">byte</span><span style="color: #cccccc">(</span><span style="color: #cd0000">&quot;ok&quot;</span><span style="color: #cccccc">))</span>
+	<span style="color: #cccccc">c.Close()</span>
+<span style="color: #cccccc">}</span>
+
+<span style="opacity: 0.5"><span style="color: #00cd00">func</span> <span style="color: #cccccc">main()</span> <span style="color: #cccccc">{</span>
+	<span style="color: #cccccc">l,</span> <span style="color: #cccccc">err</span> <span style="color: #3399cc">:=</span> <span style="color: #cccccc">net.Listen(</span><span style="color: #cd0000">&quot;tcp&quot;</span><span style="color: #cccccc">,</span> <span style="color: #cd0000">&quot;:5000&quot;</span><span style="color: #cccccc">)</span>
+	<span style="color: #cdcd00">if</span> <span style="color: #cccccc">err</span> <span style="color: #3399cc">!=</span> <span style="color: #cdcd00">nil</span> <span style="color: #cccccc">{</span>
+		<span style="color: #cd00cd">panic</span><span style="color: #cccccc">(err)</span>
+	<span style="color: #cccccc">}</span></span>
+	<span style="color: #cccccc">ch</span> <span style="color: #3399cc">:=</span> <span style="color: #cd00cd">make</span><span style="color: #cccccc">(</span><span style="color: #00cd00">chan</span> <span style="color: #00cd00">string</span><span style="color: #cccccc">)</span>
+	<span style="color: #cdcd00">go</span> <span style="color: #cccccc">logger(ch)</span>
+	<span style="opacity: 0.5"><span style="color: #cdcd00">go</span> <span style="color: #cccccc">server(l,</span> <span style="color: #cccccc">ch)</span>
+	<span style="color: #cdcd00">select</span><span style="color: #cccccc">{}</span>
+<span style="color: #cccccc">}</span></span>
+</pre></div>
+

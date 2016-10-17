@@ -1,0 +1,305 @@
+.slides
+	section
+		br
+		br
+		br
+		h1 Visualizing Concurrency in Go
+		h5 OSCON, Oct 17, 2016
+		h5 Ivan Danyliuk, Typeform
+	mixin slide(title, sample)
+		section
+			h3= title
+			canvas(data-sample=sample, style='display:inline')
+
+	section
+		br
+		h3 What is Go?
+		br
+		pre(style='width: 55%; float: left; padding: 5px')
+			ul.part
+				li made in google
+				li static-typed
+				li compiled
+				li targets cloud software
+		pre(style='width: 43%; float: right; padding: 5px')
+			img(src="images/gopher.png",width="50%")
+	section
+		br
+		br
+		br
+		br
+		br
+		br
+		br
+		br
+		br
+		h3 Go Is a C for XXI century
+	section
+		br
+		h3 Modern system is a cloud
+		br
+		pre(style='width: 43%; float: left; padding: 5px')
+			img(src="images/motherboard.jpg",width="100%")
+		pre(style='width: 48%; float: right; padding: 5px')
+			img(src="images/cloud.jpg",width="100%")
+	section
+		br
+		h3 What is Go?
+		br
+		ul
+			li familiar syntax
+			li low entry barrier
+			li simple
+			li only 25 keywords
+			li simple grammar
+			li no classes & inheritance
+			li no exceptions
+	section
+		br
+		h3 What is Go?
+		br
+		ul
+			li high performance
+			li sub-second compilation times
+			li no manual memory management (fast GC)
+			li great tooling
+			li rich standard library
+			li promise of compatibility
+	section
+		img(src="images/hello_world.png",width="85%")
+			
+	section
+		br
+		h3 Go trends
+		br
+		img(src="images/trends.png",width="95%")
+	section
+		img(src="images/go_in_production.png",width="95%")
+	section
+		br
+		br
+		br
+		br
+		br
+		br
+		h1 Concurrency
+	section
+		img(src="images/cpu.gif",width="90%")
+	section
+		h5 40 years of CPU
+		img(src="images/cpu_trends.png",width="80%")
+	section
+		h5 CPU cores trend
+		img(src="images/cores.png",width="90%")
+	section
+		br
+		br
+		br
+		br
+		br
+		br
+		br
+		h2 Concurrency
+		h2 is hard
+	section
+		br
+		h2 Concurrency
+		h2 is not parallelism
+		br
+		ul
+			li concurrency is a design technique
+			li parallelism is an optimization technique
+	section
+		h3 CSP by Tony Hoare
+		img(src="images/hoare.jpg",width="100%")
+	section
+		br
+		h2 Go Concurrency
+		br
+		ul
+			li goroutine
+			li channel
+			li select{}
+	section(transition="none")
+		br
+		h3 Goroutine
+		br
+		ul
+			li is a lightweight 'process'
+			li similar to '&' in UNIX
+			li just prefix func with 'go'
+		pre
+			include ./code/goroutine.html
+	section(transition="none")
+		br
+		h3 Channel
+		br
+		ul
+			li allows passing messages between goroutines
+			li similar to pipe in UNIX
+		pre
+			include ./code/chan.html
+	section(transition="none")
+		br
+		h3 Select{}
+		br
+		ul
+			li multiplexing channels I/O
+		pre
+			include ./code/select.html
+	section
+		br
+		h2 Go concurrency
+		br
+		ul
+			li Run new logical 'thread' - 3 characters
+			li Create pool of goroutines - 3 lines of code
+			li Safety - automatically
+		br
+	section
+		br
+		br
+		br
+		br
+		br
+		br
+		h3 Concurrent programming
+		h3 has never
+		h3 been easier
+		br
+	section
+		br
+		h2 New questions
+		br
+		ul
+			li How do we teach it?
+			li How we build more complex abstractions?
+			li How we build concurrent pipelines?
+			li How do we understand it, after all?
+		br
+	section
+		br
+		h2 Gotrace
+		br
+		br
+		br
+		p(style="font-size: 1.8em") Tool for visualizing Go concurrency using WebGL:
+		br
+		p(style="font-size: 1.8em")
+			a(href="https://github.com/divan/gotrace", target="_blank") github.com/divan/gotrace
+		br
+	section
+		h3 Hello, world!
+		pre
+			include ./code/hello01.html
+	+slide("Hello, world!", "hello01")
+	section
+		h3 Timer
+		pre
+			include ./code/timer01.html
+	+slide("Timer", "timer01")
+
+	section
+		h3 Ping-pong
+		pre
+			include ./code/pingpong01.html
+	+slide("Ping-pong", "pingpong01")
+
+	section(transition="none")
+		h3 Ping-pong #3
+		pre
+			include ./code/pingpong03.html
+	+slide("Ping-pong #3", "pingpong03")
+
+	section
+		h3 Ping-pong #36
+		pre
+			include ./code/pingpong36.html
+	+slide("Ping-pong #36", "pingpong36")
+
+	section
+		br
+		br
+		br
+		br
+		br
+		h1 Messaging patterns
+
+	section
+		h3 Fan-in
+		pre
+			include ./code/fanin.html
+	+slide("Fan in", "fanin")
+
+	section
+		h3 Servers
+		pre
+			include ./code/server01.html
+	+slide("Servers", "server01")
+
+	section
+		h3 Servers
+		pre(style='width: 55%; float: left; padding: 5px')
+			include ./code/server02_part1.html
+		pre(style='width: 43%; float: right; padding: 5px')
+			include ./code/server02_part2.html
+	+slide("Servers", "server02")
+
+	section
+		h3 Workers / Fan-out
+		pre(style='width: 40%; float: left; padding: 5px')
+			include ./code/workers01_part1.html
+		pre(style='width: 55%; float: right; padding: 5px')
+			include ./code/workers01_part2.html
+	+slide("Workers", "workers01")
+
+	+slide("Subworkers", "workers02")
+
+	+slide("Server+Worker", "server03")
+
+	section
+		h3 Concurrent prime sieve
+		pre(style='width: 43%; float: left; padding: 5px')
+			include ./code/primesieve_part1.html
+		pre(style='width: 55%; float: right; padding: 5px')
+			include ./code/primesieve_part2.html
+	+slide("Concurrent prime sieve", "primesieve")
+
+	section
+		h3 GOMAXPROCS
+		img(src="images/gomaxprocs.png")
+
+	+slide("GOMAXPROCS = 1", "gomaxprocs1")
+	+slide("GOMAXPROCS = 24", "gomaxprocs24")
+	section
+		br
+		br
+		br
+		br
+		br
+		br
+		h2 Goroutines leak
+	+slide("Goroutines leak", "leakage")
+
+	section
+		br
+		br
+		br
+		h3 Go Concurrency Tracer
+		ul
+			li It's open-source
+			li
+				a(href="https://github.com/divan/gotrace", target="_blank") github.com/divan/gotrace
+			li Uses go execution tracer (go tool trace)
+			li Requires patched Go (or pre-made docker images)
+			li (Kind of) language agnostic
+
+	section
+		br
+		br
+		br
+		br
+		br
+		h1 Thank you
+		p Twitter: @idanyliuk
+		p Github: divan
