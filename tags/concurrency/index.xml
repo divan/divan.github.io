@@ -18,13 +18,7 @@
       <description>
 
 &lt;p&gt;&lt;em&gt;If you prefer video over blog posts, here is my talk on this at GopherCon 2016:&lt;/em&gt;
-&lt;div class=&#34;embed video-player&#34;&gt;
-	&lt;center&gt;
-		&lt;iframe class=&#34;youtube-player&#34; type=&#34;text/html&#34; width=&#34;760&#34; height=&#34;457&#34; src=&#34;http://www.youtube.com/embed/KyuFeiG3Y60&#34; allowfullscreen frameborder=&#34;0&#34;&gt;
-		&lt;/iframe&gt;
-	&lt;/center&gt;
-&lt;/div&gt;
-&lt;/p&gt;
+&lt;a href=&#34;https://www.youtube.com/watch?v=KyuFeiG3Y60&#34;&gt;https://www.youtube.com/watch?v=KyuFeiG3Y60&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;One of the strongest sides of Go programming language is a built-in concurrency based on &lt;a href=&#34;https://en.wikipedia.org/wiki/Communicating_sequential_processes&#34;&gt;Tony Hoare&amp;rsquo;s CSP&lt;/a&gt; paper. Go is designed with concurrency in mind and allows us to build complex concurrent pipelines. But have you ever wondered - how various concurrency patterns look like?&lt;/p&gt;
 
