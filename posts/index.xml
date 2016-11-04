@@ -173,7 +173,7 @@ func FindDigits(filename string) []byte {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;By reading let&amp;rsquo;s say 10MB of data into slice and searching for only 3 digits, you may assume that you&amp;rsquo;re returning 3 bytes, but, in fact, the underlying array will be kept in memory, no matter have large it is.
+&lt;p&gt;By reading let&amp;rsquo;s say 10MB of data into slice and searching for only 3 digits, you may assume that you&amp;rsquo;re returning 3 bytes, but, in fact, the underlying array will be kept in memory, no matter how large it is.
  &lt;img src=&#34;https://divan.github.io/images/slice5.png&#34; alt=&#34;Slice 5&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;And that is one of the most common Go gotchas you may read about. But once you have this picture of internal slice representation in your head, I bet it will be almost impossible to run into it!&lt;/p&gt;
