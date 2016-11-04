@@ -305,18 +305,18 @@ Hopefully, it makes sense to you now as well.&lt;/p&gt;
 
 &lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 
-&lt;p&gt;Not every gotcha can be attacked by learning internals. Some of them are simply the difference between your past and new experience, and we&amp;rsquo;re all have somehow different background and experience. Nevertheless, there a many of the gotchas that can be successfully avoided simply by understanding a bit deeper how Go works. I hope explanations in this post will help you build intuition on what is happening inside your programs and will make you a better developer. Go is you friend, and knowing it a bit better would not hurt anyway.&lt;/p&gt;
+&lt;p&gt;Not every gotcha can be attacked by learning internals. Some of them are simply the difference between your past and new experience, and we&amp;rsquo;re all have somehow different background and experience. Nevertheless, there a many of the gotchas that can be successfully avoided simply by understanding a bit deeper how Go works. I hope explanations in this post will help you build intuition on what is happening inside your programs and will make you a better developer. Go is your friend, and knowing it a bit better would not hurt anyway.&lt;/p&gt;
 
 &lt;p&gt;If you&amp;rsquo;re interested in reading more about Go internals, here are a list of links that helped me:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;research.swtch.com/godata&#34;&gt;Go Data Structures&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;research.swtch.com/interfaces&#34;&gt;Go Data Structures: Interfaces&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://research.swtch.com/godata&#34;&gt;Go Data Structures&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;Go Data Structures: Interfaces&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.golang.org/go-slices-usage-and-internals&#34;&gt;Go Slices: usage and internals&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;talks.godoc.org/github.com/davecheney/presentations/gopher-puzzlers.slide&#34;&gt;Gopher Puzzlers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://talks.godoc.org/github.com/davecheney/presentations/gopher-puzzlers.slide&#34;&gt;Gopher Puzzlers&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;And, of couse, timeless source of usefull stuff :)&lt;/p&gt;
+&lt;p&gt;And, of course, timeless source of usefull stuff :)&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://golang.org/src/&#34;&gt;Go source code&lt;/a&gt;&lt;/li&gt;
