@@ -265,7 +265,7 @@ You can clearly see the &lt;code&gt;*os.PathError&lt;/code&gt; variable - it&amp
 
 &lt;p&gt;In both cases, we have &lt;code&gt;nil&lt;/code&gt;, but there is a huge difference between &lt;em&gt;&amp;ldquo;have an interface with a variable which value equals to nil&amp;rdquo;&lt;/em&gt; and &lt;em&gt;&amp;ldquo;interface without variable&amp;rdquo;&lt;/em&gt;. Having this knowledge of internal structure of interfaces, try to confuse these two examples now:
  &lt;img src=&#34;https://divan.github.io/images/iface3.png&#34; alt=&#34;Interface3&#34; /&gt;
-Should me much harder now to run into that gotcha.&lt;/p&gt;
+Should be much harder now to run into that gotcha.&lt;/p&gt;
 
 &lt;h3 id=&#34;empty-interface&#34;&gt;Empty interface&lt;/h3&gt;
 
