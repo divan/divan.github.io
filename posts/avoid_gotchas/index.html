@@ -378,7 +378,7 @@ Should be much harder now to run into that gotcha.</p>
 cannot use []int literal (type []int) as type []interface {} in return argument
 </code></pre>
 
-<p>It&rsquo;s confusing and the beginning. Like, why I can do this conversion with a single variable, but cannot do with slice? But once you know what is an empty interface (take a look at the picture above again), it becomes pretty clear, that this &ldquo;conversion&rdquo; is actually a quite expensive operation which involves allocating a bunch of memory and is around O(n) of time and space. And one of the common approaches in Go design is <strong>a&rdquo;if you want to do something expensive - do it explicitly&rdquo;</strong>.
+<p>It&rsquo;s confusing and the beginning. Like, why I can do this conversion with a single variable, but cannot do with slice? But once you know what is an empty interface (take a look at the picture above again), it becomes pretty clear, that this &ldquo;conversion&rdquo; is actually a quite expensive operation which involves allocating a bunch of memory and is around O(n) of time and space. And one of the common approaches in Go design is <strong>&ldquo;if you want to do something expensive - do it explicitly&rdquo;</strong>.
  <img src="/images/eface_slice.png" alt="Slice Interface" />
 Hopefully, it makes sense to you now as well.</p>
 
