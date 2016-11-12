@@ -206,7 +206,7 @@ a[2] = 42
  &lt;img src=&#34;https://divan.github.io/images/append2.png&#34; alt=&#34;Append 2&#34; /&gt;
 Yes, you&amp;rsquo;ll have two different underlying arrays and it may be quite contra-intuitive for the beginners. So, as a rule of thumb, be careful when you use subslices, and especially, subslices with append.&lt;/p&gt;
 
-&lt;p&gt;By the way, &lt;code&gt;append&lt;/code&gt; grows slice by doubling it&amp;rsquo;s capacity only up to 1024, after that it will use so-called &lt;a href=&#34;src/runtime/msize.go&#34;&gt;memory size classes&lt;/a&gt; to guarantee that growth will be no more than ~12.5%. Requesting 64 bytes for 32 bytes array is ok, but if your slice is 4GB, allocating another 4GB for adding 1 element is quite expensive, so it makes sense.&lt;/p&gt;
+&lt;p&gt;By the way, &lt;code&gt;append&lt;/code&gt; grows slice by doubling it&amp;rsquo;s capacity only up to 1024, after that it will use so-called &lt;a href=&#34;https://golang.org/src/runtime/msize.go&#34;&gt;memory size classes&lt;/a&gt; to guarantee that growth will be no more than ~12.5%. Requesting 64 bytes for 32 bytes array is ok, but if your slice is 4GB, allocating another 4GB for adding 1 element is quite expensive, so it makes sense.&lt;/p&gt;
 
 &lt;h1 id=&#34;interfaces&#34;&gt;Interfaces&lt;/h1&gt;
 
