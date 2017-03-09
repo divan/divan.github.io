@@ -2,11 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Docker on divan&#39;s blog</title>
-    <link>https://divan.github.io/tags/docker/</link>
+    <link>https://divan.github.io/tags/docker/index.xml</link>
     <description>Recent content in Docker on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Dec 2015 08:36:54 -0700</lastBuildDate>
     <atom:link href="https://divan.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     
     <item>

@@ -158,31 +158,28 @@ In a first case, you copy all those blocks of memory - and in reality, it&rsquo;
 <p>Slices at the beginning are often confused with arrays. So let&rsquo;s take a look at arrays.</p>
 
 <h3 id="arrays">Arrays</h3>
-
-<pre><code class="language-go">var arr [5]int
-var arr [5]int{1,2,3,4,5}
-var arr [...]int{1,2,3,4,5}
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">var</span> <span class="nx">arr</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span>
+<span class="kd">var</span> <span class="nx">arr</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">}</span>
+<span class="kd">var</span> <span class="nx">arr</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">}</span>
+</code></pre></div>
 
 <p>Arrays are just continuous  blocks of memory, and if you check the Go runtime source code (<a href="https://golang.org/src/runtime/malloc.go#L793">src/runtime/malloc.go</a>), you may see that creating an array is essentially an allocating a piece of memory of the given size. Old good malloc, just smarter :)</p>
-
-<pre><code class="language-go">// newarray allocates an array of n elements of type typ.
-func newarray(typ *_type, n int) unsafe.Pointer {
-    if n &lt; 0 || uintptr(n) &gt; maxSliceCap(typ.size) {
-        panic(plainError(&quot;runtime: allocation size out of range&quot;))
-    }
-    return mallocgc(typ.size*uintptr(n), typ, true)
-}
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="c1">// newarray allocates an array of n elements of type typ.</span>
+<span class="kd">func</span> <span class="nx">newarray</span><span class="p">(</span><span class="nx">typ</span> <span class="o">*</span><span class="nx">_type</span><span class="p">,</span> <span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">n</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">&gt;</span> <span class="nx">maxSliceCap</span><span class="p">(</span><span class="nx">typ</span><span class="p">.</span><span class="nx">size</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="nx">plainError</span><span class="p">(</span><span class="s">&quot;runtime: allocation size out of range&quot;</span><span class="p">))</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">mallocgc</span><span class="p">(</span><span class="nx">typ</span><span class="p">.</span><span class="nx">size</span><span class="o">*</span><span class="nb">uintptr</span><span class="p">(</span><span class="nx">n</span><span class="p">),</span> <span class="nx">typ</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>What does it mean for us? It means that we can simply represent array as a set of blocks in memory sitting next to each other:
 <img src="/images/array.png" alt="Array" />
 Array elements are always initialized with <em>zero values</em> of its type, 0 in our case of <code>[5]int</code>. We can index them and get the length using <code>len()</code> built-in command. Nothing else, basically.
 When you refer to the single element in the array by index and doing something like this:</p>
-
-<pre><code class="language-go">var arr [5]int
-arr[4] = 42
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">var</span> <span class="nx">arr</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span>
+<span class="nx">arr</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">=</span> <span class="mi">42</span>
+</code></pre></div>
 
 <p>you&rsquo;re taking the fifth (4+1) element and change its value:
 <img src="/images/array2.png" alt="Array 2" />
@@ -191,65 +188,58 @@ Now, we&rsquo;re ready to explore the slices.</p>
 <h3 id="slices">Slices</h3>
 
 <p>Slices at the first glance are similar to arrays, and the declaration is really similar:</p>
-
-<pre><code class="language-go">var foo []int
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">var</span> <span class="nx">foo</span> <span class="p">[]</span><span class="kt">int</span>
+</code></pre></div>
 
 <p>But if we go to the Go source code (<a href="https://golang.org/src/runtime/slice.go#L11">src/runtime/slice.go</a>), we&rsquo;ll see that, in fact, Go&rsquo;s slices are structures with three fields - pointer to array, length and capacity:</p>
-
-<pre><code class="language-go">type slice struct {
-        array unsafe.Pointer
-        len   int
-        cap   int
-}
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">slice</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="nx">array</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span>
+        <span class="nx">len</span>   <span class="kt">int</span>
+        <span class="nx">cap</span>   <span class="kt">int</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>When you create a new slice, Go runtime will create this three-blocks&rsquo; object in memory with the pointer set to <code>nil</code> and <code>len</code> and <code>cap</code> set to 0. Let&rsquo;s represent it visually:
 <img src="/images/slice1.png" alt="Slice 1" />
 That&rsquo;s not very interesting, so let&rsquo;s use <code>make</code> to initialize slice of the given size:</p>
-
-<pre><code class="language-go">foo = make([]int, 5)
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">foo</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
 
 <p>will create a slice with an underlying array of 5 elements, initialized with 0, and will set both <code>len</code> and <code>cap</code> to 5.
 Cap means capacity and helps to reserve more space for the future growth. You can use <code>make([]int, len, cap)</code> syntax to specify capacity. If fact, you&rsquo;re almost never will have to deal with that, but it&rsquo;s important to understand the concept of capacity.</p>
-
-<pre><code class="language-go">foo = make([]int, 3, 5)
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">foo</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
 
 <p>Let&rsquo;s take a look at both cases:
  <img src="/images/slice2.png" alt="Slice 2" /></p>
 
 <p>Now, when you update some elements of the slice, you&rsquo;re actually change the values in the underlying array.</p>
-
-<pre><code class="language-go">foo = make([]int, 5)
-foo[3] = 42
-foo[4] = 100
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">foo</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nx">foo</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">=</span> <span class="mi">42</span>
+<span class="nx">foo</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">=</span> <span class="mi">100</span>
+</code></pre></div>
 
 <p><img src="/images/slice3.png" alt="Slice 3" /></p>
 
 <p>That was easy. But what will happen, if you create another subslice and change some elements? Let&rsquo;s try:</p>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">foo</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nx">foo</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">=</span> <span class="mi">42</span>
+<span class="nx">foo</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">=</span> <span class="mi">100</span>
 
-<pre><code class="language-go">foo = make([]int, 5)
-foo[3] = 42
-foo[4] = 100
-
-bar  := foo[1:4]
-bar[1] = 99
-</code></pre>
+<span class="nx">bar</span>  <span class="o">:=</span> <span class="nx">foo</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="nx">bar</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="mi">99</span>
+</code></pre></div>
 
 <p><img src="/images/slice4.png" alt="Slice 4" /></p>
 
 <p>Now, you see it! By modifying <code>bar</code>, you actually modified the underlying array, which is also referenced by slice <code>foo</code>.  And it&rsquo;s actually a real thing, you may write something like this:</p>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">var</span> <span class="nx">digitRegexp</span> <span class="p">=</span> <span class="nx">regexp</span><span class="p">.</span><span class="nx">MustCompile</span><span class="p">(</span><span class="s">&quot;[0-9]+&quot;</span><span class="p">)</span>
 
-<pre><code class="language-go">var digitRegexp = regexp.MustCompile(&quot;[0-9]+&quot;)
-
-func FindDigits(filename string) []byte {
-    b, _ := ioutil.ReadFile(filename)
-    return digitRegexp.Find(b)
-}
-</code></pre>
+<span class="kd">func</span> <span class="nx">FindDigits</span><span class="p">(</span><span class="nx">filename</span> <span class="kt">string</span><span class="p">)</span> <span class="p">[]</span><span class="kt">byte</span> <span class="p">{</span>
+    <span class="nx">b</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nx">ReadFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">digitRegexp</span><span class="p">.</span><span class="nx">Find</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>By reading let&rsquo;s say 10MB of data into slice and searching for only 3 digits, you may assume that you&rsquo;re returning 3 bytes, but, in fact, the underlying array will be kept in memory, no matter how large it is.
  <img src="/images/slice5.png" alt="Slice 5" /></p>
@@ -261,10 +251,9 @@ func FindDigits(filename string) []byte {
 <p>Next to the slices&rsquo; gotchas, there are some gotchas related to the built-in generic function <code>append()</code>. It essentially does one operation - appends a value to the slice, but internally it does a lot of complex stuff, allocating memory in a smart and efficient way if needed.</p>
 
 <p>Let&rsquo;s take the following code:</p>
-
-<pre><code class="language-go">a := make([]int, 32)
-a = append(a, 1)
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">a</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="nx">a</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
 
 <p>It creates a new slice of 32 ints and adds new (33rd) element.</p>
 
@@ -273,12 +262,11 @@ a = append(a, 1)
 <p>The confusing part here is that, for many reasons, allocating more memory usually means allocating it at the different address and moving data from old place to the new one. It means that address of the underlying array in the slice will also change. Let&rsquo;s visualize this:
  <img src="/images/append.png" alt="Append" />
 It&rsquo;s easy to see two underlying arrays - old and new ones. Doesn&rsquo;t look like a possible gotcha, right? The old array will be freed by GC later unless another slice is referring it. This case, actually, is one of the gotchas with append. What if you create subslice <code>b</code>, then append a value to <code>a</code>, assuming they both share common underlying array?</p>
-
-<pre><code class="language-go">a := make([]int, 32)
-b := a[1:16]
-a = append(a, 1)
-a[2] = 42
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">a</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="nx">b</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">16</span><span class="p">]</span>
+<span class="nx">a</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nx">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">=</span> <span class="mi">42</span>
+</code></pre></div>
 
 <p>You will get this:
  <img src="/images/append2.png" alt="Append 2" />
@@ -291,53 +279,48 @@ Yes, you&rsquo;ll have two different underlying arrays and it may be quite contr
 <p>Okay, this is the most confusing thing for many people. It takes some time to wrap your head around proper usage of interfaces in Go, especially after having a traumatic experience with class-based languages. And one of the sources of confusion is a different meaning of <code>nil</code> keyword in the context of interfaces.</p>
 
 <p>To help understand this subject, let&rsquo;s again take a look at the Go source code. What is interface under the hood? Here is a code from <a href="https://golang.org/src/runtime/runtime2.go#L143">src/runtime/runtime2.go</a>:</p>
-
-<pre><code class="language-go">type iface struct {
-    tab  *itab
-    data unsafe.Pointer
-}
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">iface</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">tab</span>  <span class="o">*</span><span class="nx">itab</span>
+    <span class="nx">data</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p><code>itab</code> stand for <em>interface table</em> and is also a structure that holds needed meta information about interface and underlying type:</p>
-
-<pre><code class="language-go">type itab struct {
-    inter  *interfacetype
-    _type  *_type
-    link   *itab
-    bad    int32
-    unused int32
-    fun    [1]uintptr // variable sized
-}
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">itab</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">inter</span>  <span class="o">*</span><span class="nx">interfacetype</span>
+    <span class="nx">_type</span>  <span class="o">*</span><span class="nx">_type</span>
+    <span class="nx">link</span>   <span class="o">*</span><span class="nx">itab</span>
+    <span class="nx">bad</span>    <span class="kt">int32</span>
+    <span class="nx">unused</span> <span class="kt">int32</span>
+    <span class="nx">fun</span>    <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="kt">uintptr</span> <span class="c1">// variable sized</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>We&rsquo;re not going to learn the logic of how interface type assertion works, but what is important is to understand that <em>interface</em> is a compound of interface and static type information plus pointer to the actual variable (field <code>data</code> in <code>iface</code>). Let&rsquo;s create variable <code>err</code> of interface type <code>error</code> and represent it visually:</p>
-
-<pre><code class="language-go">var err error
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span>
+</code></pre></div>
 
 <p><img src="/images/iface1.png" alt="Interface1" /></p>
 
 <p>In fact, what you see in this picture is the thing called <em>nil interface</em>. When you return nil in the function with return type <code>error</code>, you are returning this object. It has information about interface (<code>itab.inter</code>), but has <code>nil</code> in <code>data</code> and <code>itab.type</code> fields. This object will evaluate to true in the <code>if err == nil {}</code>  condition.</p>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">func</span> <span class="nx">foo</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span> <span class="c1">// nil</span>
+    <span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
 
-<pre><code class="language-go">func foo() error {
-    var err error // nil
-    return err
-}
-
-err := foo()
-if err == nil {...} // true
-</code></pre>
+<span class="nx">err</span> <span class="o">:=</span> <span class="nx">foo</span><span class="p">()</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span> <span class="c1">// true</span>
+</code></pre></div>
 
 <p>Now, famous gotcha is to return a <code>*os.PathError</code> variable which is <code>nil</code>.</p>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">func</span> <span class="nx">foo</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">err</span> <span class="o">*</span><span class="nx">os</span><span class="p">.</span><span class="nx">PathError</span> <span class="c1">// nil</span>
+    <span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
 
-<pre><code class="language-go">func foo() error {
-    var err *os.PathError // nil
-    return err
-}
-
-err := foo()
-if err == nil {...} // false
-</code></pre>
+<span class="nx">err</span> <span class="o">:=</span> <span class="nx">foo</span><span class="p">()</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span> <span class="c1">// false</span>
+</code></pre></div>
 
 <p>Those two pieces of code are similar unless you know how the interface looks like inside. Let&rsquo;s represent this <code>nil</code> variable of type <code>*os.PathError</code> being wrapped in an <code>error</code> interface:
  <img src="/images/iface2.png" alt="Interface2" />
@@ -350,35 +333,31 @@ Should be much harder now to run into that gotcha.</p>
 <h3 id="empty-interface">Empty interface</h3>
 
 <p>A few words about <em>empty interface</em> - <code>interface{}</code>. In the Go source code (<a href="https://golang.org/src/runtime/runtime2.go#L148">src/runtime/malloc.go</a> it&rsquo;s implemented using own structure - <code>eface</code>:</p>
-
-<pre><code class="language-go">type eface struct {
-    _type *_type
-    data  unsafe.Pointer
-}
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">eface</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">_type</span> <span class="o">*</span><span class="nx">_type</span>
+    <span class="nx">data</span>  <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>As you may see, it&rsquo;s similar to <code>iface</code>, but lacks interface table. It just does not need one because by definition empty interface is implemented by any static type. So when you wrap something - explicitly or implicitly (by passing as a function argument, for example) - into <code>interface{}</code>, you actually working with this structure:</p>
-
-<pre><code class="language-go">func foo() interface{} {
-    foo := int64(42)
-    return foo
-}
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">func</span> <span class="nx">foo</span><span class="p">()</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">{</span>
+    <span class="nx">foo</span> <span class="o">:=</span> <span class="nb">int64</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">foo</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p><img src="/images/eface.png" alt="Empty Interface" /></p>
 
 <p>One of the <code>interface{}</code> related gotchas is the frustration that you can&rsquo;t easily assign slice of interfaces to slice of concrete types and vice versa. Something like</p>
-
-<pre><code class="language-go">func foo() []interface{} {
-    return []int{1,2,3}
-}
-</code></pre>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">func</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{}</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>You&rsquo;ll get compile time error:</p>
-
-<pre><code class="language-bash">$ go build
-cannot use []int literal (type []int) as type []interface {} in return argument
-</code></pre>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ go build
+cannot use <span class="o">[]</span>int literal <span class="o">(</span><span class="nb">type</span> <span class="o">[]</span>int<span class="o">)</span> as <span class="nb">type</span> <span class="o">[]</span>interface <span class="o">{}</span> in <span class="k">return</span> argument
+</code></pre></div>
 
 <p>It&rsquo;s confusing and the beginning. Like, why I can do this conversion with a single variable, but cannot do with slice? But once you know what is an empty interface (take a look at the picture above again), it becomes pretty clear, that this &ldquo;conversion&rdquo; is actually a quite expensive operation which involves allocating a bunch of memory and is around O(n) of time and space. And one of the common approaches in Go design is <strong>&ldquo;if you want to do something expensive - do it explicitly&rdquo;</strong>.
  <img src="/images/eface_slice.png" alt="Slice Interface" />
@@ -454,7 +433,7 @@ Hopefully, it makes sense to you now as well.</p>
       <li class="previous"><a href="https://divan.github.io/posts/gophercon16/"><span aria-hidden="true">&larr;</span> Older</a></li>
       
       
-      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      <li class="next"><a href="https://divan.github.io/posts/misusing_error_interface/">Newer <span aria-hidden="true">&rarr;</span></a></li>
       
     </ul>
   </footer>

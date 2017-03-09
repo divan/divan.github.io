@@ -2,11 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Concurrency on divan&#39;s blog</title>
-    <link>https://divan.github.io/tags/concurrency/</link>
+    <link>https://divan.github.io/tags/concurrency/index.xml</link>
     <description>Recent content in Concurrency on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 24 Jan 2016 18:31:12 -0300</lastBuildDate>
     <atom:link href="https://divan.github.io/tags/concurrency/index.xml" rel="self" type="application/rss+xml" />
     
     <item>

@@ -2,8 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://divan.github.io/</loc>
-    <lastmod>2016-11-04T13:25:35+01:00</lastmod>
+    <loc>https://divan.github.io/posts/misusing_error_interface/</loc>
+    <lastmod>2017-03-08T12:07:40+01:00</lastmod>
   </url>
   
   <url>
@@ -44,6 +44,53 @@
   <url>
     <loc>https://divan.github.io/posts/go_errors/</loc>
     <lastmod>2015-11-02T08:36:54-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/tags/concurrency/</loc>
+    <lastmod>2016-01-24T18:31:12-03:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/tags/docker/</loc>
+    <lastmod>2015-12-07T08:36:54-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/tags/golang/</loc>
+    <lastmod>2016-11-04T13:25:35+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/tags/life/</loc>
+    <lastmod>2016-08-03T19:28:46+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/posts/</loc>
+    <lastmod>2017-03-08T12:07:40+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/tags/testing/</loc>
+    <lastmod>2015-12-07T08:36:54-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/</loc>
+    <lastmod>2017-03-08T12:07:40+01:00</lastmod>
+    <priority>0</priority>
   </url>
   
 </urlset>
