@@ -1183,6 +1183,8 @@ First, gotracer does the following:&lt;/p&gt;
 &lt;p&gt;I also would be happy to visualize more interesting concurrent algorithms and patterns not listed here. Feel free to write ones in the comments.&lt;/p&gt;
 
 &lt;p&gt;Happy coding!&lt;/p&gt;
+
+&lt;p&gt;UPD: This tool is available at &lt;a href=&#34;https://github.com/divan/gotrace&#34;&gt;github.com/divan/gotrace&lt;/a&gt; and using Go Execution Tracer and patched runtime to generate trace.&lt;/p&gt;
 </description>
     </item>
     
