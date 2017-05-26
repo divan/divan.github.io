@@ -6,8 +6,85 @@
     <description>Recent content on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 08 Mar 2017 12:07:40 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 26 May 2017 12:55:00 +0100</lastBuildDate>
     <atom:link href="https://divan.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>WakeMeUpInTheMiddleOfTheNight log level</title>
+      <link>https://divan.github.io/posts/wakemeupinthemiddleofthenight/</link>
+      <pubDate>Fri, 26 May 2017 12:55:00 +0100</pubDate>
+      
+      <guid>https://divan.github.io/posts/wakemeupinthemiddleofthenight/</guid>
+      <description>
+
+&lt;p&gt;On the last &lt;a href=&#34;https://www.meetup.com/Golang-Barcelona/&#34;&gt;Golang Barcelona meetup&lt;/a&gt; we decided to try new format of conversation and after the talk started open discussion on logging, tracing and metrics. The idea was to encourage people to read a very nice blog post by Peter Bourgon on this subject - &lt;a href=&#34;https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html&#34;&gt;&amp;ldquo;Metrics, Tracing and Logging&amp;rdquo;&lt;/a&gt; and discuss it in a free format.&lt;/p&gt;
+
+&lt;p&gt;It went surprisingly well, and while most of the people were conscious about the topic, one thing seemed to be still confusing - what to log and when. I think we&amp;rsquo;re all more or less agree that we should log only when program requires human to take a look. It wasn&amp;rsquo;t a case, let&amp;rsquo;s say, 10 years ago - there were no ELK, solid solutions for metrics or tracing - we were using logs for everything, then were building &amp;ldquo;log analyzers&amp;rdquo; to deal with a vast amount of information. But now, when we have all these best practices, powerful time-series databases, visualization platforms, tracing tools - what should we print to the log?&lt;/p&gt;
+
+&lt;p&gt;One of the coolest approaches to clarify this question I&amp;rsquo;ve found in the brilliant article by Daniel Lebrero &lt;a href=&#34;https://labs.ig.com/logging-level-wrong-abstraction&#34;&gt;&amp;ldquo;Logging levels: the wrong abstractions&amp;rdquo;&lt;/a&gt; (thanks &lt;a href=&#34;https://twitter.com/kasiazien&#34;&gt;@katzien&lt;/a&gt; for sharing this article). The idea is to rename the log levels, at least temporarily, and see how your perception of it changes.&lt;/p&gt;
+
+&lt;p&gt;So, let&amp;rsquo;s say you&amp;rsquo;re using any of the popular logging packages for Go, and you probably have these calls all over your code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;some error&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Warning&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;some warning&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;some info&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Debug&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;some debug information&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Looks familiar, right?&lt;/p&gt;
+
+&lt;p&gt;Now, let&amp;rsquo;s rename those calls to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;WakeMeUpInTheMiddleOfTheNight&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;some error&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ToInvestigateTomorrow&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;some warning&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;InProdEnv&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;some info&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;InTestEnv&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;some debug information&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;How does it look like? :)&lt;/p&gt;
+
+&lt;p&gt;Yeah, renaming &lt;code&gt;Error()&lt;/code&gt; method of your logger into &lt;code&gt;WakeMeUpInTheMiddleOfTheNight()&lt;/code&gt; not only makes it harder to type and forces you think twice, but also gives you a very straightforward answer to the question &amp;ldquo;Should I print this to the log?&amp;rdquo;. Do you want to be woken up in the middle of the night when this error occurs?&lt;/p&gt;
+
+&lt;p&gt;You may quickly create an wrapper for your logger (even if you use &lt;code&gt;log.Println(&amp;quot;[ERROR] error message&amp;quot;)&lt;/code&gt; approach) and have something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;LoggerWrapper&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Logger&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;l&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;LoggerWrapper&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;WakeMeUpInTheMiddleOfTheNight&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;args&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{})&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;l&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;WakeMeUpInTheMiddleOfTheNight&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;something failed&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Just try it.
+You may want to use &lt;code&gt;gofmt&lt;/code&gt; tool for that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gofmt -w -l -r &amp;quot;log.Error(x) -&amp;gt; log.WakeMeUpInTheMiddleOfTheNight(x)&amp;quot; .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I tried to do this with some of my projects and it was pretty interesting.&lt;/p&gt;
+
+&lt;p&gt;For example, when you see:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;WakeMeUpInTheMiddleOfTheNight&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Migrations failed&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;It makes sense. If running migrations process has failed, it&amp;rsquo;s a sign that something went terribly wrong and I want to be woken up in the middle of the night to investigate this. But when you see this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;WakeMeUpInTheMiddleOfTheNight&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Page not found&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;WriteHeader&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;htttp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;StatusNotFound&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;it immediately raises your eyebrow, Really, do you want to be woken up because of someone requested wrong URL?&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;I personally find this idea brilliant, even in a form of mental excercise. It also makes you realize that you don&amp;rsquo;t really need that &amp;ldquo;WARN&amp;rdquo; error level - what does it even mean? If it can wait till tomorrow - make it just normal log message, so human will read it and react. &amp;ldquo;DEBUG&amp;rdquo; is literally a normal log messages for the program running in a test or development mode. And, as you may guess, &amp;ldquo;INFO&amp;rdquo; is really redundant.&lt;/p&gt;
+
+&lt;p&gt;So I would argue, what you need in most cases is just two logging levels: normal message and error message (probably decorated with filename:line or stacktrace in some cases).&lt;/p&gt;
+
+&lt;p&gt;And, of course, use error level only when the program really needs you in the middle of the night.&lt;/p&gt;
+
+&lt;p&gt;Again, thanks for this brilliant idea to Daniel Lebrero and here again the link to the original article: &lt;a href=&#34;https://labs.ig.com/logging-level-wrong-abstraction&#34;&gt;https://labs.ig.com/logging-level-wrong-abstraction&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Misusing error interface</title>

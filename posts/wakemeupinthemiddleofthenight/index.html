@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta property="og:title" content=" WakeMeUpInTheMiddleOfTheNight log level &middot;  divan&#39;s blog" />
+  
+  <meta property="og:site_name" content="divan&#39;s blog" />
+  <meta property="og:url" content="https://divan.github.io/posts/wakemeupinthemiddleofthenight/" />
+  
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:article:published_time" content="2017-05-26T12:55:00&#43;01:00" />
+  
+  
+
+  <title>
+     WakeMeUpInTheMiddleOfTheNight log level &middot;  divan&#39;s blog
+  </title>
+
+  <link rel="stylesheet" href="https://divan.github.io/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.github.io/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.github.io/images/apple-touch-icon.png" />
+  
+</head>
+<body>
+    <header class="global-header">
+    <section class="header-text">
+      <h1><a href="https://divan.github.io/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+	  
+      <div class="tag-line">
+        random thoughts on Go, software and sports
+      </div>
+      
+      <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+      
+      <a href="https://divan.github.io/" class="btn-header btn-back hidden-xs">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        &nbsp;Home
+      </a>
+      
+      
+    </section>
+  </header>
+  <main class="container">
+
+
+<article>
+  <header>
+    <h1 class="text-primary">WakeMeUpInTheMiddleOfTheNight log level</h1>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2017-05-26T12:55:00&#43;01:00">
+          May 26, 2017
+        </time>
+      </div>
+      <div class="pull-right">
+        
+      </div>
+    </div>
+  </header>
+  <section>
+    
+
+<p>On the last <a href="https://www.meetup.com/Golang-Barcelona/">Golang Barcelona meetup</a> we decided to try new format of conversation and after the talk started open discussion on logging, tracing and metrics. The idea was to encourage people to read a very nice blog post by Peter Bourgon on this subject - <a href="https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html">&ldquo;Metrics, Tracing and Logging&rdquo;</a> and discuss it in a free format.</p>
+
+<p>It went surprisingly well, and while most of the people were conscious about the topic, one thing seemed to be still confusing - what to log and when. I think we&rsquo;re all more or less agree that we should log only when program requires human to take a look. It wasn&rsquo;t a case, let&rsquo;s say, 10 years ago - there were no ELK, solid solutions for metrics or tracing - we were using logs for everything, then were building &ldquo;log analyzers&rdquo; to deal with a vast amount of information. But now, when we have all these best practices, powerful time-series databases, visualization platforms, tracing tools - what should we print to the log?</p>
+
+<p>One of the coolest approaches to clarify this question I&rsquo;ve found in the brilliant article by Daniel Lebrero <a href="https://labs.ig.com/logging-level-wrong-abstraction">&ldquo;Logging levels: the wrong abstractions&rdquo;</a> (thanks <a href="https://twitter.com/kasiazien">@katzien</a> for sharing this article). The idea is to rename the log levels, at least temporarily, and see how your perception of it changes.</p>
+
+<p>So, let&rsquo;s say you&rsquo;re using any of the popular logging packages for Go, and you probably have these calls all over your code:</p>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">log</span><span class="p">.</span><span class="nx">Error</span><span class="p">(</span><span class="s">&quot;some error&quot;</span><span class="p">)</span>
+<span class="nx">log</span><span class="p">.</span><span class="nx">Warning</span><span class="p">(</span><span class="s">&quot;some warning&quot;</span><span class="p">)</span>
+<span class="nx">log</span><span class="p">.</span><span class="nx">Info</span><span class="p">(</span><span class="s">&quot;some info&quot;</span><span class="p">)</span>
+<span class="nx">log</span><span class="p">.</span><span class="nx">Debug</span><span class="p">(</span><span class="s">&quot;some debug information&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Looks familiar, right?</p>
+
+<p>Now, let&rsquo;s rename those calls to:</p>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">log</span><span class="p">.</span><span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="s">&quot;some error&quot;</span><span class="p">)</span>
+<span class="nx">log</span><span class="p">.</span><span class="nx">ToInvestigateTomorrow</span><span class="p">(</span><span class="s">&quot;some warning&quot;</span><span class="p">)</span>
+<span class="nx">log</span><span class="p">.</span><span class="nx">InProdEnv</span><span class="p">(</span><span class="s">&quot;some info&quot;</span><span class="p">)</span>
+<span class="nx">log</span><span class="p">.</span><span class="nx">InTestEnv</span><span class="p">(</span><span class="s">&quot;some debug information&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>How does it look like? :)</p>
+
+<p>Yeah, renaming <code>Error()</code> method of your logger into <code>WakeMeUpInTheMiddleOfTheNight()</code> not only makes it harder to type and forces you think twice, but also gives you a very straightforward answer to the question &ldquo;Should I print this to the log?&rdquo;. Do you want to be woken up in the middle of the night when this error occurs?</p>
+
+<p>You may quickly create an wrapper for your logger (even if you use <code>log.Println(&quot;[ERROR] error message&quot;)</code> approach) and have something like this:</p>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">LoggerWrapper</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="o">*</span><span class="nx">Logger</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">LoggerWrapper</span><span class="p">)</span> <span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="nx">fmt</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span> <span class="p">{</span>
+    <span class="nx">l</span><span class="p">.</span><span class="nx">Error</span><span class="p">(</span><span class="nx">fmt</span><span class="p">,</span> <span class="nx">args</span><span class="o">...</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="o">...</span>
+<span class="nx">logger</span><span class="p">.</span><span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="s">&quot;something failed&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Just try it.
+You may want to use <code>gofmt</code> tool for that:</p>
+
+<pre><code>gofmt -w -l -r &quot;log.Error(x) -&gt; log.WakeMeUpInTheMiddleOfTheNight(x)&quot; .
+</code></pre>
+
+<p>I tried to do this with some of my projects and it was pretty interesting.</p>
+
+<p>For example, when you see:</p>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">log</span><span class="p">.</span><span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="s">&quot;Migrations failed&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>It makes sense. If running migrations process has failed, it&rsquo;s a sign that something went terribly wrong and I want to be woken up in the middle of the night to investigate this. But when you see this:</p>
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">log</span><span class="p">.</span><span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="s">&quot;Page not found&quot;</span><span class="p">)</span>
+<span class="nx">w</span><span class="p">.</span><span class="nx">WriteHeader</span><span class="p">(</span><span class="nx">htttp</span><span class="p">.</span><span class="nx">StatusNotFound</span><span class="p">)</span>
+</code></pre></div>
+
+<p>it immediately raises your eyebrow, Really, do you want to be woken up because of someone requested wrong URL?</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>I personally find this idea brilliant, even in a form of mental excercise. It also makes you realize that you don&rsquo;t really need that &ldquo;WARN&rdquo; error level - what does it even mean? If it can wait till tomorrow - make it just normal log message, so human will read it and react. &ldquo;DEBUG&rdquo; is literally a normal log messages for the program running in a test or development mode. And, as you may guess, &ldquo;INFO&rdquo; is really redundant.</p>
+
+<p>So I would argue, what you need in most cases is just two logging levels: normal message and error message (probably decorated with filename:line or stacktrace in some cases).</p>
+
+<p>And, of course, use error level only when the program really needs you in the middle of the night.</p>
+
+<p>Again, thanks for this brilliant idea to Daniel Lebrero and here again the link to the original article: <a href="https://labs.ig.com/logging-level-wrong-abstraction">https://labs.ig.com/logging-level-wrong-abstraction</a></p>
+
+  </section>
+  <footer>
+    <section class="author-info row">
+      <div class="author-avatar col-md-2">
+        
+        <img alt="Author Avatar" src="/images/avatar.jpg" />
+        
+      </div>
+      <div class="author-meta col-md-6">
+        
+        
+		<div class="author-bio">Gopher. Figure skating enthusiast.<br />
+			Follow me at <a href="https://twitter.com/idanyliuk" target="_blank">@idanyliuk</a>
+		</div>
+        
+      </div>
+      
+      <div class="author-contact col-md-4">
+        <a href="mailto:ivan.daniluk@gmail.com">
+          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          &nbsp;Contact me
+        </a>
+      </div>
+      
+    </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a href="https://divan.github.io/posts/misusing_error_interface/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      
+      
+      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+  </main>
+  <footer class="container global-footer">
+    <div class="copyright-note pull-left">
+      
+    </div>
+    <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <script src="https://divan.github.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-70805978-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  
+  
+</body>
+</html>
+
