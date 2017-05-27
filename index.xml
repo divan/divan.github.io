@@ -58,7 +58,7 @@
 &lt;p&gt;Just try it.
 You may want to use &lt;code&gt;gofmt&lt;/code&gt; tool for that:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;gofmt -w -l -r &amp;quot;log.Error(x) -&amp;gt; log.WakeMeUpInTheMiddleOfTheNight(x)&amp;quot; .
+&lt;pre&gt;&lt;code&gt;gofmt -w -l -r &amp;quot;log.Error -&amp;gt; log.WakeMeUpInTheMiddleOfTheNight&amp;quot; .
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;I tried to do this with some of my projects and it was pretty interesting.&lt;/p&gt;
