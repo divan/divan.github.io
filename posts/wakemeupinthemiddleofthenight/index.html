@@ -98,36 +98,39 @@
 <p>One of the coolest approaches to clarify this question I&rsquo;ve found in the brilliant article by Daniel Lebrero <a href="https://labs.ig.com/logging-level-wrong-abstraction">&ldquo;Logging levels: the wrong abstractions&rdquo;</a> (thanks <a href="https://twitter.com/kasiazien">@katzien</a> for sharing this article). The idea is to rename the log levels, at least temporarily, and see how your perception of it changes.</p>
 
 <p>So, let&rsquo;s say you&rsquo;re using any of the popular logging packages for Go, and you probably have these calls all over your code:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">log</span><span class="p">.</span><span class="nx">Error</span><span class="p">(</span><span class="s">&quot;some error&quot;</span><span class="p">)</span>
-<span class="nx">log</span><span class="p">.</span><span class="nx">Warning</span><span class="p">(</span><span class="s">&quot;some warning&quot;</span><span class="p">)</span>
-<span class="nx">log</span><span class="p">.</span><span class="nx">Info</span><span class="p">(</span><span class="s">&quot;some info&quot;</span><span class="p">)</span>
-<span class="nx">log</span><span class="p">.</span><span class="nx">Debug</span><span class="p">(</span><span class="s">&quot;some debug information&quot;</span><span class="p">)</span>
-</code></pre></div>
+
+<pre><code class="language-go">log.Error(&quot;some error&quot;)
+log.Warning(&quot;some warning&quot;)
+log.Info(&quot;some info&quot;)
+log.Debug(&quot;some debug information&quot;)
+</code></pre>
 
 <p>Looks familiar, right?</p>
 
 <p>Now, let&rsquo;s rename those calls to:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">log</span><span class="p">.</span><span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="s">&quot;some error&quot;</span><span class="p">)</span>
-<span class="nx">log</span><span class="p">.</span><span class="nx">ToInvestigateTomorrow</span><span class="p">(</span><span class="s">&quot;some warning&quot;</span><span class="p">)</span>
-<span class="nx">log</span><span class="p">.</span><span class="nx">InProdEnv</span><span class="p">(</span><span class="s">&quot;some info&quot;</span><span class="p">)</span>
-<span class="nx">log</span><span class="p">.</span><span class="nx">InTestEnv</span><span class="p">(</span><span class="s">&quot;some debug information&quot;</span><span class="p">)</span>
-</code></pre></div>
+
+<pre><code class="language-go">log.WakeMeUpInTheMiddleOfTheNight(&quot;some error&quot;)
+log.ToInvestigateTomorrow(&quot;some warning&quot;)
+log.InProdEnv(&quot;some info&quot;)
+log.InTestEnv(&quot;some debug information&quot;)
+</code></pre>
 
 <p>How does it look like? :)</p>
 
 <p>Yeah, renaming <code>Error()</code> method of your logger into <code>WakeMeUpInTheMiddleOfTheNight()</code> not only makes it harder to type and forces you think twice, but also gives you a very straightforward answer to the question &ldquo;Should I print this to the log?&rdquo;. Do you want to be woken up in the middle of the night when this error occurs?</p>
 
 <p>You may quickly create an wrapper for your logger (even if you use <code>log.Println(&quot;[ERROR] error message&quot;)</code> approach) and have something like this:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">LoggerWrapper</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="o">*</span><span class="nx">Logger</span>
-<span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">LoggerWrapper</span><span class="p">)</span> <span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="nx">fmt</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span> <span class="p">{</span>
-    <span class="nx">l</span><span class="p">.</span><span class="nx">Error</span><span class="p">(</span><span class="nx">fmt</span><span class="p">,</span> <span class="nx">args</span><span class="o">...</span><span class="p">)</span>
-<span class="p">}</span>
-<span class="o">...</span>
-<span class="nx">logger</span><span class="p">.</span><span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="s">&quot;something failed&quot;</span><span class="p">)</span>
-</code></pre></div>
+<pre><code class="language-go">type LoggerWrapper struct {
+    *Logger
+}
+
+func (l *LoggerWrapper) WakeMeUpInTheMiddleOfTheNight(fmt string, args ...interface{}) {
+    l.Error(fmt, args...)
+}
+...
+logger.WakeMeUpInTheMiddleOfTheNight(&quot;something failed&quot;)
+</code></pre>
 
 <p>Just try it.
 You may want to use <code>gofmt</code> tool for that:</p>
@@ -138,13 +141,15 @@ You may want to use <code>gofmt</code> tool for that:</p>
 <p>I tried to do this with some of my projects and it was pretty interesting.</p>
 
 <p>For example, when you see:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">log</span><span class="p">.</span><span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="s">&quot;Migrations failed&quot;</span><span class="p">)</span>
-</code></pre></div>
+
+<pre><code class="language-go">log.WakeMeUpInTheMiddleOfTheNight(&quot;Migrations failed&quot;)
+</code></pre>
 
 <p>It makes sense. If running migrations process has failed, it&rsquo;s a sign that something went terribly wrong and I want to be woken up in the middle of the night to investigate this. But when you see this:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">log</span><span class="p">.</span><span class="nx">WakeMeUpInTheMiddleOfTheNight</span><span class="p">(</span><span class="s">&quot;Page not found&quot;</span><span class="p">)</span>
-<span class="nx">w</span><span class="p">.</span><span class="nx">WriteHeader</span><span class="p">(</span><span class="nx">htttp</span><span class="p">.</span><span class="nx">StatusNotFound</span><span class="p">)</span>
-</code></pre></div>
+
+<pre><code class="language-go">log.WakeMeUpInTheMiddleOfTheNight(&quot;Page not found&quot;)
+w.WriteHeader(htttp.StatusNotFound)
+</code></pre>
 
 <p>it immediately raises your eyebrow, Really, do you want to be woken up because of someone requested wrong URL?</p>
 

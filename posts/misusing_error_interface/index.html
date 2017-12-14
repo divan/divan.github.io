@@ -96,49 +96,54 @@
 <h1 id="the-bug">The bug</h1>
 
 <p>But here is the interesting piece of code that actually was buggy:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">err</span> <span class="o">:=</span> <span class="nx">SomeFunc</span><span class="p">()</span>
-<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="nx">MyError</span><span class="p">);</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
-    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
+
+<pre><code class="language-go">err := SomeFunc()
+if _, ok := err.(MyError); !ok {
+    log.Println(err)
+}
+</code></pre>
 
 <p>Quite idiomatic, right?  Error type naming is good, following <a href="https://github.com/golang/go/wiki/Errors#naming">recommended way to name error types and variables</a>.  We use here normal <a href="https://golang.org/doc/effective_go.html#interface_conversions">type assertion</a>, &ldquo;extracting&rdquo; underlying static type from an interface. If an error doesn&rsquo;t have this type inside, we should log it.</p>
 
 <p>But it didn&rsquo;t work. Variable <code>ok</code> was always true.</p>
 
 <p>First, I checked <code>SomeFunc()</code>:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">func</span> <span class="nx">SomeFunc</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
-    <span class="c1">// case 1: we want caller to print this error</span>
-    <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Unmarshal</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">v</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">err</span>
-    <span class="p">}</span>
-    <span class="o">...</span>
-    <span class="c1">// case 2: we want caller to ignore this error</span>
-    <span class="nx">err</span> <span class="p">=</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="s">&quot;my error&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nx">MyError</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
+
+<pre><code class="language-go">func SomeFunc() error {
+    // case 1: we want caller to print this error
+    err := json.Unmarshal(data, &amp;v)
+    if err != nil {
+        return err
+    }
+    ...
+    // case 2: we want caller to ignore this error
+    err = errors.New(&quot;my error&quot;)
+    return MyError(err)
+}
+</code></pre>
 
 <p>Well, it&rsquo;s a bit smelly, but looks kinda ok. In the first case, we definitely do not return <code>MyError</code>, so type assertion should reflect this. Why was <code>ok</code> true in this case?</p>
 
 <p>Next jump to the definition of <code>MyError</code> gave me an answer:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">MyError</span> <span class="kt">error</span>
-</code></pre></div>
+
+<pre><code class="language-go">type MyError error
+</code></pre>
 
 <p>What??</p>
 
 <p><code>MyError</code> was actually an interface type! Even more - it was &ldquo;synonym&rdquo; for <code>error</code> interface!</p>
 
 <p>Developer who wrote this code was assuming that</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">MyError</span> <span class="kt">error</span>
-</code></pre></div>
+
+<pre><code class="language-go">type MyError error
+</code></pre>
 
 <p>is the same as:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">MyError</span> <span class="kd">struct</span> <span class="p">{</span>
-   <span class="kt">error</span>
-<span class="p">}</span>
-</code></pre></div>
+
+<pre><code class="language-go">type MyError struct {
+   error
+}
+</code></pre>
 
 <p>Which is more than far from the truth.</p>
 
@@ -147,8 +152,9 @@
 <p>If you do understand interfaces in Go, you will spot immediately that in a first case MyError is an interface type, while in the second case it is a concrete type.</p>
 
 <p>The tricky part here is that type assertion works both with concrete and interface types - it&rsquo;s ok to &ldquo;extract&rdquo; one interface from another. For example, you can &ldquo;reduce&rdquo; <code>io.ReadCloser</code> to <code>io.Reader</code> by this:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">r</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">rc</span><span class="p">.(</span><span class="nx">io</span><span class="p">.</span><span class="nx">Reader</span><span class="p">)</span>
-</code></pre></div>
+
+<pre><code class="language-go">r, ok := rc.(io.Reader)
+</code></pre>
 
 <p>and it&rsquo;s perfectly valid case. It&rsquo;s <a href="https://golang.org/doc/effective_go.html#interface_conversions">in the spec</a>:</p>
 
