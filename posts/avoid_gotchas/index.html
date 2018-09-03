@@ -212,7 +212,7 @@ That&rsquo;s not very interesting, so let&rsquo;s use <code>make</code> to initi
 </code></pre>
 
 <p>will create a slice with an underlying array of 5 elements, initialized with 0, and will set both <code>len</code> and <code>cap</code> to 5.
-Cap means capacity and helps to reserve more space for the future growth. You can use <code>make([]int, len, cap)</code> syntax to specify capacity. If fact, you&rsquo;re almost never will have to deal with that, but it&rsquo;s important to understand the concept of capacity.</p>
+Cap means capacity and helps to reserve more space for the future growth. You can use <code>make([]int, len, cap)</code> syntax to specify capacity. In fact, you&rsquo;re almost never will have to deal with that, but it&rsquo;s important to understand the concept of capacity.</p>
 
 <pre><code class="language-go">foo = make([]int, 3, 5)
 </code></pre>
