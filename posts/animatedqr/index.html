@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta property="og:title" content=" Animated QR data transfer with Gomobile and Gopherjs &middot;  divan&#39;s blog" />
+  
+  <meta property="og:site_name" content="divan&#39;s blog" />
+  <meta property="og:url" content="https://divan.github.io/posts/animatedqr/" />
+  
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:article:published_time" content="2018-11-18T11:55:00&#43;01:00" />
+  
+  
+
+  <title>
+     Animated QR data transfer with Gomobile and Gopherjs &middot;  divan&#39;s blog
+  </title>
+
+  <link rel="stylesheet" href="https://divan.github.io/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.github.io/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.github.io/images/apple-touch-icon.png" />
+  
+</head>
+<body>
+    <header class="global-header">
+    <section class="header-text">
+      <h1><a href="https://divan.github.io/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+	  
+      <div class="tag-line">
+        random thoughts on Go and software design
+      </div>
+      
+      <div class="tag-line">
+        <a href="https://divan.github.io/talks">My Talks</a>
+      </div>
+      <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+      
+      <a href="https://divan.github.io/" class="btn-header btn-back hidden-xs">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        &nbsp;Home
+      </a>
+      
+      
+    </section>
+  </header>
+  <main class="container">
+
+
+<article>
+  <header>
+    <h1 class="text-primary">Animated QR data transfer with Gomobile and Gopherjs</h1>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2018-11-18T11:55:00&#43;01:00">
+          Nov 18, 2018
+        </time>
+      </div>
+      <div class="pull-right">
+        
+      </div>
+    </div>
+  </header>
+  <section>
+    
+
+<p>TL;DR: a weekend project for transferring data via animated QR codes, written in Go. The Go code is reused for mobile apps using Gomobile, and in a web application for automating testing QR codes parameters, built with GopherJS and Vecty framework.</p>
+
+<p><img src="/images/txqr_send.gif#center" alt="Transfer file via QR code between two phones" /></p>
+
+<p>I&rsquo;ll share my experience building it, some code and benchmark results of using animated QR as a data transfer method.</p>
+
+<p><img src="/images/results_3d.png" alt="Testing results" /></p>
+
+<h1 id="the-problem">The problem</h1>
+
+<p>One day I was trying to find a viable solution for the following scenario:</p>
+
+<p><em>Imagine you&rsquo;re in the crowded place and suddenly your messenger stop working because your authoritarian government blocked it. Maybe they just banned IP addresses of bootnodes for the messenger, or restricted access to some hosts via state-controlled DNS providers, or cut off yet another VPN or proxy service – it doesn&rsquo;t actually relevant here. The question is – how to re-enable connectivity if at least one device has a working connection and willing to share connectivity information with others.</em></p>
+
+<p>Now, that&rsquo;s rather a long introduction, but one important concept has to be understood here – <a href="https://en.wikipedia.org/wiki/Percolation_threshold">percolation threshold</a>. The simplified idea is that if you connect nodes in lattice or graph (or people in the crowd) with probability <em>p</em>, then at some critical probability <em>p</em><sub>0</sub> large clusters and long-range connectivity will appear. In even simpler words, if everyone in a crowd will share information with <em>n</em> people around them, you can guarantee with mathematical precision that everyone will get this information.</p>
+
+<p>In the case of bootnodes IPs, for example, that means, that connectivity of the app will be restored for everyone.</p>
+
+<p>Ok, now the question – how do you quickly send an arbitrary piece of small data from one app to another, when you&rsquo;re in the adversarial environment, with the partly blocked internet? Bluetooth comes to mind first, but that requires a long and tedious process of discovering the device, figuring out its device name, and in many cases, it just &ldquo;doesn&rsquo;t connect, don&rsquo;t know why&rdquo; type of problems. Next, NFC is a good idea – just tap one phone to another – but the major drawback is that there are still plenty of phones and tablets out there without or with limited NFC support. How about QR codes?</p>
+
+<h1 id="qr-codes">QR Codes</h1>
+
+<p><a href="https://en.wikipedia.org/wiki/QR_code">QR codes</a> are an extremely popular type of visual encoding, widely adopted across many industries. It allows for different error recovery levels, with almost 30% redundancy for the highest one. Version with the highest capacity (QR Version 40) allows you to encode up to 4296 alphanumeric or 2953 binary symbols.</p>
+
+<p>But here are two obvious problems:</p>
+
+<ul>
+<li>3-4KB might be just not enough</li>
+<li>The more data in QR code, the better quality and image resolution should be</li>
+</ul>
+
+<p>For my case I wanted to be able to transfer approximately ~15KB of data on the average consumer devices, so I naturally asked why not use animated QR codes with dynamic FPS and size changes?</p>
+
+<p>A quick research of prior work showed a <a href="https://github.com/leonjza/qrxfer">few</a> <a href="https://volumeintegration.com/jumping-the-gap-data-transmission-over-an-air-gap/">similar</a> <a href="http://stephendnicholas.com/posts/quicker-video-qr-codes">projects</a>, mostly as hackathon projects or even as a <a href="http://www.theseus.fi/bitstream/handle/10024/96359/Grasbeck_Max.pdf?sequence=1&amp;isAllowed=y">bachelor&rsquo;s thesis</a> and written in Java, Python or JavaScript. That means the code is not cross-platform and virtually non-reusable and has to be reimplemented from scratch. Luckily, due to the massive popularity of QR codes, there is no shortage of libraries to work with them, and QR decoding is even embedded in the camera software of major smartphones manufacturers. (That&rsquo;s actually was one of the reasons of not exploring other ways to increase the capacity of QR code, like colored QR codes, where color encodes additional layers or even cooler stuff with luminance encoding like Apple uses for their <a href="https://www.youtube.com/watch?v=-WK4jiwlE5k">particle cloud in Apple Watch pairing process</a>).</p>
+
+<h1 id="txqr">TXQR</h1>
+
+<p>So that&rsquo;s how my weekend project started. Name TxQR stands for Transfer (Tx) via QR  codes.</p>
+
+<p>The basic design is following. One client chooses the data to be sent, generates animated QR code and shows it in the loop until the reader receives all the frames. Encoding is designed in such a way, that it allows for any particular order of frames, as well as dynamic changes in FPS or encoded chunks size. That was made for the case where the reader is much slower, and it can display a message &ldquo;please decrease FPS on sender&rdquo;, and continue receiving the same file, even if the frame size has changed.</p>
+
+<p>The protocol is quite simple – each frame starts with a prefix &ldquo;NUM/TOTAL|&rdquo;, (where NUM and TOTAL are integer values for current and total frames respectively) and the rest is the file content. For binary content, original data is encoded using Base64, so only alphanumeric data is actually encoded in QR. Then frames are shown with a given FPS in the infinite loop.</p>
+
+<p><img src="/images/txqr_protocol.png" alt="TXQR protocol" /></p>
+
+<p>It&rsquo;s that simple, and <a href="https://github.com/divan/txqr">here</a> is a Go implementation of the protocol, along with convenient wrappers for encoding and decoding QR codes. The cool part was to make a mobile app that can use this code.</p>
+
+<h2 id="gomobile">Gomobile</h2>
+
+<p>And it was an extremely easy task thanks to <a href="https://github.com/golang/mobile">gomobile</a>.</p>
+
+<p>You just write a standard Go code, then run <code>gomobile bind ...</code> and in a few seconds get prepared <code>.framework</code> or <code>.aar</code> file to be included in your iOS or Android project. In the project, you refer to it as to any regular library and get autocomplete and type information automatically.</p>
+
+<p>I quickly built a simple iOS QR scanner in Swift (thanks to the <a href="https://medium.com/appcoda-tutorials/how-to-build-qr-code-scanner-app-in-swift-b5532406dd6b">fantastic intro</a> on that by Simon Ng) and modified it to read animated QR codes, feed the decoded chunks into txqr decoder and display received the file in a preview window.</p>
+
+<p>Whenever I got stuck on &ldquo;how to do X properly in Swift&rdquo;, it usually was much easier to implement it in Go and then just call the method from lib. Don&rsquo;t get me wrong, Swift is a nice language in many aspects, but it allows you to things in multiple ways plus has some breaking changes history, and you end up googling and stackoverflowing for an hour for simple things like &ldquo;how to measure duration with millisecond precision&rdquo;. After 40 minutes of wasted time, I just did Go function with <code>time.Since(start)</code> call and used it from within the Swift.</p>
+
+<p>I also wrote a terminal tool that displays QR codes in the console for quickly testing the app. Combined, that worked suprisingly well - I was able to send the small image in approximately ten seconds, but once I started to test on bigger files and playing with different FPS, I realized that terminal QR implementation frame rate wasn&rsquo;t enough to test higher rates and that trying it manually is a dead end.</p>
+
+<h1 id="txqr-tester">TXQR Tester</h1>
+
+<p><img src="/images/txqr_tester.jpg" alt="TXQR tester" /></p>
+
+<p>If I want to find the optimal combination of FPS, QR frame size and QR recovery level I have to run at least 1000 tests, manually changing parameters and writing down results to the spreadsheets, while holding the phone near the screen. No way. I obviously should be able to automate that!</p>
+
+<p>That&rsquo;s where the idea of txqr tester app came in. First, I decided to use <a href="x/exp/shiny">x/exp/shiny</a> which is a UI framework for desktop apps in Go, but it seems to as experimental as it is abandoned. That&rsquo;s a pity as I played with <code>shiny</code> a year ago and it was promising for low-level desktop apps. When I tried it today, it didn&rsquo;t even compile. It seems like there is no incentive to develop desktop UI frameworks anymore – everything is on the web.</p>
+
+<p>But web programming, you know, is still in the very early stages – programming languages just started to be supported by browsers via WASM, but they&rsquo;re just making their first baby steps. There is, of course, JavaScript, but friends don&rsquo;t let friends write web apps in JavaScript, so I decided to use one recent discovery of mine - framework <a href="https://github.com/gopherjs/vecty">Vecty</a>, which allows you to write frontends in Go and automagically transpile it to JS via surprisingly mature project <a href="https://github.com/gopherjs/gopherjs">GopherJS</a>.</p>
+
+<h3 id="vecty-and-gopherjs">Vecty and GopherJS</h3>
+
+<p><img src="https://raw.githubusercontent.com/vecty/vecty-logo/master/horizontal_color.png" alt="Vecty" /></p>
+
+<p>Honestly, I never had more fun writing frontends.</p>
+
+<p>I&rsquo;ll blog more about my recent experience with Vecty, including developing WebGL apps, but the point is – after writing quite a few projects in React, Angulars and Ember, doing it in a well-designed language is such a breath of fresh air! I can now write pretty decent web apps without writing any single line of Javascript, and, in most cases, &ldquo;it just works&rdquo;!</p>
+
+<p>Just to tease you, here is how you write a web app in Go these days:</p>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;github.com/gopherjs/vecty&quot;
+)
+
+func main() {
+    app := NewApp()
+
+    vecty.SetTitle(&quot;My App&quot;)
+    vecty.AddStylesheet(/* ... add your css... */)
+    vecty.RenderBody(app)
+}
+</code></pre>
+
+<p>The app is just a type – a struct that embeds <code>vecty.Core</code> type – and it has to implement <code>vecty.Component</code> interface. That&rsquo;s it! Constructing DOM objects seems a bit verbose at start, but you fully appreciate how actually great it is only when start refactoring the code:</p>
+
+<pre><code class="language-go">// App is a top-level app component.
+type App struct {
+    vecty.Core
+
+    session      *Session
+    settings     *Settings
+    // any other stuff you need,
+    // it's just a struct
+}
+
+// Render implements the vecty.Component interface.
+func (a *App) Render() vecty.ComponentOrHTML {
+    return elem.Body(
+        a.header(),
+        elem.Div(
+            vecty.Markup(
+                vecty.Class(&quot;columns&quot;),
+            ),
+            // Left half
+            elem.Div(
+                vecty.Markup(
+                    vecty.Class(&quot;column&quot;, &quot;is-half&quot;),
+                ),
+                elem.Div(a.QR()), // QR display zone
+            ),
+            // Right half
+            elem.Div(
+                vecty.Markup(
+                    vecty.Class(&quot;column&quot;, &quot;is-half&quot;),
+                ),
+                vecty.If(!a.session.Started(), elem.Div(
+                    a.settings,
+                )),
+                vecty.If(a.session.Started(), elem.Div(
+                    a.resultsTable,
+                )),
+            ),
+        ),
+        vecty.Markup(
+            event.KeyDown(a.KeyListener),
+        ),
+    )
+}
+</code></pre>
+
+<p>You&rsquo;re probably looking at this code and thinking how verbose it is, and it definitely is, but it&rsquo;s so pleasant to work with! No open/closing tags, super easy copy/paste operation (if you need to move some DOM nodes around), the structure is clear and makes sense, and it&rsquo;s all strongly typed! You&rsquo;ll appreciate its verbosity after writing your own components, I&rsquo;m quite sure.</p>
+
+<p>Vecty is said to be a React-like framework, but it&rsquo;s not completely accurate. There are GopherjS bindings to React exists - <a href="https://github.com/myitcv/x/blob/master/react/_doc/README.md">myitcv.io/react</a>, but I don&rsquo;t think we need to follow the same steps as React did. When you write frontend in Vecty, you realize how much simpler things are. You don&rsquo;t need most of the hidden magic and new terms that most JavaScript frameworks invent – they&rsquo;re all just accidental complexity. You still just need types and functions and methods and connect and call them properly, that&rsquo;s it.</p>
+
+<p>For the CSS I used surprisingly good CSS framework called <a href="https://bulma.io">Bulma</a> - it has some sane and meaningful naming, making resulting UI code really digestible.</p>
+
+<p>The real magic happens on the compilation stage, though. You just run <code>gopherjs build</code>, and in less than a second, you got your compiled JS ready to be included in your page or server by your server. When I first run it, I expected to see a bunch of errors, warnings, unreadable messages, but no - it&rsquo;s blazingly fast, silent and only reports compilation errors as oneliners. In the browsers, by the way, if panic is thrown, you see stacktraces with references to Go files (not the transpiled JS) and line numbers in it. Isn&rsquo;t it cool?</p>
+
+<h3 id="testing-the-txqr-encoder-parameters">Testing the TXQR encoder parameters</h3>
+
+<p>So, in a few hours, I got the web app that allows me to configure the range of testing parameters:</p>
+
+<ul>
+<li>FPS (frame per second)</li>
+<li>QR frame size (how many bytes to put in each QR frame)</li>
+<li>QR Recovery level (Low, Medium, High and/or Highest)</li>
+</ul>
+
+<p>and initiate a testing sequence for the mobile app.</p>
+
+<p><img src="/images/txqr_app.png" alt="TXQR tester app" /></p>
+
+<p>The mobile app, of course, should be automated as well – it needs to understand when the next testing round starts, handle timeouts (sometimes phone camera just can&rsquo;t pick up all frames and never get the result), sends results to the app, etc.</p>
+
+<p>There was a tricky part with the fact that web app can&rsquo;t create listening sockets – it runs in the browsers, and apart of WebRTC (which I thought would be an overkill) for such a simple communication testing protocol, you only can be a client.</p>
+
+<p>So the solution was quite simple – small Go app that will serve as an HTTP static server for web app (and automatically spin up the browser for you), will also include WebSocket proxy which will expect only two connections – from UI (our web app) and from mobile phone - and that will act like a transparent proxy, so both clients think they talk to each other directly. They have to be on the same WiFi network, of course.</p>
+
+<p>There still a need to somehow communicate WebSocket address to the mobile app, and guess what – we can use QR code for that :) So the flow is following:</p>
+
+<ul>
+<li>mobile app looks for QR code with &ldquo;start&rdquo; marker</li>
+<li>from the marker, it extracts &ldquo;ws://&rdquo; URL and connects to the given server</li>
+<li>UI app immediately recognizes this and starts generating next QR testing round</li>
+<li>it shows new QR code with &ldquo;readyToStart?&rdquo; marker</li>
+<li>the mobile app reads this QR code and sends the WebSocket message with a confirmation</li>
+</ul>
+
+<p><img src="/images/txqr_tester_design.png" alt="TXQR tester design" /></p>
+
+<p>So, in the end, I just have to put the mobile phone on the tripod, and it will talk to the app via scanning QR codes and sending messages WebSocket.</p>
+
+<p><img src="/images/txqr_tester.gif#center" alt="TXQR tester demo" /></p>
+
+<p>At the end UI allows to download CSV file with results, that can be analyzed in R or any other statistical tool or language.</p>
+
+<h1 id="benchmarking">Benchmarking</h1>
+
+<p>The full testing cycle runs around 4 hours (the heaviest part – generation of animated QR runs in the browser, and as it&rsquo;s still JS under the hood, it uses only one CPU core), and I had to make sure that the screen doesn&rsquo;t turn itself off, or some other application window doesn&rsquo;t cover the testing app. I set up testing with the following parameters:</p>
+
+<ul>
+<li><strong>FPS</strong> - from 3 to 12</li>
+<li><strong>QR frame size</strong> - from 100 to 1000 (with step 50)</li>
+<li><strong>QR Recovery Levels</strong> - all four</li>
+<li><strong>Data size</strong> - 13KB (it&rsquo;s randomly generated binary bytes)</li>
+</ul>
+
+<p>After a few hours, I downloaded CSV file and did some quick analysis and visualizations.</p>
+
+<h1 id="results">Results</h1>
+
+<p>A picture is worth a thousands words, but 3D interactive widgets is worth a thousand pictures. Here is 3D scatterplot for obtained results:</p>
+
+<div>
+	<a href="https://plot.ly/~divan0/1/?share_key=t8DizOL9dynI6NTcLA88Xi" target="_blank" title="qr_scan_results" style="display: block; text-align: center;"><img src="https://plot.ly/~divan0/1.png?share_key=t8DizOL9dynI6NTcLA88Xi" alt="qr_scan_results" style="max-width: 100%;width: 600px;" width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+	<script data-plotly="divan0:1" sharekey-plotly="t8DizOL9dynI6NTcLA88Xi" src="https://plot.ly/embed.js" async></script>
+</div>
+
+
+<p>The best result was 1.4 secs, which is almost 9KB/s! This result has been recorded at a rate of 11 frames per second and chunk size of 850 bytes with Medium recovery level.  In fact, however, at such encoding ratio and fps the probability of phone camera missing a frame was quite high, so in many cases it was just looping over and over, waiting for the missed frame until the test round timed out.</p>
+
+<p>Here are the boxplots for chunk size and fps variables (note, timed out measurements recorded here as values of 30s):</p>
+
+<h4 id="time-vs-chunk-size">Time vs Chunk size:</h4>
+
+<p><a href="https://plot.ly/~divan0/3/"><img src="/images/qr_size.png" alt="Time vs Size" /></a></p>
+
+<p>As we can see above, low chunk sizes result in too much overhead for QR encoding and overall transferring time skyrockets. There are some sane values like 550 and 900 bytes per chunk, but step left or right, and we got timeouts due to missed frames again. 1000 bytes size is almost guaranteed miss of frames and timeout.</p>
+
+<h4 id="time-vs-fps">Time vs FPS:</h4>
+
+<p><a href="https://plot.ly/~divan0/2/"><img src="/images/qr_fps.png" alt="Time vs FPS" /></a></p>
+
+<p>FPS parameter, a bit to my surprise, didn&rsquo;t have that much effect. The best values seem to be 6-7 FPS, which equals to approximately 150ms between frames. The lower fps result in increasing wait time, and faster FPS yields missed frames.</p>
+
+<h4 id="time-vs-qr-recovery-level">Time vs QR Recovery Level:</h4>
+
+<p><a href="https://plot.ly/~divan0/6/"><img src="/images/qr_lvl.png" alt="Time vs Lvl" /></a></p>
+
+<p>QR Recovery Level parameter showed a clear connection between transferring time and the redundancy level. The clear winner here is Low level (7% redundancy), and there is no surprise – smaller redundancy of data results in more readable and smaller QR codes, which are easier to scan and faster to process. For data transfer purpose we probably don&rsquo;t need much redundancy at all. So safe values should be either Medium or Low.</p>
+
+<p>Now, those test rounds should probably be run hundreds of times more, on different screens and different devices, to make more adequate conclusions. But for my weekend exploring that was more than enough.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>This fun project proved to me that it&rsquo;s definitely possible to add unidirectional data transfer without any network connectivity at all using animated QR codes. While maximum data transfer rate was around 9KB/s, in the vast majority of cases you can expect more modest rates – 1-2KB/s.</p>
+
+<p>I also had incredibly great and productive experience with both Gomobile and Gopherjs (with Vecty) – they practically become my usual daily tools. They&rsquo;re mature, fast and gives you &ldquo;it just works&rdquo; experience.</p>
+
+<p>Last, but not least, I&rsquo;m still amazed at how productive you can be with Go, once you know what you&rsquo;re going to build – extra short edit-run loop time boosts experimentation, simple code and no class-hierarchies madness makes refactoring easy and nice chore, and cross-platform mindset allows you to reuse the same code in a server, in a web app and in a mobile apps at the same time. There is also still plenty of room for the optimization and speedups, as I mostly did things in the most straightforward way.</p>
+
+<p>So if you have never tried gomobile or gopherjs – I encourage you to try it on the next opportunity. It&rsquo;ll take an hour of your time to start playing with, but could open a whole new world of web or mobile development with Go. Give it a try!</p>
+
+<h1 id="links">Links</h1>
+
+<ul>
+<li><a href="https://github.com/divan/txqr">https://github.com/divan/txqr</a></li>
+<li><a href="https://github.com/divan/txqr/tree/master/cmd/txqr-tester">https://github.com/divan/txqr/tree/master/cmd/txqr-tester</a></li>
+<li><a href="https://github.com/divan/txqr-tester-ios">https://github.com/divan/txqr-tester-ios</a></li>
+<li><a href="https://github.com/divan/txqr-reader">https://github.com/divan/txqr-reader</a></li>
+<li><a href="https://github.com/gopherjs/vecty">https://github.com/gopherjs/vecty</a></li>
+<li><a href="https://github.com/golang/mobile">https://github.com/golang/mobile</a></li>
+</ul>
+
+  </section>
+  <footer>
+    <section class="author-info row">
+      <div class="author-avatar col-md-2">
+        
+        <img alt="Author Avatar" src="/images/avatar.jpg" />
+        
+      </div>
+      <div class="author-meta col-md-6">
+        
+        
+		<div class="author-bio">Gopher. Public speaker. Available for hire.<br />
+			Follow me at <a href="https://twitter.com/idanyliuk" target="_blank">@idanyliuk</a>
+		</div>
+        
+      </div>
+      
+      <div class="author-contact col-md-4">
+        <a href="mailto:ivan.daniluk@gmail.com">
+          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          &nbsp;Contact me
+        </a>
+      </div>
+      
+    </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a href="https://divan.github.io/posts/wakemeupinthemiddleofthenight/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      
+      
+      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+  </main>
+  <footer class="container global-footer">
+    <div class="copyright-note pull-left">
+      
+    </div>
+    <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <script src="https://divan.github.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-70805978-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  
+  
+</body>
+</html>
+

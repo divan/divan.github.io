@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://divan.github.io/posts/animatedqr/</loc>
+    <lastmod>2018-11-18T11:55:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://divan.github.io/posts/wakemeupinthemiddleofthenight/</loc>
     <lastmod>2017-05-26T12:55:00+01:00</lastmod>
   </url>
@@ -83,7 +88,7 @@
   
   <url>
     <loc>https://divan.github.io/posts/</loc>
-    <lastmod>2017-05-26T12:55:00+01:00</lastmod>
+    <lastmod>2018-11-18T11:55:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -101,7 +106,7 @@
   
   <url>
     <loc>https://divan.github.io/</loc>
-    <lastmod>2017-05-26T12:55:00+01:00</lastmod>
+    <lastmod>2018-11-18T11:55:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   

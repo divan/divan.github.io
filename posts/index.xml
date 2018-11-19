@@ -6,10 +6,21 @@
     <description>Recent content in Posts on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 26 May 2017 12:55:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 18 Nov 2018 11:55:00 +0100</lastBuildDate>
     
 	<atom:link href="https://divan.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Animated QR data transfer with Gomobile and Gopherjs</title>
+      <link>https://divan.github.io/posts/animatedqr/</link>
+      <pubDate>Sun, 18 Nov 2018 11:55:00 +0100</pubDate>
+      
+      <guid>https://divan.github.io/posts/animatedqr/</guid>
+      <description>TL;DR: a weekend project for transferring data via animated QR codes, written in Go. The Go code is reused for mobile apps using Gomobile, and in a web application for automating testing QR codes parameters, built with GopherJS and Vecty framework.
+I&amp;rsquo;ll share my experience building it, some code and benchmark results of using animated QR as a data transfer method.
+The problem One day I was trying to find a viable solution for the following scenario:</description>
+    </item>
     
     <item>
       <title>WakeMeUpInTheMiddleOfTheNight log level</title>

@@ -288,3 +288,60 @@ article section img {
     margin: 13px auto;
 }
 
+
+/* Support dark mode in MacOS */
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #101010;
+        color: white;
+    }
+	.header-text {
+		background-color: #101010;
+	}
+	.header-text .tag-line {
+		color: white;
+	}
+	.header-text h1 a {
+		color: white;
+	}
+	.header-text .sns-links a {
+		border: 1px solid rgba(255, 255, 255, 0.6);
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	.header-text .sns-links a:hover {
+		border: 1px solid rgba(255, 255, 255, 1.0);
+		color: rgba(255, 255, 255, 1.0);
+	}
+	a.btn-header {
+		background-color: rgba(255, 255, 255, 0.1);
+		color: rgba(255, 255, 255, 1.0);
+	}
+
+	a.btn-header:hover {
+		background-color: rgba(255, 255, 255, 0.6);
+		color: rgba(0, 0, 0, 1.0);
+	}
+	.author-bio {
+		color: rgba(255, 255, 255, 0.7);
+	}
+	.author-contact a {
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		color: rgba(255, 255, 255, 0.7);
+	}
+	.author-contact a:hover {
+		border: 1px solid rgba(51, 122, 182, 1.0);
+		background-color: rgba(51, 122, 183, 1.0);
+		color: rgba(255, 255, 255, 1.0);
+	}
+}
+
+img[src$='#center']
+{
+	width: 100%;
+	display: block;
+	margin: 0.7rem auto; /* you can replace the vertical '0.7rem' by
+	whatever floats your boat, but keep the
+	horizontal 'auto' for this to work */
+}
