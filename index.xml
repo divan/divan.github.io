@@ -126,17 +126,6 @@ Golang is often used for writing microservices and various backends. Often these
     </item>
     
     <item>
-      <title>ISU Events Statistics</title>
-      <link>https://divan.github.io/posts/20151128_isu_stats/</link>
-      <pubDate>Sat, 28 Nov 2015 08:36:54 -0700</pubDate>
-      
-      <guid>https://divan.github.io/posts/20151128_isu_stats/</guid>
-      <description>Intro Have you ever wondered how many quads where executed in all ISU competitions ever? Or, maybe, which throw in pair skating is most problematic? Perhaps, you want to see statistics for skaters of your nation, or even, you have skills in statistical analysis and want to have nice diagrams on ISU results of overall time?
-Well, I may have a solution for you.
-Since when Judgement System was introduced, it was really nice to have detailed scores and points, which can be easily analyzed by human.</description>
-    </item>
-    
-    <item>
       <title>Explaining Go error handling</title>
       <link>https://divan.github.io/posts/go_errors/</link>
       <pubDate>Mon, 02 Nov 2015 08:36:54 -0700</pubDate>

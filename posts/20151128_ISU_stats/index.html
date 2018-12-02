@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en-us">
 <head prefix="og: http://ogp.me/ns#">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-  <meta property="og:title" content=" ISU Events Statistics &middot;  " />
+  <meta property="og:title" content=" ISU Events Statistics &middot;  divan&#39;s blog" />
   
-  <meta property="og:site_name" content="" />
-  <meta property="og:url" content="http://localhost:1313/posts/20151128_ISU_stats/" />
+  <meta property="og:site_name" content="divan&#39;s blog" />
+  <meta property="og:url" content="https://divan.github.io/posts/20151128_isu_stats/" />
   
   
   <meta property="og:type" content="article" />
@@ -16,28 +16,48 @@
   
 
   <title>
-     ISU Events Statistics &middot;  
+     ISU Events Statistics &middot;  divan&#39;s blog
   </title>
 
-  <link rel="stylesheet" href="http://localhost:1313css/bootstrap.min.css" />
-  <link rel="stylesheet" href="http://localhost:1313css/main.css" />
-  <link rel="stylesheet" href="http://localhost:1313css/highlight.css" />
-  <link rel="stylesheet" href="http://localhost:1313css/font-awesome.min.css" />
-  <link rel="shortcut icon" href="http://localhost:1313images/favicon.ico" />
-  <link rel="apple-touch-icon" href="http://localhost:1313images/apple-touch-icon.png" />
+  <link rel="stylesheet" href="https://divan.github.io/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.github.io/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.github.io/images/apple-touch-icon.png" />
   
 </head>
 <body>
     <header class="global-header">
     <section class="header-text">
-      <h1><a href="http://localhost:1313"></a></h1>
+      <h1><a href="https://divan.github.io/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+	  
+      <div class="tag-line">
+        random thoughts on Go and software design
+      </div>
       
+      <div class="tag-line">
+        <a href="https://divan.github.io/talks">My Talks</a>
+      </div>
       <div class="sns-links hidden-print">
   
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
   
   
   
   
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
   
   
   
@@ -45,7 +65,7 @@
 </div>
 
       
-      <a href="http://localhost:1313" class="btn-header btn-back hidden-xs">
+      <a href="https://divan.github.io/" class="btn-header btn-back hidden-xs">
         <i class="fa fa-angle-left" aria-hidden="true"></i>
         &nbsp;Home
       </a>
@@ -74,7 +94,7 @@
   <section>
     
 
-<h1 id="intro:cdcd48f0046b8c293cb9d9854a7b4f96">Intro</h1>
+<h1 id="intro">Intro</h1>
 
 <p>Have you ever wondered how many quads where executed in all ISU competitions ever? Or, maybe, which throw in pair skating is most problematic? Perhaps, you want to see statistics for skaters of your nation, or even, you have skills in statistical analysis and want to have nice diagrams on ISU results of overall time?</p>
 
@@ -86,12 +106,12 @@
 
 <p>Now, let me introduce a tool that automatically downloads all PDF scores ever produced in the official ISU events, carefully parses them and generates dataset, available for import into data analysis software.</p>
 
-<h1 id="results:cdcd48f0046b8c293cb9d9854a7b4f96">Results</h1>
+<h1 id="results">Results</h1>
 
-<h2 id="quads:cdcd48f0046b8c293cb9d9854a7b4f96">Quads</h2>
+<h2 id="quads">Quads</h2>
 
 <p>I start with quads, as the most debatable and attracting topic in figure skating since eighties.
-Let’s first look on the quads count per year, from <sup>2006</sup>&frasl;<sub>07</sub> to <sup>2014</sup>&frasl;<sub>15</sub>:</p>
+Let’s first look on the quads count per year, from 2006/07 to 2014/15:</p>
 
 <p><img src="/images/quads.png" alt="Quads" /></p>
 
@@ -99,7 +119,7 @@ Let’s first look on the quads count per year, from <sup>2006</sup>&frasl;<sub>
 
 <p>Again, we see slight descent of trending line right before Olympics 2014. This difference is interesting in particular, so let’s visualise it.</p>
 
-<h1 id="analysys:cdcd48f0046b8c293cb9d9854a7b4f96">Analysys</h1>
+<h1 id="analysys">Analysys</h1>
 
 <p>Now, let’s download all PDF scores ever produced on the official ISU events, and check what we can get out of it.
 The data actually not large - scores for all elements in all ISU competitions since 2006, in flatten CSV form (which has lot of redundant data) weights only ~21MB. In compressed form 1.7MB, so it even could be easily sent by e-mail to friend.</p>
@@ -113,7 +133,7 @@ The data actually not large - scores for all elements in all ISU competitions si
 
 <p>Variable df now holds our data. Each line represents single executed element and contains all information available - name of event, year, skater name, nationality and gender, name of element, GOE, base value and so on.</p>
 
-<h1 id="code:cdcd48f0046b8c293cb9d9854a7b4f96">Code</h1>
+<h1 id="code">Code</h1>
 
 <p>Code is open-source, licensed under MIT license, so you can freely use it for non-commercial purpose. It written in Go, and binaries are build for Windows, MacOS X, Linux and even FreeBSD platforms. It quite well tested and documented.</p>
 
@@ -125,23 +145,48 @@ The data actually not large - scores for all elements in all ISU competitions si
 
   </section>
   <footer>
-    
     <section class="author-info row">
       <div class="author-avatar col-md-2">
+        
+        <img alt="Author Avatar" src="/images/avatar.jpg" />
         
       </div>
       <div class="author-meta col-md-6">
         
         
+		<div class="author-bio">Gopher. Public speaker. Available for hire.<br />
+			Follow me at <a href="https://twitter.com/idanyliuk" target="_blank">@idanyliuk</a>
+		</div>
+        
+      </div>
+      
+      <div class="author-contact col-md-4">
+        <a href="mailto:ivan.daniluk@gmail.com">
+          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          &nbsp;Contact me
+        </a>
       </div>
       
     </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
     <ul class="pager">
       
-      <li class="previous"><a href="http://localhost:1313/posts/20151127_Test/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      <li class="previous"><a href="https://divan.github.io/posts/go_errors/"><span aria-hidden="true">&larr;</span> Older</a></li>
       
       
-      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      <li class="next"><a href="https://divan.github.io/posts/integration_testing/">Newer <span aria-hidden="true">&rarr;</span></a></li>
       
     </ul>
   </footer>
@@ -154,10 +199,22 @@ The data actually not large - scores for all elements in all ISU competitions si
     </div>
     <div class="sns-links hidden-print">
   
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
   
   
   
   
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
   
   
   
@@ -166,13 +223,19 @@ The data actually not large - scores for all elements in all ISU competitions si
 
   </footer>
 
-  <script src="http://localhost:1313js/highlight.pack.js"></script>
+  <script src="https://divan.github.io/js/highlight.pack.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
   
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-70805978-1', 'auto');
+    ga('send', 'pageview');
+  </script>
   
-<script data-no-instant>document.write('<script src="http://'
-        + (location.host || 'localhost').split(':')[0]
-		+ ':1313/livereload.js?mindelay=10"></'
-        + 'script>')</script></body>
+  
+</body>
 </html>
 
