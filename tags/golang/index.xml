@@ -6,10 +6,20 @@
     <description>Recent content in Golang on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 04 Nov 2016 13:25:35 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 01 Dec 2018 16:55:00 +0200</lastBuildDate>
     
 	<atom:link href="https://divan.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Fountain codes and animated QR</title>
+      <link>https://divan.github.io/posts/fountaincodes/</link>
+      <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
+      
+      <guid>https://divan.github.io/posts/fountaincodes/</guid>
+      <description>(source: Anders Sune Berg)
+In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.</description>
+    </item>
     
     <item>
       <title>How to avoid Go gotchas</title>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta property="og:title" content=" Fountain codes and animated QR &middot;  divan&#39;s blog" />
+  
+  <meta property="og:site_name" content="divan&#39;s blog" />
+  <meta property="og:url" content="https://divan.github.io/posts/fountaincodes/" />
+  
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:article:published_time" content="2018-12-01T16:55:00&#43;02:00" />
+  
+  <meta property="og:article:tag" content="golang" />
+  
+  <meta property="og:article:tag" content="coding theory" />
+  
+  <meta property="og:article:tag" content="fountain codes" />
+  
+  
+
+  <title>
+     Fountain codes and animated QR &middot;  divan&#39;s blog
+  </title>
+
+  <link rel="stylesheet" href="https://divan.github.io/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.github.io/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.github.io/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.github.io/images/apple-touch-icon.png" />
+  
+</head>
+<body>
+    <header class="global-header">
+    <section class="header-text">
+      <h1><a href="https://divan.github.io/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+	  
+      <div class="tag-line">
+        random thoughts on Go and software design
+      </div>
+      
+      <div class="tag-line">
+        <a href="https://divan.github.io/talks">My Talks</a>
+      </div>
+      <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+      
+      <a href="https://divan.github.io/" class="btn-header btn-back hidden-xs">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        &nbsp;Home
+      </a>
+      
+      
+    </section>
+  </header>
+  <main class="container">
+
+
+<article>
+  <header>
+    <h1 class="text-primary">Fountain codes and animated QR</h1>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2018-12-01T16:55:00&#43;02:00">
+          Dec 1, 2018
+        </time>
+      </div>
+      <div class="pull-right">
+        
+        <span class="post-tag small"><a href="https://divan.github.io//tags/golang">#golang</a></span>
+        
+        <span class="post-tag small"><a href="https://divan.github.io//tags/coding-theory">#coding theory</a></span>
+        
+        <span class="post-tag small"><a href="https://divan.github.io//tags/fountain-codes">#fountain codes</a></span>
+        
+      </div>
+    </div>
+  </header>
+  <section>
+    
+
+<p><img src="/images/fountain.jpg" alt="fountain" /> <sup>(source: <a href="https://olafureliasson.net/archive/artwork/WEK110140/waterfall">Anders Sune Berg</a>)</sup></p>
+
+<p>In the <a href="https://divan.github.io/posts/animatedqr/">previous article</a> I&rsquo;ve described a weekend project called <a href="https://github.com/divan/txqr">txqr</a> for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame. And in practice, it often did, of course.</p>
+
+<p>This sort of problems of sending data over a noisy communication channel is quite well studied, and there is a whole theory exists to deal solve it – coding theory.</p>
+
+<p>In the comments to the previous article, <a href="https://disqus.com/by/bojtoskiskutya/">Bojtos Kiskutya</a> mentioned LT codes that can yield much better results for <em>txqr</em>. That was exactly the type of comments I expect – not only suggestion for improvement, but also discovering some new and exciting stuff. And I never heard about LT codes, so next couple of days I spend reading everything I could find about them.</p>
+
+<p>It turned out, <a href="https://en.wikipedia.org/wiki/Luby_transform_code">LT codes</a> (<strong>LT</strong> stands for <strong>L</strong>uby <strong>T</strong>ransform) are just one of the implementations of the broader family of codes called <a href="https://en.wikipedia.org/wiki/Fountain_code">fountain codes</a>. It&rsquo;s a class of <a href="https://en.wikipedia.org/wiki/Erasure_codes">erasure codes</a> that can produce a potentially infinite amount of blocks from the source message blocks (K), and it&rsquo;s enough to receive slightly more than K encoded blocks to decode the message successfully. The receiver can start receiving blocks from any point, receive blocks in any order, with any erasure probability – fountain codes will work as soon as you received K+ different blocks. That&rsquo;s where name &ldquo;fountain&rdquo; comes from, actually – fountain&rsquo;s water drops represent encoded blocks, and you just have to fill the bucket with enough drops, without actually caring which drops exactly you get.</p>
+
+<p>That was a perfect match for my case, so I quickly found Go based implementation <a href="https://github.com/google/gofountain">google/gofountain</a>, and replaced my naive repetition code with Luby transform code implementation. Results were quite impressive, and in this post, I&rsquo;ll share details about LT algorithm, gotchas in using <em>gofountain</em> package and the final results with comparison with original ones.</p>
+
+<h1 id="fountain-codes-are-damn-cool">Fountain codes are damn cool</h1>
+
+<p>If you, like myself, have never heard about fountain codes before, don&rsquo;t worry – they are relatively new and solve very narrow and specific problem. They&rsquo;re also extremely cool. They beautifully harness properties of randomness, mathematical logic and clever probability distribution tuning to achieve their goal.</p>
+
+<p>While I&rsquo;m going to describe mostly LT codes, there are many other algorithms in this family – <a href="https://en.wikipedia.org/wiki/Online_codes">Online codes</a>, <a href="https://en.wikipedia.org/wiki/Tornado_codes">Tornado codes</a>, <a href="https://en.wikipedia.org/wiki/Raptor_code#Legal_complexity">Raptor codes</a>, etc., with Raptor codes being superior in almost every aspect, excluding a legal one. They seem to be heavily covered by patents and not widely implemented.</p>
+
+<p>So the idea behind LT codes is relatively simple – encoder splits message into <strong style="color: #00A2FF">source blocks</strong>
+, and continuously creates <strong style="color: green">encoded blocks</strong>
+ that consist of 1, 2 or more randomly selected <strong style="color: #00A2FF">source blocks</strong>
+ XOR-ed with each other. Block IDs used to construct each new <strong style="color: green">encoded block</strong>
+ are stored in it in an arbitrary way.</p>
+
+<p><img src="/images/ltcodes.gif" alt="lt encoder" /></p>
+
+<p>Decoder, in its turn, collects all the <strong style="color: green">encoded blocks</strong>
+ (like a drops from a fountain)  – some consisting from just 1 <strong style="color: #00A2FF">source block</strong>
+, some from 2 or more – and tries to restore new blocks by XORing them back with already decoded blocks.</p>
+
+<p>So when decoder sees the <strong style="color: green">encoded block</strong>
+ with just 1 <strong style="color: #00A2FF">source block</strong>
+ – it does nothing else than adding it to the list of decoded blocks. Once it catches the block with 2 XOR-ed <strong style="color: #00A2FF">source blocks</strong>
+, it checks the IDs, and if one of them is already in the list of decoded blocks – easily restore it due to the property of XOR. The same applies to decoding <strong style="color: green">encoded blocks</strong>
+ with more than 2  <strong style="color: #00A2FF">source blocks</strong>
+ – once you have all but one blocks decoded – just XOR it.</p>
+
+<h3 id="solition-distribution">Solition distribution</h3>
+
+<p>The coolness lays in choosing how to decide how many blocks should be encoded with just 1 <strong style="color: #00A2FF">source block</strong>
+, with 2 or more. Too many single block packets and you lose the redundancy needed. Too many multiple-blocks packets – and it&rsquo;ll take too much time to get single blocks in a very noisy channel. That&rsquo;s what <a href="https://en.wikipedia.org/wiki/Michael_Luby">Michael Luby</a>, after which Luby codes are named, calls the <a href="https://en.wikipedia.org/wiki/Soliton_distribution">Solition Distribution</a> - almost perfect distribution, which ensures that you have enough single block packets, definitely have <strong>a lot</strong> of 2-blocks packets and also a long tail of many-blocks packets up to N-block ones, where N is the total amount of <strong style="color: 00A2FF">source blocks</strong>
+.</p>
+
+<p><img src="/images/solition.png" alt="solition distribution" /></p>
+
+<p>Here is a closer look at the head of the distribution:</p>
+
+<p><img src="/images/solition_zoom.png" alt="solition distribution zoom" /></p>
+
+<p>You can see here some non-zero amount of single block packets, then 2-blocks packets take a fair share of all distribution (it&rsquo;s exactly a half to be precise), and the rest is distributed in descending way between the packets with a higher number of XOR-ed blocks.</p>
+
+<p>All that give LT codes a lovely property of not depending on how often or in which pattern communication channel loses packets.</p>
+
+<p>For my txqr project, it means that fountain code should give on average much lower decoding time with any given encoding/transmission parameter.</p>
+
+<h1 id="google-gofountain">google/gofountain</h1>
+
+<p>The google&rsquo;s package gofountain implements several fountain codes in Go, including Luby transform code. It has <a href="https://godoc.org/github.com/google/gofountain#NewBinaryCodec">tiny API</a> (which is a good sign for the library) – basically just <code>Codec</code> interface with a few implementations and <code>EncodeLTBlocks()</code> function, plus a few pseudorandom generators helpers.</p>
+
+<p>However, I stuck trying to understand what does the second parameter of <code>EncodeLTBlocks()</code> is supposed to mean:</p>
+
+<pre><code class="language-go">func EncodeLTBlocks(message []byte, encodedBlockIDs []int64, c Codec) []LTBlock
+</code></pre>
+
+<p>Why would I want to provide block IDs to the encoder, I don&rsquo;t even want to worry about blocks&rsquo; properties, as it&rsquo;s an algorithm implementation and not the library user&rsquo;s concern. So my first guess was just to pass all block IDs – <code>1..N</code>.</p>
+
+<p>It was close enough – debug output from tests produced blocks that looked like what I expected, but decoding had never been finishing.</p>
+
+<p>I checked <a href="https://godoc.org/github.com/google/gofountain#NewBinaryCodec">GoDoc page for gofountain</a> to see what other packages use it, and found only one open-source library for transmitting large files over lossy networks - <a href="https://github.com/sudhirj/pump">pump</a> by <a href="https://github.com/sudhirj">Sudhir Jonathan</a>, I decided to leverage the power of friendly Gophers community and contacted Sudhir in Gophers slack, asking if he could help me to clarify those IDs usage.</p>
+
+<p>And that worked, Sudhir was extremely helpful and gave me an elaborate answer, which clarified all my doubts. The right way to use this library was to pass incremental IDs for <code>1..N*r</code> blocks, where N is the total amount of source blocks, and r is a redundancy factor., which probably should lay in 1.4-2.0 range.</p>
+
+<p>As LT codes designed to provide limitless source of blocks, the proper usage would be to generate random chunks of IDs, and call <code>EncodeLTBlocks</code> in a loop, but as <code>txqr</code> API expected to return a concrete number of chunks to be encoded as QR, I decided not to break API for now and went with redundancy factor approach. So for <code>encodedBlockIDs</code> parameter, I use a simple helper function:</p>
+
+<pre><code class="language-go">// ids create slice with IDs for 0..n values.
+func ids(n int) []int64 {
+    ids := make([]int64, n)
+    for i := int64(0); i &lt; int64(n); i++ {
+        ids[i] = i
+    }
+    return ids
+}
+</code></pre>
+
+<p>and call it via:</p>
+
+<pre><code class="language-go">    codec := fountain.NewLubyCodec(N, rand.New(fountain.NewMersenneTwister(200)), solitonDistribution(N))
+
+    idsToEncode := ids(int(N * e.redundancyFactor))
+    lubyBlocks := fountain.EncodeLTBlocks(msg, idsToEncode, codec)
+</code></pre>
+
+<p>That&rsquo;s probably a needlessly boring part for the reader not interested in working with <code>gofountain</code>, but I hope it&rsquo;ll be helpful for someone struggling with its API, coming to this post via search results.</p>
+
+<h1 id="testing-results">Testing results</h1>
+
+<p>As I preserved the API of the initial package, the rest was a breeze. As you might remember from the <a href="https://divan.github.io/posts/animatedqr/">previous article</a>, I used the txqr Go package in both iOS app and web app called <code>txqr-tester</code>, running in the browser. That&rsquo;s where mindblowing cross-platform nature of Go paid off again! I just switched to my <code>fountain-codes</code> branch, with the new implementation of encoder and decoder, run <code>go generate</code> to execute both <code>gomobile</code> and <code>gopherjs</code> commands, and in a couple of seconds, I had fountain codes implementation ready to use with Swift and in the browser.</p>
+
+<p>I wonder if there any other language that can do this?</p>
+
+<p>I launched my test setup, consisting of the phone on a tripod and external monitor, configured testing parameters and launched automated testing, which lasted nearly half a day. This time I didn&rsquo;t change QR error recovery levels to save time, as they seem to have a negligible effect on the result.</p>
+
+<p>The results were more than impressive.</p>
+
+<p>The record time for transferring ~13KB of data is now is half a second or <strong>501ms</strong> to be precise – it&rsquo;s almost 25kbps. This record was set for 12FPS and 1850 bytes per QR code with low error correction level. The variance of the time needed to decode plummeted significantly as there were no &ldquo;expect the whole loop iteration&rdquo; part as with repetition codes. Compare decoding times histogram between <strong style="color: orange">repetition code</strong>
+ and <strong style="color: lime">fountain code</strong>
+:</p>
+
+<div>
+	<a href="https://plot.ly/~divan0/15/?share_key=t8DizOL9dynI6NTcLA88Xi" target="_blank" title="time_histogram" style="display: block; text-align: center;"><img src="https://plot.ly/~divan0/15.png?share_key=t8DizOL9dynI6NTcLA88Xi" alt="time_histogram" style="max-width: 100%;width: 600px;" width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+	<script data-plotly="divan0:15" sharekey-plotly="t8DizOL9dynI6NTcLA88Xi" src="https://plot.ly/embed.js" async></script>
+</div>
+
+
+<p>As you can see, most of the decoding attempts, with different values for FPS and chunk size, are still concentrated in the lower part of time axis – most of them less them 4 seconds.</p>
+
+<p>And here is more detailed results breakdown:</p>
+
+<div>
+	<a href="https://plot.ly/~divan0/16/?share_key=t8DizOL9dynI6NTcLA88Xi" target="_blank" title="time_vs_size" style="display: block; text-align: center;"><img src="https://plot.ly/~divan0/16.png?share_key=t8DizOL9dynI6NTcLA88Xi" alt="time_vs_size" style="max-width: 100%;width: 600px;" width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+	<script data-plotly="divan0:16" sharekey-plotly="t8DizOL9dynI6NTcLA88Xi" src="https://plot.ly/embed.js" async></script>
+</div>
+
+
+<p>Results were so good, so I decided to run tests with chunk sizes greater than 1000 bytes - up to 2000 bytes. And that brought me interesting results – there were a lot of decoding timeouts with chunk sizes between 1400 and 1700, but 1800-2000 bytes actually showed one of the best results so far:</p>
+
+<div>
+	<a href="https://plot.ly/~divan0/7/?share_key=t8DizOL9dynI6NTcLA88Xi" target="_blank" title="time_vs_size_2k" style="display: block; text-align: center;"><img src="https://plot.ly/~divan0/7.png?share_key=t8DizOL9dynI6NTcLA88Xi" alt="time_vs_size_2k" style="max-width: 100%;width: 600px;" width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+	<script data-plotly="divan0:7" sharekey-plotly="t8DizOL9dynI6NTcLA88Xi" src="https://plot.ly/embed.js" async></script>
+</div>
+
+
+<p>FPS effect seemed to be even more negligible this time but showed much better results within all values overall, and I even was able to increase the upper cap to 15FPS:</p>
+
+<div>
+	<a href="https://plot.ly/~divan0/9/?share_key=t8DizOL9dynI6NTcLA88Xi" target="_blank" title="time_vs_fps" style="display: block; text-align: center;"><img src="https://plot.ly/~divan0/9.png?share_key=t8DizOL9dynI6NTcLA88Xi" alt="time_vs_fps" style="max-width: 100%;width: 600px;" width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+	<script data-plotly="divan0:9" sharekey-plotly="t8DizOL9dynI6NTcLA88Xi" src="https://plot.ly/embed.js" async></script>
+</div>
+
+
+<p>Here is a complete interactive 3D interactive graph with results:</p>
+
+<div>
+	<a href="https://plot.ly/~divan0/18/?share_key=t8DizOL9dynI6NTcLA88Xi" target="_blank" title="3d_results" style="display: block; text-align: center;"><img src="https://plot.ly/~divan0/18.png?share_key=t8DizOL9dynI6NTcLA88Xi" alt="3d_results" style="max-width: 100%;width: 600px;" width="600" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+	<script data-plotly="divan0:18" sharekey-plotly="t8DizOL9dynI6NTcLA88Xi" src="https://plot.ly/embed.js" async></script>
+</div>
+
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Fountain codes are definitely an exciting thing to work with. Being non-trivial, but simple, narrow scoped, but extremely useful, clever and fast, they undoubtedly fall into the &ldquo;cool algorithms&rdquo; bucket. They&rsquo;re one of those algorithms that can give you awe once you understand how they work.</p>
+
+<p>For txqr, they offered dramatic performance and reliability improvements, and I&rsquo;m looking forward to play with more efficient algorithms than LT codes.</p>
+
+<p>Gomobile and Gopherjs, again, showed their awesomeness by decreasing the hassle of using already written and tested code in the browser and mobile platforms to a lowest possible minimum.</p>
+
+<h1 id="links">Links</h1>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Luby_transform_code">Wikipedia: LT Codes</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Fountain_code">Wikipedia: Fountain Codes</a></li>
+<li><a href="http://blog.notdot.net/2012/01/Damn-Cool-Algorithms-Fountain-Codes">Damn Cool Algorithms: Fountain Codes by Nick Johnson</a></li>
+<li><a href="https://franpapers.com/en/algorithmic/2018-introduction-to-fountain-codes-lt-codes-with-python/">Introduction to fountain codes: LT codes with Python by François Andrieux</a></li>
+<li><a href="https://www.youtube.com/watch?v=s3lrmBczBTc">Michael Luby - Fountain Codes (video, 2004)</a></li>
+</ul>
+
+  </section>
+  <footer>
+    <section class="author-info row">
+      <div class="author-avatar col-md-2">
+        
+        <img alt="Author Avatar" src="/images/avatar.jpg" />
+        
+      </div>
+      <div class="author-meta col-md-6">
+        
+        
+		<div class="author-bio">Gopher. Public speaker. Available for hire.<br />
+			Follow me at <a href="https://twitter.com/idanyliuk" target="_blank">@idanyliuk</a>
+		</div>
+        
+      </div>
+      
+      <div class="author-contact col-md-4">
+        <a href="mailto:ivan.daniluk@gmail.com">
+          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          &nbsp;Contact me
+        </a>
+      </div>
+      
+    </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a href="https://divan.github.io/posts/animatedqr/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      
+      
+      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+  </main>
+  <footer class="container global-footer">
+    <div class="copyright-note pull-left">
+      
+    </div>
+    <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <script src="https://divan.github.io/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-70805978-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  
+  
+</body>
+</html>
+

@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://divan.github.io/posts/fountaincodes/</loc>
+    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://divan.github.io/posts/animatedqr/</loc>
     <lastmod>2018-11-18T11:55:00+01:00</lastmod>
   </url>
@@ -53,12 +58,23 @@
   </url>
   
   <url>
+    <loc>https://divan.github.io/posts/20151128_isu_stats/</loc>
+    <lastmod>2015-11-28T08:36:54-07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://divan.github.io/posts/go_errors/</loc>
     <lastmod>2015-11-02T08:36:54-07:00</lastmod>
   </url>
   
   <url>
     <loc>https://divan.github.io/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/tags/coding-theory/</loc>
+    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -75,8 +91,14 @@
   </url>
   
   <url>
+    <loc>https://divan.github.io/tags/fountain-codes/</loc>
+    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://divan.github.io/tags/golang/</loc>
-    <lastmod>2016-11-04T13:25:35+01:00</lastmod>
+    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -88,13 +110,13 @@
   
   <url>
     <loc>https://divan.github.io/posts/</loc>
-    <lastmod>2018-11-18T11:55:00+01:00</lastmod>
+    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://divan.github.io/tags/</loc>
-    <lastmod>2016-01-24T18:31:12-03:00</lastmod>
+    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -106,7 +128,7 @@
   
   <url>
     <loc>https://divan.github.io/</loc>
-    <lastmod>2018-11-18T11:55:00+01:00</lastmod>
+    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   

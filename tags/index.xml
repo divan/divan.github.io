@@ -6,10 +6,19 @@
     <description>Recent content in Tags on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 24 Jan 2016 18:31:12 -0300</lastBuildDate>
+    <lastBuildDate>Sat, 01 Dec 2018 16:55:00 +0200</lastBuildDate>
     
 	<atom:link href="https://divan.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Coding Theory</title>
+      <link>https://divan.github.io/tags/coding-theory/</link>
+      <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
+      
+      <guid>https://divan.github.io/tags/coding-theory/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Concurrency</title>
@@ -30,9 +39,18 @@
     </item>
     
     <item>
+      <title>Fountain Codes</title>
+      <link>https://divan.github.io/tags/fountain-codes/</link>
+      <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
+      
+      <guid>https://divan.github.io/tags/fountain-codes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Golang</title>
       <link>https://divan.github.io/tags/golang/</link>
-      <pubDate>Fri, 04 Nov 2016 13:25:35 +0100</pubDate>
+      <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
       
       <guid>https://divan.github.io/tags/golang/</guid>
       <description></description>
