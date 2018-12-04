@@ -95,7 +95,7 @@
   <section>
     
 
-<p>TL;DR: a weekend project for transferring data via animated QR codes, written in Go. The Go code is reused for mobile apps using Gomobile, and in a web application for automating testing QR codes parameters, built with GopherJS and Vecty framework.</p>
+<p>TL;DR: a weekend project for transferring data via animated QR codes, written in Go and using fountain erasure codes. The Go code is reused for mobile apps using Gomobile, and in a web application for automating testing QR codes parameters, built with GopherJS and Vecty framework.</p>
 
 <p><img src="/images/txqr_send.gif#center" alt="Transfer file via QR code between two phones" /></p>
 
@@ -141,6 +141,8 @@
 <p><img src="/images/txqr_protocol.png" alt="TXQR protocol" /></p>
 
 <p>It&rsquo;s that simple, and <a href="https://github.com/divan/txqr">here</a> is a Go implementation of the protocol, along with convenient wrappers for encoding and decoding QR codes. The cool part was to make a mobile app that can use this code.</p>
+
+<p><strong>UPD</strong>: <em>txqr now uses much more efficient approach using <a href="https://en.wikipedia.org/wiki/Fountain_code">fountain codes</a>. See the <a href="https://divan.github.io/posts/fountaincodes/">follow-up article</a> with detailed description and results comparison.</em></p>
 
 <h2 id="gomobile">Gomobile</h2>
 
@@ -349,6 +351,10 @@ func (a *App) Render() vecty.ComponentOrHTML {
 <li><a href="https://github.com/gopherjs/vecty">https://github.com/gopherjs/vecty</a></li>
 <li><a href="https://github.com/golang/mobile">https://github.com/golang/mobile</a></li>
 </ul>
+
+<h1 id="update">Update</h1>
+
+<p><strong>UPD</strong>: <em>txqr now uses much more efficient approach using <a href="https://en.wikipedia.org/wiki/Fountain_code">fountain codes</a>. See the <a href="https://divan.github.io/posts/fountaincodes/">follow-up article</a> with detailed description and results comparison.</em></p>
 
   </section>
   <footer>
