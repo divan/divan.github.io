@@ -167,7 +167,7 @@
 
 <h1 id="google-gofountain">google/gofountain</h1>
 
-<p>The google&rsquo;s package gofountain implements several fountain codes in Go, including Luby transform code. It has <a href="https://godoc.org/github.com/google/gofountain#NewBinaryCodec">tiny API</a> (which is a good sign for the library) – basically just <code>Codec</code> interface with a few implementations and <code>EncodeLTBlocks()</code> function, plus a few pseudorandom generators helpers.</p>
+<p>The google&rsquo;s package gofountain implements several fountain codes in Go, including Luby transform code. It has <a href="https://godoc.org/github.com/google/gofountain">tiny API</a> (which is a good sign for the library) – basically just <code>Codec</code> interface with a few implementations and <code>EncodeLTBlocks()</code> function, plus a few pseudorandom generators helpers.</p>
 
 <p>However, I stuck while trying to understand what does the second parameter of <code>EncodeLTBlocks()</code> is supposed to mean:</p>
 
@@ -178,7 +178,7 @@
 
 <p>It was close enough – debug output from tests produced blocks that looked like what I expected, but decoding had never been finishing.</p>
 
-<p>I checked <a href="https://godoc.org/github.com/google/gofountain#NewBinaryCodec">GoDoc page for gofountain</a> to see what other packages use it, and found only one open-source library for transmitting large files over lossy networks - <a href="https://github.com/sudhirj/pump">pump</a> by <a href="https://github.com/sudhirj">Sudhir Jonathan</a>, I decided to leverage the power of friendly Gophers community and contacted Sudhir in Gophers slack, asking if he could help me to clarify those IDs usage.</p>
+<p>I checked <a href="https://godoc.org/github.com/google/gofountain">GoDoc page for gofountain</a> to see what other packages use it, and found only one open-source library for transmitting large files over lossy networks - <a href="https://github.com/sudhirj/pump">pump</a> by <a href="https://github.com/sudhirj">Sudhir Jonathan</a>, I decided to leverage the power of friendly Gophers community and contacted Sudhir in Gophers slack, asking if he could help me to clarify those IDs usage.</p>
 
 <p>And that worked, Sudhir was extremely helpful and gave me an elaborate answer, which clarified all my doubts. The right way to use this library was to pass incremental IDs for blocks continuously – for example, <code>1..N</code>, <code>N..2N</code>, <code>2N..3N</code>, etc. As generally we don&rsquo;t know how noisy the channel is, it&rsquo;s important to generate new blocks all the time.</p>
 
