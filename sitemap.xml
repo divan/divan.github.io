@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://divan.github.io/posts/flutter_go/</loc>
+    <lastmod>2019-01-12T14:55:00+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://divan.github.io/posts/fountaincodes/</loc>
     <lastmod>2018-12-01T16:55:00+02:00</lastmod>
   </url>
@@ -80,8 +85,20 @@
   </url>
   
   <url>
+    <loc>https://divan.github.io/tags/dart/</loc>
+    <lastmod>2019-01-12T14:55:00+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://divan.github.io/tags/docker/</loc>
     <lastmod>2015-12-07T08:36:54-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://divan.github.io/tags/flutter/</loc>
+    <lastmod>2019-01-12T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -93,7 +110,7 @@
   
   <url>
     <loc>https://divan.github.io/tags/golang/</loc>
-    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
+    <lastmod>2019-01-12T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -105,7 +122,7 @@
   
   <url>
     <loc>https://divan.github.io/posts/</loc>
-    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
+    <lastmod>2019-01-12T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -123,7 +140,7 @@
   
   <url>
     <loc>https://divan.github.io/</loc>
-    <lastmod>2018-12-01T16:55:00+02:00</lastmod>
+    <lastmod>2019-01-12T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   

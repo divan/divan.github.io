@@ -30,11 +30,29 @@
     </item>
     
     <item>
+      <title>Dart</title>
+      <link>https://divan.github.io/tags/dart/</link>
+      <pubDate>Sat, 12 Jan 2019 14:55:00 +0200</pubDate>
+      
+      <guid>https://divan.github.io/tags/dart/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Docker</title>
       <link>https://divan.github.io/tags/docker/</link>
       <pubDate>Mon, 07 Dec 2015 08:36:54 -0700</pubDate>
       
       <guid>https://divan.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Flutter</title>
+      <link>https://divan.github.io/tags/flutter/</link>
+      <pubDate>Sat, 12 Jan 2019 14:55:00 +0200</pubDate>
+      
+      <guid>https://divan.github.io/tags/flutter/</guid>
       <description></description>
     </item>
     
@@ -50,7 +68,7 @@
     <item>
       <title>Golang</title>
       <link>https://divan.github.io/tags/golang/</link>
-      <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
+      <pubDate>Sat, 12 Jan 2019 14:55:00 +0200</pubDate>
       
       <guid>https://divan.github.io/tags/golang/</guid>
       <description></description>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Flutter on divan&#39;s blog</title>
+    <link>https://divan.github.io/tags/flutter/</link>
+    <description>Recent content in Flutter on divan&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 12 Jan 2019 14:55:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://divan.github.io/tags/flutter/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Thought Experiment: Flutter in Go</title>
+      <link>https://divan.github.io/posts/flutter_go/</link>
+      <pubDate>Sat, 12 Jan 2019 14:55:00 +0200</pubDate>
+      
+      <guid>https://divan.github.io/posts/flutter_go/</guid>
+      <description>I&amp;rsquo;ve recently discovered Flutter – a new Google&amp;rsquo;s framework for mobile development – for myself and even had an experience of teaching Flutter basics to the person who has never been doing programming at all. Flutter is written in Dart – programming language born in a Chrome browser and then escaped to the console land – and that made me think &amp;ldquo;hey, Flutter could have been easily implemented in Go as well&amp;rdquo;!</description>
+    </item>
+    
+  </channel>
+</rss>

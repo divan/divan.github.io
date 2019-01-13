@@ -170,10 +170,7 @@
 <p>The google&rsquo;s package gofountain implements several fountain codes in Go, including Luby transform code. It has <a href="https://godoc.org/github.com/google/gofountain">tiny API</a> (which is a good sign for the library) – basically just <code>Codec</code> interface with a few implementations and <code>EncodeLTBlocks()</code> function, plus a few pseudorandom generators helpers.</p>
 
 <p>However, I stuck while trying to understand what does the second parameter of <code>EncodeLTBlocks()</code> is supposed to mean:</p>
-
-<pre><code class="language-go">func EncodeLTBlocks(message []byte, encodedBlockIDs []int64, c Codec) []LTBlock
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeLTBlocks</span>(<span style="color:#a6e22e">message</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">encodedBlockIDs</span> []<span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">c</span> <span style="color:#a6e22e">Codec</span>) []<span style="color:#a6e22e">LTBlock</span></code></pre></div>
 <p>Why would I want to provide block IDs to the encoder, I don&rsquo;t even want to worry about blocks&rsquo; properties, as it&rsquo;s an algorithm implementation and not the library user&rsquo;s concern. So my first guess was just to pass all block IDs – <code>1..N</code>.</p>
 
 <p>It was close enough – debug output from tests produced blocks that looked like what I expected, but decoding had never been finishing.</p>
@@ -187,25 +184,19 @@
 <p>Plus, there were current design limitations –  <code>txqr.Encode()</code> API expects to return a concrete number of chunks to be encoded as QR frames, plus <code>txqr-tester</code> generate animated GIF file upfront to ensure reliable framerate when displayed in the browser, so, I decided not to break API for now and went with redundancy factor approach.</p>
 
 <p>Redundancy factor approach is based on the assumption that in my case noise estimations is more or less predictable – I&rsquo;d say no more than 20% of skipped frames. We can generate <code>N*redundancyFactor</code> frames and just loop it over as in repetitive codes approach. This approach is sub-optimal in general case, but for my task and controlled environment it was good enough. So for <code>encodedBlockIDs</code> parameter, I use a simple helper function:</p>
-
-<pre><code class="language-go">// ids create slice with IDs for 0..n values.
-func ids(n int) []int64 {
-    ids := make([]int64, n)
-    for i := int64(0); i &lt; int64(n); i++ {
-        ids[i] = i
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// ids create slice with IDs for 0..n values.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ids</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int64</span> {
+    <span style="color:#a6e22e">ids</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">n</span>)
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> int64(<span style="color:#ae81ff">0</span>); <span style="color:#a6e22e">i</span> &lt; int64(<span style="color:#a6e22e">n</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+        <span style="color:#a6e22e">ids</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">i</span>
     }
-    return ids
-}
-</code></pre>
-
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ids</span>
+}</code></pre></div>
 <p>and call it via:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">    <span style="color:#a6e22e">codec</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fountain</span>.<span style="color:#a6e22e">NewLubyCodec</span>(<span style="color:#a6e22e">N</span>, <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">fountain</span>.<span style="color:#a6e22e">NewMersenneTwister</span>(<span style="color:#ae81ff">200</span>)), <span style="color:#a6e22e">solitonDistribution</span>(<span style="color:#a6e22e">N</span>))
 
-<pre><code class="language-go">    codec := fountain.NewLubyCodec(N, rand.New(fountain.NewMersenneTwister(200)), solitonDistribution(N))
-
-    idsToEncode := ids(int(N * e.redundancyFactor))
-    lubyBlocks := fountain.EncodeLTBlocks(msg, idsToEncode, codec)
-</code></pre>
-
+    <span style="color:#a6e22e">idsToEncode</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ids</span>(int(<span style="color:#a6e22e">N</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">redundancyFactor</span>))
+    <span style="color:#a6e22e">lubyBlocks</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fountain</span>.<span style="color:#a6e22e">EncodeLTBlocks</span>(<span style="color:#a6e22e">msg</span>, <span style="color:#a6e22e">idsToEncode</span>, <span style="color:#a6e22e">codec</span>)</code></pre></div>
 <p>That&rsquo;s probably a needlessly boring part for the reader not interested in working with <code>gofountain</code>, but I hope it&rsquo;ll be helpful for someone struggling with its API, coming to this post via search results.</p>
 
 <h1 id="testing-results">Testing results</h1>
@@ -323,7 +314,7 @@ func ids(n int) []int64 {
       <li class="previous"><a href="https://divan.github.io/posts/animatedqr/"><span aria-hidden="true">&larr;</span> Older</a></li>
       
       
-      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      <li class="next"><a href="https://divan.github.io/posts/flutter_go/">Newer <span aria-hidden="true">&rarr;</span></a></li>
       
     </ul>
   </footer>

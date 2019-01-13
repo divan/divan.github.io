@@ -6,10 +6,19 @@
     <description>Recent content in Golang on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 01 Dec 2018 16:55:00 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 12 Jan 2019 14:55:00 +0200</lastBuildDate>
     
 	<atom:link href="https://divan.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Thought Experiment: Flutter in Go</title>
+      <link>https://divan.github.io/posts/flutter_go/</link>
+      <pubDate>Sat, 12 Jan 2019 14:55:00 +0200</pubDate>
+      
+      <guid>https://divan.github.io/posts/flutter_go/</guid>
+      <description>I&amp;rsquo;ve recently discovered Flutter – a new Google&amp;rsquo;s framework for mobile development – for myself and even had an experience of teaching Flutter basics to the person who has never been doing programming at all. Flutter is written in Dart – programming language born in a Chrome browser and then escaped to the console land – and that made me think &amp;ldquo;hey, Flutter could have been easily implemented in Go as well&amp;rdquo;!</description>
+    </item>
     
     <item>
       <title>Fountain codes and animated QR</title>

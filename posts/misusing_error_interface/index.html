@@ -100,55 +100,40 @@
 <h1 id="the-bug">The bug</h1>
 
 <p>But here is the interesting piece of code that actually was buggy:</p>
-
-<pre><code class="language-go">err := SomeFunc()
-if _, ok := err.(MyError); !ok {
-    log.Println(err)
-}
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">SomeFunc</span>()
+<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">err</span>.(<span style="color:#a6e22e">MyError</span>); !<span style="color:#a6e22e">ok</span> {
+    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
+}</code></pre></div>
 <p>Quite idiomatic, right?  Error type naming is good, following <a href="https://github.com/golang/go/wiki/Errors#naming">recommended way to name error types and variables</a>.  We use here normal <a href="https://golang.org/doc/effective_go.html#interface_conversions">type assertion</a>, &ldquo;extracting&rdquo; underlying static type from an interface. If an error doesn&rsquo;t have this type inside, we should log it.</p>
 
 <p>But it didn&rsquo;t work. Variable <code>ok</code> was always true.</p>
 
 <p>First, I checked <code>SomeFunc()</code>:</p>
-
-<pre><code class="language-go">func SomeFunc() error {
-    // case 1: we want caller to print this error
-    err := json.Unmarshal(data, &amp;v)
-    if err != nil {
-        return err
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SomeFunc</span>() <span style="color:#66d9ef">error</span> {
+    <span style="color:#75715e">// case 1: we want caller to print this error
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#a6e22e">data</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">v</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
     }
-    ...
-    // case 2: we want caller to ignore this error
-    err = errors.New(&quot;my error&quot;)
-    return MyError(err)
-}
-</code></pre>
-
+    <span style="color:#f92672">...</span>
+    <span style="color:#75715e">// case 2: we want caller to ignore this error
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;my error&#34;</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">MyError</span>(<span style="color:#a6e22e">err</span>)
+}</code></pre></div>
 <p>Well, it&rsquo;s a bit smelly, but looks kinda ok. In the first case, we definitely do not return <code>MyError</code>, so type assertion should reflect this. Why was <code>ok</code> true in this case?</p>
 
 <p>Next jump to the definition of <code>MyError</code> gave me an answer:</p>
-
-<pre><code class="language-go">type MyError error
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyError</span> <span style="color:#66d9ef">error</span></code></pre></div>
 <p>What??</p>
 
 <p><code>MyError</code> was actually an interface type! Even more - it was &ldquo;synonym&rdquo; for <code>error</code> interface!</p>
 
 <p>Developer who wrote this code was assuming that</p>
-
-<pre><code class="language-go">type MyError error
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyError</span> <span style="color:#66d9ef">error</span></code></pre></div>
 <p>is the same as:</p>
-
-<pre><code class="language-go">type MyError struct {
-   error
-}
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyError</span> <span style="color:#66d9ef">struct</span> {
+   <span style="color:#66d9ef">error</span>
+}</code></pre></div>
 <p>Which is more than far from the truth.</p>
 
 <h1 id="understanding-interfaces">Understanding interfaces</h1>
@@ -156,10 +141,7 @@ if _, ok := err.(MyError); !ok {
 <p>If you do understand interfaces in Go, you will spot immediately that in a first case MyError is an interface type, while in the second case it is a concrete type.</p>
 
 <p>The tricky part here is that type assertion works both with concrete and interface types - it&rsquo;s ok to &ldquo;extract&rdquo; one interface from another. For example, you can &ldquo;reduce&rdquo; <code>io.ReadCloser</code> to <code>io.Reader</code> by this:</p>
-
-<pre><code class="language-go">r, ok := rc.(io.Reader)
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">r</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rc</span>.(<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Reader</span>)</code></pre></div>
 <p>and it&rsquo;s perfectly valid case. It&rsquo;s <a href="https://golang.org/doc/effective_go.html#interface_conversions">in the spec</a>:</p>
 
 <blockquote>
