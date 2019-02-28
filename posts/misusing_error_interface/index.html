@@ -6,7 +6,7 @@
   <meta property="og:title" content=" Misusing error interface &middot;  divan&#39;s blog" />
   
   <meta property="og:site_name" content="divan&#39;s blog" />
-  <meta property="og:url" content="https://divan.github.io/posts/misusing_error_interface/" />
+  <meta property="og:url" content="https://divan.dev/posts/misusing_error_interface/" />
   
   
   <meta property="og:type" content="article" />
@@ -20,26 +20,26 @@
      Misusing error interface &middot;  divan&#39;s blog
   </title>
 
-  <link rel="stylesheet" href="https://divan.github.io/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://divan.github.io/css/main.css" />
-  <link rel="stylesheet" href="https://divan.github.io/css/highlight.css" />
-  <link rel="stylesheet" href="https://divan.github.io/css/animate.css" />
-  <link rel="stylesheet" href="https://divan.github.io/css/font-awesome.min.css" />
-  <link rel="shortcut icon" href="https://divan.github.io/images/favicon.ico" />
-  <link rel="apple-touch-icon" href="https://divan.github.io/images/apple-touch-icon.png" />
+  <link rel="stylesheet" href="https://divan.dev/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/main.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
 </head>
 <body>
     <header class="global-header">
     <section class="header-text">
-      <h1><a href="https://divan.github.io/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+      <h1><a href="https://divan.dev/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
 	  
       <div class="tag-line">
         random thoughts on Go and software design
       </div>
       
       <div class="tag-line">
-        <a href="https://divan.github.io/talks">My Talks</a>
+        <a href="https://divan.dev/talks">My Talks</a>
       </div>
       <div class="sns-links hidden-print">
   
@@ -66,7 +66,7 @@
 </div>
 
       
-      <a href="https://divan.github.io/" class="btn-header btn-back hidden-xs">
+      <a href="https://divan.dev/" class="btn-header btn-back hidden-xs">
         <i class="fa fa-angle-left" aria-hidden="true"></i>
         &nbsp;Home
       </a>
@@ -148,9 +148,9 @@
 <p>That type must either be the concrete type held by the interface, or a second interface type that the value can be converted to.</p>
 </blockquote>
 
-<p>I do believe that to truly understand interfaces you need to learn how they are implemented. I wrote a blog post some time ago with visual explanations of interfaces - <a href="https://divan.github.io/posts/avoid_gotchas/">&ldquo;How to avoid go gotchas&rdquo;</a>. Here is a refresher picture what interface is under the hood:
-<img src="https://divan.github.io/images/iface2.png" alt="interfaces" />
-If you haven&rsquo;t read it yet, <a href="https://divan.github.io/posts/avoid_gotchas/">please do</a> - I&rsquo;m genuinely interested in a feedback and hope my way of explaining things works for others.</p>
+<p>I do believe that to truly understand interfaces you need to learn how they are implemented. I wrote a blog post some time ago with visual explanations of interfaces - <a href="https://divan.dev/posts/avoid_gotchas/">&ldquo;How to avoid go gotchas&rdquo;</a>. Here is a refresher picture what interface is under the hood:
+<img src="https://divan.dev/images/iface2.png" alt="interfaces" />
+If you haven&rsquo;t read it yet, <a href="https://divan.dev/posts/avoid_gotchas/">please do</a> - I&rsquo;m genuinely interested in a feedback and hope my way of explaining things works for others.</p>
 
 <p>Now, back to our the initial code. What was happening there is following:</p>
 
@@ -166,7 +166,7 @@ If you haven&rsquo;t read it yet, <a href="https://divan.github.io/posts/avoid_g
 
 <p>Misunderstanding interfaces can lead to some non-obvious bugs, so it&rsquo;s crucial to build a proper understanding of what concrete and interface types are in Go.</p>
 
-<p>If you feel like you don&rsquo;t have a clear picture, try one of my previous articles, where I tried to explain interfaces visually - <a href="https://divan.github.io/posts/avoid_gotchas/">&ldquo;How to avoid Go gotchas&rdquo;</a>. And, as always, don&rsquo;t forget the (re)read the <a href="https://golang.org/doc/effective_go.html#interfaces_and_types">&ldquo;Effective Go&rdquo;</a>.</p>
+<p>If you feel like you don&rsquo;t have a clear picture, try one of my previous articles, where I tried to explain interfaces visually - <a href="https://divan.dev/posts/avoid_gotchas/">&ldquo;How to avoid Go gotchas&rdquo;</a>. And, as always, don&rsquo;t forget the (re)read the <a href="https://golang.org/doc/effective_go.html#interfaces_and_types">&ldquo;Effective Go&rdquo;</a>.</p>
 
 <p>Also, proper testing - when you test not only happy path - would have caught this bug before it went to production.</p>
 
@@ -212,10 +212,10 @@ If you haven&rsquo;t read it yet, <a href="https://divan.github.io/posts/avoid_g
     
     <ul class="pager">
       
-      <li class="previous"><a href="https://divan.github.io/posts/avoid_gotchas/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      <li class="previous"><a href="https://divan.dev/posts/avoid_gotchas/"><span aria-hidden="true">&larr;</span> Older</a></li>
       
       
-      <li class="next"><a href="https://divan.github.io/posts/wakemeupinthemiddleofthenight/">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      <li class="next"><a href="https://divan.dev/posts/wakemeupinthemiddleofthenight/">Newer <span aria-hidden="true">&rarr;</span></a></li>
       
     </ul>
   </footer>
@@ -252,7 +252,7 @@ If you haven&rsquo;t read it yet, <a href="https://divan.github.io/posts/avoid_g
 
   </footer>
 
-  <script src="https://divan.github.io/js/highlight.pack.js"></script>
+  <script src="https://divan.dev/js/highlight.pack.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
   
   <script>

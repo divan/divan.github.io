@@ -3,143 +3,143 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://divan.github.io/posts/flutter_go/</loc>
+    <loc>https://divan.dev/posts/flutter_go/</loc>
     <lastmod>2019-01-12T14:55:00+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/fountaincodes/</loc>
+    <loc>https://divan.dev/posts/fountaincodes/</loc>
     <lastmod>2018-12-01T16:55:00+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/animatedqr/</loc>
+    <loc>https://divan.dev/posts/animatedqr/</loc>
     <lastmod>2018-11-18T11:55:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/wakemeupinthemiddleofthenight/</loc>
+    <loc>https://divan.dev/posts/wakemeupinthemiddleofthenight/</loc>
     <lastmod>2017-05-26T12:55:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/misusing_error_interface/</loc>
+    <loc>https://divan.dev/posts/misusing_error_interface/</loc>
     <lastmod>2017-03-08T12:07:40+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/avoid_gotchas/</loc>
+    <loc>https://divan.dev/posts/avoid_gotchas/</loc>
     <lastmod>2016-11-04T13:25:35+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/gophercon16/</loc>
+    <loc>https://divan.dev/posts/gophercon16/</loc>
     <lastmod>2016-08-03T19:28:46+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/go_get_private/</loc>
+    <loc>https://divan.dev/posts/go_get_private/</loc>
     <lastmod>2016-06-01T19:28:46+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/leftpad_and_go/</loc>
+    <loc>https://divan.dev/posts/leftpad_and_go/</loc>
     <lastmod>2016-03-31T04:30:29+03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/go_concurrency_visualize/</loc>
+    <loc>https://divan.dev/posts/go_concurrency_visualize/</loc>
     <lastmod>2016-01-24T18:31:12-03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/go_complain_howto/</loc>
+    <loc>https://divan.dev/posts/go_complain_howto/</loc>
     <lastmod>2015-12-14T08:36:54-03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/integration_testing/</loc>
+    <loc>https://divan.dev/posts/integration_testing/</loc>
     <lastmod>2015-12-07T08:36:54-07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/go_errors/</loc>
+    <loc>https://divan.dev/posts/go_errors/</loc>
     <lastmod>2015-11-02T08:36:54-07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://divan.github.io/categories/</loc>
+    <loc>https://divan.dev/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/coding-theory/</loc>
+    <loc>https://divan.dev/tags/coding-theory/</loc>
     <lastmod>2018-12-01T16:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/concurrency/</loc>
+    <loc>https://divan.dev/tags/concurrency/</loc>
     <lastmod>2016-01-24T18:31:12-03:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/dart/</loc>
+    <loc>https://divan.dev/tags/dart/</loc>
     <lastmod>2019-01-12T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/docker/</loc>
+    <loc>https://divan.dev/tags/docker/</loc>
     <lastmod>2015-12-07T08:36:54-07:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/flutter/</loc>
+    <loc>https://divan.dev/tags/flutter/</loc>
     <lastmod>2019-01-12T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/fountain-codes/</loc>
+    <loc>https://divan.dev/tags/fountain-codes/</loc>
     <lastmod>2018-12-01T16:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/golang/</loc>
+    <loc>https://divan.dev/tags/golang/</loc>
     <lastmod>2019-01-12T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/life/</loc>
+    <loc>https://divan.dev/tags/life/</loc>
     <lastmod>2016-08-03T19:28:46+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/posts/</loc>
+    <loc>https://divan.dev/posts/</loc>
     <lastmod>2019-01-12T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/</loc>
+    <loc>https://divan.dev/tags/</loc>
     <lastmod>2018-12-01T16:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/tags/testing/</loc>
+    <loc>https://divan.dev/tags/testing/</loc>
     <lastmod>2015-12-07T08:36:54-07:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://divan.github.io/</loc>
+    <loc>https://divan.dev/</loc>
     <lastmod>2019-01-12T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>

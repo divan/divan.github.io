@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Coding Theory on divan&#39;s blog</title>
-    <link>https://divan.github.io/tags/coding-theory/</link>
+    <link>https://divan.dev/tags/coding-theory/</link>
     <description>Recent content in Coding Theory on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 01 Dec 2018 16:55:00 +0200</lastBuildDate>
     
-	<atom:link href="https://divan.github.io/tags/coding-theory/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://divan.dev/tags/coding-theory/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Fountain codes and animated QR</title>
-      <link>https://divan.github.io/posts/fountaincodes/</link>
+      <link>https://divan.dev/posts/fountaincodes/</link>
       <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
       
-      <guid>https://divan.github.io/posts/fountaincodes/</guid>
+      <guid>https://divan.dev/posts/fountaincodes/</guid>
       <description>(source: Anders Sune Berg)
 In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.</description>
     </item>

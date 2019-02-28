@@ -2,60 +2,60 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Golang on divan&#39;s blog</title>
-    <link>https://divan.github.io/tags/golang/</link>
+    <link>https://divan.dev/tags/golang/</link>
     <description>Recent content in Golang on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 12 Jan 2019 14:55:00 +0200</lastBuildDate>
     
-	<atom:link href="https://divan.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://divan.dev/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Thought Experiment: Flutter in Go</title>
-      <link>https://divan.github.io/posts/flutter_go/</link>
+      <link>https://divan.dev/posts/flutter_go/</link>
       <pubDate>Sat, 12 Jan 2019 14:55:00 +0200</pubDate>
       
-      <guid>https://divan.github.io/posts/flutter_go/</guid>
+      <guid>https://divan.dev/posts/flutter_go/</guid>
       <description>I&amp;rsquo;ve recently discovered Flutter – a new Google&amp;rsquo;s framework for mobile development – for myself and even had an experience of teaching Flutter basics to the person who has never been doing programming at all. Flutter is written in Dart – programming language born in a Chrome browser and then escaped to the console land – and that made me think &amp;ldquo;hey, Flutter could have been easily implemented in Go as well&amp;rdquo;!</description>
     </item>
     
     <item>
       <title>Fountain codes and animated QR</title>
-      <link>https://divan.github.io/posts/fountaincodes/</link>
+      <link>https://divan.dev/posts/fountaincodes/</link>
       <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
       
-      <guid>https://divan.github.io/posts/fountaincodes/</guid>
+      <guid>https://divan.dev/posts/fountaincodes/</guid>
       <description>(source: Anders Sune Berg)
 In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.</description>
     </item>
     
     <item>
       <title>How to avoid Go gotchas</title>
-      <link>https://divan.github.io/posts/avoid_gotchas/</link>
+      <link>https://divan.dev/posts/avoid_gotchas/</link>
       <pubDate>Fri, 04 Nov 2016 13:25:35 +0100</pubDate>
       
-      <guid>https://divan.github.io/posts/avoid_gotchas/</guid>
+      <guid>https://divan.dev/posts/avoid_gotchas/</guid>
       <description>TL;DR by learning internals  a gotcha is a valid construct in a system, program or programming language that works as documented but is counter-intuitive and almost invites mistakes because it is both easy to invoke and unexpected or unreasonable in its outcome (source: wikipedia)
  Go programming language has some gotchas and there is a number of good articles explaining them. I find those articles very important, especially for the newcomers in Go, as I see people run into those gotchas every now and then.</description>
     </item>
     
     <item>
       <title>My GopherCon experience</title>
-      <link>https://divan.github.io/posts/gophercon16/</link>
+      <link>https://divan.dev/posts/gophercon16/</link>
       <pubDate>Wed, 03 Aug 2016 19:28:46 +0200</pubDate>
       
-      <guid>https://divan.github.io/posts/gophercon16/</guid>
+      <guid>https://divan.dev/posts/gophercon16/</guid>
       <description>A couple of weeks ago I gave a talk at the largest Go conference, GopherCon, in Denver. It was the first time I attended GopherCon at all, and the first time ever I spoke in English in front of 1400+ people, and it was an absolutely incredible experience. Here is my story.
 My journey to GopherCon started on a cold winter day in the apartments in the center of Odessa, Ukraine, where I was living at that time.</description>
     </item>
     
     <item>
       <title>go get for private repos in docker</title>
-      <link>https://divan.github.io/posts/go_get_private/</link>
+      <link>https://divan.dev/posts/go_get_private/</link>
       <pubDate>Wed, 01 Jun 2016 19:28:46 +0200</pubDate>
       
-      <guid>https://divan.github.io/posts/go_get_private/</guid>
+      <guid>https://divan.dev/posts/go_get_private/</guid>
       <description>As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing moments. One of them is automating repeatable build process using containers along with using dependencies in private repositories.
 Private repositories on Github are often is a source of confusion when using go get, but it has easy workaround by adding two lines to your .gitconfig:
 [url &amp;quot;git@github.com:&amp;quot;] insteadOf = https://github.</description>
@@ -63,10 +63,10 @@ Private repositories on Github are often is a source of confusion when using go 
     
     <item>
       <title>Visualizing Concurrency in Go</title>
-      <link>https://divan.github.io/posts/go_concurrency_visualize/</link>
+      <link>https://divan.dev/posts/go_concurrency_visualize/</link>
       <pubDate>Sun, 24 Jan 2016 18:31:12 -0300</pubDate>
       
-      <guid>https://divan.github.io/posts/go_concurrency_visualize/</guid>
+      <guid>https://divan.dev/posts/go_concurrency_visualize/</guid>
       <description>If you prefer video over blog posts, here is my talk on this at GopherCon 2016: https://www.youtube.com/watch?v=KyuFeiG3Y60
 One of the strongest sides of Go programming language is a built-in concurrency based on Tony Hoare&amp;rsquo;s CSP paper. Go is designed with concurrency in mind and allows us to build complex concurrent pipelines. But have you ever wondered - how various concurrency patterns look like?
 Of course, you have. We&amp;rsquo;re all thinking mostly by visualization in one form or another.</description>
@@ -74,30 +74,30 @@ Of course, you have. We&amp;rsquo;re all thinking mostly by visualization in one
     
     <item>
       <title>How to complain about Go</title>
-      <link>https://divan.github.io/posts/go_complain_howto/</link>
+      <link>https://divan.dev/posts/go_complain_howto/</link>
       <pubDate>Mon, 14 Dec 2015 08:36:54 -0300</pubDate>
       
-      <guid>https://divan.github.io/posts/go_complain_howto/</guid>
+      <guid>https://divan.dev/posts/go_complain_howto/</guid>
       <description>Over the years of existence of Go programming language, the articles with its critique was always popular, bringing a lot of discussion from both sides. Recently, Maksim Kochkin even created GitHub repo with curated list of articles complaining about golang&amp;rsquo;s imperfection.
 So, is it true that ranting about Go flaws is a trend nowadays? With carefully gathered links in the repository above, we can check this! :) Unfortunately, there are only 17 articles in the list, which is a bit disappointing because it&amp;rsquo;s not enough for fine statistical analysis, but we can use this anyway.</description>
     </item>
     
     <item>
       <title>Integration testing in Go using Docker</title>
-      <link>https://divan.github.io/posts/integration_testing/</link>
+      <link>https://divan.dev/posts/integration_testing/</link>
       <pubDate>Mon, 07 Dec 2015 08:36:54 -0700</pubDate>
       
-      <guid>https://divan.github.io/posts/integration_testing/</guid>
+      <guid>https://divan.dev/posts/integration_testing/</guid>
       <description>Note: this post was originally written for the Go Advent 2015 series, but I discovered that a post with almost exactly the same subject (and even similar code!) already planned :) That&amp;rsquo;s amazing.
 Golang is often used for writing microservices and various backends. Often these type of software do some computation, read/write data on external storage and expose it&amp;rsquo;s API via http handlers. All this functionality is remarkably easy to implement in Go and, especially if you&amp;rsquo;re creating 12factor-compatible app, Go is your friend here.</description>
     </item>
     
     <item>
       <title>Explaining Go error handling</title>
-      <link>https://divan.github.io/posts/go_errors/</link>
+      <link>https://divan.dev/posts/go_errors/</link>
       <pubDate>Mon, 02 Nov 2015 08:36:54 -0700</pubDate>
       
-      <guid>https://divan.github.io/posts/go_errors/</guid>
+      <guid>https://divan.dev/posts/go_errors/</guid>
       <description>I recently translated great article — Errors are values by Rob Pike — and we discussed it in our podcast Golangshow (in russian). One thing I was surprised about is that even experienced Go developers sometimes do not understand the core idea of that article.
 Looking back, I remember my first impressions when I read it for the first time. It was similar to “It looks like Pike just adds some complexity to what could’ve been solved gracefully with exceptions”.</description>
     </item>

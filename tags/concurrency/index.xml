@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Concurrency on divan&#39;s blog</title>
-    <link>https://divan.github.io/tags/concurrency/</link>
+    <link>https://divan.dev/tags/concurrency/</link>
     <description>Recent content in Concurrency on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 24 Jan 2016 18:31:12 -0300</lastBuildDate>
     
-	<atom:link href="https://divan.github.io/tags/concurrency/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://divan.dev/tags/concurrency/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Visualizing Concurrency in Go</title>
-      <link>https://divan.github.io/posts/go_concurrency_visualize/</link>
+      <link>https://divan.dev/posts/go_concurrency_visualize/</link>
       <pubDate>Sun, 24 Jan 2016 18:31:12 -0300</pubDate>
       
-      <guid>https://divan.github.io/posts/go_concurrency_visualize/</guid>
+      <guid>https://divan.dev/posts/go_concurrency_visualize/</guid>
       <description>If you prefer video over blog posts, here is my talk on this at GopherCon 2016: https://www.youtube.com/watch?v=KyuFeiG3Y60
 One of the strongest sides of Go programming language is a built-in concurrency based on Tony Hoare&amp;rsquo;s CSP paper. Go is designed with concurrency in mind and allows us to build complex concurrent pipelines. But have you ever wondered - how various concurrency patterns look like?
 Of course, you have. We&amp;rsquo;re all thinking mostly by visualization in one form or another.</description>

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Life on divan&#39;s blog</title>
-    <link>https://divan.github.io/tags/life/</link>
+    <link>https://divan.dev/tags/life/</link>
     <description>Recent content in Life on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 03 Aug 2016 19:28:46 +0200</lastBuildDate>
     
-	<atom:link href="https://divan.github.io/tags/life/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://divan.dev/tags/life/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>My GopherCon experience</title>
-      <link>https://divan.github.io/posts/gophercon16/</link>
+      <link>https://divan.dev/posts/gophercon16/</link>
       <pubDate>Wed, 03 Aug 2016 19:28:46 +0200</pubDate>
       
-      <guid>https://divan.github.io/posts/gophercon16/</guid>
+      <guid>https://divan.dev/posts/gophercon16/</guid>
       <description>A couple of weeks ago I gave a talk at the largest Go conference, GopherCon, in Denver. It was the first time I attended GopherCon at all, and the first time ever I spoke in English in front of 1400+ people, and it was an absolutely incredible experience. Here is my story.
 My journey to GopherCon started on a cold winter day in the apartments in the center of Odessa, Ukraine, where I was living at that time.</description>
     </item>
