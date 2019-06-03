@@ -293,11 +293,11 @@ article section img {
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
     body {
-        background: #101010;
+        background: #000000;
         color: white;
     }
 	.header-text {
-		background-color: #101010;
+		background-color: #000000;
 	}
 	.header-text .tag-line {
 		color: white;

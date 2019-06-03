@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://divan.dev/posts/visual_programming_go/</loc>
+    <lastmod>2019-06-01T14:55:00+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://divan.dev/posts/flutter_go/</loc>
     <lastmod>2019-01-12T14:55:00+02:00</lastmod>
   </url>
@@ -110,7 +115,7 @@
   
   <url>
     <loc>https://divan.dev/tags/golang/</loc>
-    <lastmod>2019-01-12T14:55:00+02:00</lastmod>
+    <lastmod>2019-06-01T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -122,7 +127,7 @@
   
   <url>
     <loc>https://divan.dev/posts/</loc>
-    <lastmod>2019-01-12T14:55:00+02:00</lastmod>
+    <lastmod>2019-06-01T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -139,8 +144,14 @@
   </url>
   
   <url>
+    <loc>https://divan.dev/tags/visual-programming/</loc>
+    <lastmod>2019-06-01T14:55:00+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://divan.dev/</loc>
-    <lastmod>2019-01-12T14:55:00+02:00</lastmod>
+    <lastmod>2019-06-01T14:55:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   

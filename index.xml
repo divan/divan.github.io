@@ -6,10 +6,21 @@
     <description>Recent content on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 12 Jan 2019 14:55:00 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 01 Jun 2019 14:55:00 +0200</lastBuildDate>
     
 	<atom:link href="https://divan.dev/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Rethinking Visual Programming with Go</title>
+      <link>https://divan.dev/posts/visual_programming_go/</link>
+      <pubDate>Sat, 01 Jun 2019 14:55:00 +0200</pubDate>
+      
+      <guid>https://divan.dev/posts/visual_programming_go/</guid>
+      <description>This is a blog version of the talk I gave at GopherCon Europe 2019 (Canary Islands Edition), where I shared my thoughts on why Visual Programming Languages have failed and revealed for the first time my experiment on visualizing Go code.
+I could dive in straight into the project, but I do believe to truly appreciate it, I have to explain the thought line behind it first.
+It starts with an almost existential frustration of working with code as a text.</description>
+    </item>
     
     <item>
       <title>Thought Experiment: Flutter in Go</title>
