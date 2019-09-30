@@ -6,10 +6,20 @@
     <description>Recent content in Golang on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 01 Jun 2019 14:55:00 +0200</lastBuildDate>
+    <lastBuildDate>Mon, 30 Sep 2019 09:04:59 +0200</lastBuildDate>
     
 	<atom:link href="https://divan.dev/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>I still ❤️ you, GOPATH</title>
+      <link>https://divan.dev/posts/gopath/</link>
+      <pubDate>Mon, 30 Sep 2019 09:04:59 +0200</pubDate>
+      
+      <guid>https://divan.dev/posts/gopath/</guid>
+      <description>The newest release of Go – Go 1.13 – finally introduced full support for Go Modules – brilliant and long-awaited solution for built-in dependency versioning problem. Modules now enabled by default, and virtually make GOPATH obsolete.
+Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &amp;ldquo;GOPATH mode&amp;rdquo; (as being opposite to the &amp;ldquo;modules mode&amp;rdquo;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.</description>
+    </item>
     
     <item>
       <title>Rethinking Visual Programming with Go</title>

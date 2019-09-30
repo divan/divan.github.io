@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta property="og:title" content=" I still ❤️ you, GOPATH &middot;  divan&#39;s blog" />
+  
+  <meta property="og:site_name" content="divan&#39;s blog" />
+  <meta property="og:url" content="https://divan.dev/posts/gopath/" />
+  
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:article:published_time" content="2019-09-30T09:04:59&#43;02:00" />
+  
+  <meta property="og:article:tag" content="golang" />
+  
+  
+  
+  <meta property="og:image" content="https://divan.dev/images/gopath_og.png"/>
+  <meta property="og:image:secure_url" content="https://divan.dev/images/gopath_og.png"/>
+  
+
+  <title>
+     I still ❤️ you, GOPATH &middot;  divan&#39;s blog
+  </title>
+
+  <link rel="stylesheet" href="https://divan.dev/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/main.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
+  
+</head>
+<body>
+    <header class="global-header">
+    <section class="header-text">
+      <h1><a href="https://divan.dev/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+	  
+      <div class="tag-line">
+        random thoughts on Go and software design
+      </div>
+      
+      <div class="tag-line">
+        <a href="https://divan.dev/talks">My Talks</a>
+      </div>
+      <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+      
+      <a href="https://divan.dev/" class="btn-header btn-back hidden-xs">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        &nbsp;Home
+      </a>
+      
+      
+    </section>
+  </header>
+  <main class="container">
+
+
+<article>
+  <header>
+    <h1 class="text-primary">I still ❤️ you, GOPATH</h1>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2019-09-30T09:04:59&#43;02:00">
+          Sep 30, 2019
+        </time>
+      </div>
+      <div class="pull-right">
+        
+        <span class="post-tag small"><a href="https://divan.dev//tags/golang">#golang</a></span>
+        
+      </div>
+    </div>
+  </header>
+  <section>
+    
+
+<p><img src="/images/gopath.png" alt="gopath" /></p>
+
+<p>The newest release of Go – <a href="https://golang.org/doc/go1.13">Go 1.13</a> – finally introduced full support for <a href="https://blog.golang.org/using-go-modules">Go Modules</a> – brilliant and long-awaited solution for built-in dependency versioning problem. Modules now enabled by default, and virtually make GOPATH obsolete.</p>
+
+<p>Technically speaking, GOPATH is still supported, and <a href="https://golang.org/doc/go1.13">Go 1.13 Release Notes</a> uses term &ldquo;<em>GOPATH mode</em>&rdquo; (as being opposite to the &ldquo;<em>modules mode</em>&rdquo;), but still, to me this is a tectonic shift in the Go development ecosystem evolution. Now you or your static analysis tools no longer can assume that all code lives in one large directory.</p>
+
+<p>A lot of people ardently hate the mere idea and the concept of GOPATH. Thousands of people were spending hours trying to configure a single environment variable before starting with Go (no comments on that). Not surprisingly, the fact that you can now work on Go programs in any directory was cheered upon quite vocally.</p>
+
+<p><img src="/images/gopath_hate.jpg" alt="gopath_hate" /></p>
+
+<p>And yet.</p>
+
+<p>If you ask me, GOPATH was a beautiful and elegant solution to the array of complicated problems and shaped Go ecosystem in a peculiar and unique way.</p>
+
+<p>So, before we sunset GOPATH, I want to pay a little homage to these 6 letters, that brought so much joy to some, and so much frustration to others.</p>
+
+<h2 id="gopath-a-single-config">GOPATH: a single config</h2>
+
+<p>I&rsquo;ll start with every newcomer&rsquo;s entry-point to any language – configuring the development environment.</p>
+
+<p>For most programming languages it was not unusual to spend a day or two just on setting up the environment before you could write a first &ldquo;hello, world&rdquo; app. In some languages sophisticated tooling has emerged to detect and find needed binaries and library versions, to accommodate to the OS specifics and machine architecture. In others, it was the responsibility of the developer to properly set up all directories, system variables, paths, filesystem permissions and versions of auxiliary tools manually. <a href="https://www.hashicorp.com">Successful companies</a> were conceived by solving this immensely overcomplicated task of setting up a development environment.</p>
+
+<p>So, configuring the new computer for a new programming language has always been a tremendously complicated thing. It was part of the game, though. Everybody knew it&rsquo;s just how the world works.</p>
+
+<p>GOPATH reduced this whole question to setting up one single value – just tell Go where your working directory is, and the rest is on us. Pick the directory, set the env var, and be 100% sure that your filesystem isn&rsquo;t touched anywhere else by Go.</p>
+
+<p>What can be easier?</p>
+
+<p>While being that simple, GOPATH gave a confidence in what Go is actually doing to your filesystem. There were no obscure dot-files around the machine, nor system-wide directories configure in platform-specific way – just one directory you&rsquo;ve chosen and control.</p>
+
+<p>It was clear, easy and refreshing.</p>
+
+<p>In my opinion, part of this clarity was lost when GOPATH acquired its default value (~/go) – new users were no longer required to understand the concept of a single directory workspace.</p>
+
+<h2 id="gopath-naming-conventions">GOPATH: naming conventions</h2>
+
+<p>As a follow-up, GOPATH offered a simple and clean structure for your directory - <code>bin/</code>, <code>pkg/</code> and <code>src/</code> triplet. The purpose of each is obvious, and you can infer it from the name.</p>
+
+<p>Down the directory depth, the structure was mirroring Go import names, which were mirroring URL of the version control system for the package.</p>
+
+<p>When I first discovered this naming convention in Go, I was excited and ashamed at the same time – why didn&rsquo;t I figure out this nice structure myself for other projects?!</p>
+
+<p>You see, in my pre-Go era my home directory, omitting non-development stuff, has been quite a mess – directories like <code>~/Work/</code>, <code>~/Projects/</code>, <code>~/CompanyName/</code>, <code>~/Soft</code>, <code>~/ImportantProjectA</code> and alike were shaping the layout of my typical development setup. Of course, folders like <code>~/Soft</code> and <code>~/Project</code> has been a huge pile of quickly forgotten names and name-version tuples.  What&rsquo;s important there was no easy way to restore where this particular project came or was downloaded from.</p>
+
+<p>People complain about never uninstalled apps on smartphones? You should&rsquo;ve seen my HOME directory before GOPATH! :)</p>
+
+<p>GOPATH idea of having one place for all code, structure by URL of its VCS was ingenious and useful from day 0. Finding where the package source lays on disk knowing it&rsquo;s remote git URL or Github page was a no-brainer now. So is the reverse action – finding the URL of the original source just by looking at the folder path.</p>
+
+<p>Very soon, I found myself using GOPATH for software projects in other languages itself. I changed GOPATH to point to my HOME directory, and now all the software I ever touched was placed under <code>~/src</code> in folders structured to mirror their Github URL.</p>
+
+<p><img src="/images/gopath_tree.png" alt="gopath tree" /></p>
+
+<p>GOPATH made my filesystem much more organized and cleaner. I still use this setup today for everything, and can&rsquo;t imagine any better layout. Change my mind.</p>
+
+<h2 id="gopath-hacking-code">GOPATH: hacking code</h2>
+
+<p>Next, the point I haven&rsquo;t appreciate enough until started hacking with Go static analysis tools – it&rsquo;s how easy GOPATH made the job of code analysis tools&rsquo; authors. No system-wide special directories that change from one OS to another, no separate directories for different Go versions, no version solving problem (that&rsquo;s my favourite, haha) – it&rsquo;s just a single environment variable, just do <code>os.Getenv()</code> and you have access to all the code you need.</p>
+
+<p>It made life easier for us, humans, too. You, know, unless you work for NASA, software development is rarely one-way translation of the spec into the code. It&rsquo;s almost always a two-way process, a tinkering and an experimentation, a creation and discovery, it&rsquo;s like Escher&rsquo;s drawing hands – hands drawing the hands, drawing the hands. We need the ability to change parts of the program and its dependencies quickly, see how it changed the behaviour, update our mental models and update the code and so on.</p>
+
+<p>This easy hacking capability is often underrated and underappreciated. GOPATH made this task a breeze – just jump to any code in your editor, change it, check the result, and then decide what to do. It could be just debug printf statement or potential fix of the dependency that will go directly to the pull-request from your change. You could do this not leaving your editor window.</p>
+
+<p>With GOPATH I was always sure in two things:</p>
+
+<ol>
+<li>I&rsquo;m able to change/modify my dependencies as much as I want</li>
+<li>I know exactly where the file I&rsquo;m modifying is on the filesystem</li>
+</ol>
+
+<p>That gave pleasant confidence in this day-to-day process.</p>
+
+<h2 id="gopath-making-the-ecosystem-alive">GOPATH:  making the ecosystem alive</h2>
+
+<p>Finally, one of the most subtle and hard to explain points. GOPATH, as you know, didn&rsquo;t try to solve the versioning problem. It was postponed and offloaded to the third-party tools, and ultimately resulted in Go Modules.</p>
+
+<p>It was an absolutely brilliant solution, though – if the probability of making suboptimal solution multiplied by costs of doing it is higher than costs of not having the solution at all – prefer not to provide the solution at all. It&rsquo;s a genius akin to Bitcoin&rsquo;s approach to solving the digital identity problem for digital finance systems – there is no identity. With GOPATH, there is only one &lsquo;master&rsquo; version, and that&rsquo;s it.</p>
+
+<p>That was painful for projects that need semi-reproducible builds in non-monorepos (which seems to be the majority of the small-to-medium codebases in the industry) but was an absolute blessing for the monorepos and open-source software – which is, in a way, also just a one giant monorepository. It was a blessing in one non-obvious way – it created an incentive to keep your code always up to date and in sync with its dependencies.</p>
+
+<h4 id="invisible-incentives">Invisible incentives</h4>
+
+<p>Let me elaborate on it because I foresee this to be debated – no-versions approach with GOPATH created incentives to keep your dependencies updated. As a maintainer of the open-source library, I&rsquo;m interested that at any point users can do <code>go get</code> and it compiles with all latest versions of dependencies.</p>
+
+<p>After a couple of &ldquo;doesn&rsquo;t build&rdquo; issues and/or pull requests, whatever your prior understanding was, but you start realizing that costs of maintaining dependency are non-zero, to put it mildly, and next time you add yet another leftpad library to your code, you think twice. At some point, you naturally embrace <strong>&ldquo;little copying is better than a little dependency&rdquo;</strong> <a href="https://go-proverbs.github.io">proverb</a>.</p>
+
+<p>You also start realizing that other projects may depend on your library and you don&rsquo;t want to break their code unless it&rsquo;s security fix or absolutely necessary change that cannot be done in any other way. Somehow, you embraced <a href="https://golang.org/doc/go1compat">Go1 compatibility promise</a> as a bar for your Go projects too.</p>
+
+<p>GOPATH created the incentive to come to these conclusions naturally.</p>
+
+<h4 id="talk-to-humans">Talk to humans</h4>
+
+<p>Many dependency problems that typically solved by locking versions can be solved by talking of one human to another human. Not always, but more often than you might think.</p>
+
+<p>Some API breaks can be solved by proposing an alternative design or keeping pieces of old API for legacy reasons. Maybe the author didn&rsquo;t realize that someone depends on her project and wasn&rsquo;t aware that new change breaks someone&rsquo;s build. Just talk to the author, maybe she will be happy to find a better solution that doesn&rsquo;t break API, or keep both, or find some other solution, or help you make a transition.</p>
+
+<p>I&rsquo;m surprised how little we appreciate the power of human talking to each other in the open-source world. It&rsquo;s cooler than locking versions.</p>
+
+<p>GOPATH represented much more than just a large directory. It was a little copy of Go universe on your disk. It was a mirror of the subset of Go ecosystem on your machine, and it was alive.</p>
+
+<h3 id="final-words">Final words</h3>
+
+<p>Millions of GOPATHes on our machines – yours, your coworkers, Go authors, mine – were copies of that ecosystem, and we tried to keep it in sync with each other. Our desire to keep libraries intact and in sync with master branches of other versions was our consensus protocol. And it shaped the dynamics of the Go ecosystem dramatically different from many others.</p>
+
+<p>Take a look at the fantastic <a href="http://anvaka.github.io/pm/#/galaxy/gosearch">visualization of the Go universe</a> by <a href="https://github.com/anvaka">Andrei Kashcha</a>:</p>
+
+<p><img src="/images/go_universe.gif" alt="go universe" /></p>
+
+<p>Some of these dots are your packages. Packages you contributed to. Packages you use in your projects.</p>
+
+<p>They are grouped, clustered, and connected through many more invisible nodes of this graph which are end-user programs, that sit in the private and corporate repositories or never leave the boundaries of your machine. But they still connecting those dots together, making Go ecosystem a huge living organism.</p>
+
+<p>Without your GOPATH that living organism wouldn&rsquo;t exist.</p>
+
+<p><a href="http://anvaka.github.io/pm/#/galaxy/gosearch"><img src="/images/go_universe.png" alt="go universe" /></a></p>
+
+<p>I&rsquo;m not sure how alive that organism will be after we say goodbye to GOPATH. Will there be enough incentives to keep this giant beautiful living thing alive and connected?</p>
+
+<p>I still love you, GOPATH.</p>
+
+  </section>
+  <footer>
+    <section class="author-info row">
+      <div class="author-avatar col-md-2">
+        
+        <img alt="Author Avatar" src="/images/avatar.jpg" />
+        
+      </div>
+      <div class="author-meta col-md-6">
+        
+        
+		<div class="author-bio">Gopher. Public speaker.<br />
+			Follow me at <a href="https://twitter.com/idanyliuk" target="_blank">@idanyliuk</a><br />
+			You can always <a href="https://www.buymeacoffee.com/divan">buy me a coffee</a><br />
+		</div>
+        
+      </div>
+      
+      <div class="author-contact col-md-4">
+        <a href="mailto:ivan.daniluk@gmail.com">
+          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          &nbsp;Contact me
+        </a>
+      </div>
+      
+    </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a href="https://divan.dev/posts/visual_programming_go/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      
+      
+      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+  </main>
+  <footer class="container global-footer">
+    <div class="copyright-note pull-left">
+      
+    </div>
+    <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <script src="https://divan.dev/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-70805978-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  
+  
+</body>
+</html>
+
