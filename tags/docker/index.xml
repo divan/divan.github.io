@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Docker on divan&#39;s blog</title>
+    <title>docker on divan&#39;s blog</title>
     <link>https://divan.dev/tags/docker/</link>
-    <description>Recent content in Docker on divan&#39;s blog</description>
+    <description>Recent content in docker on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 07 Dec 2015 08:36:54 -0700</lastBuildDate>

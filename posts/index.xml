@@ -42,6 +42,16 @@ It starts with an almost existential frustration of working with code as a text.
     </item>
     
     <item>
+      <title>Creating WebGL apps with Go</title>
+      <link>https://divan.dev/posts/webgl_go/</link>
+      <pubDate>Mon, 10 Dec 2018 00:00:00 +0100</pubDate>
+      
+      <guid>https://divan.dev/posts/webgl_go/</guid>
+      <description>TL;DR In this article I&amp;rsquo;ll share my experience building an interactive 3D WebGL-based application for peer-to-peer messaging protocol simulation without writing any single line in JS. You&amp;rsquo;ll learn how GopherJS and Vecty framework can dramatically lower the complexity of building WebGL-enabled web apps in Go.
+It&amp;rsquo;s often said &amp;ldquo;A picture is worth a thousand words&amp;rdquo;, but in the era of high-DPI screens and big data, the new idiom is now truer – &amp;ldquo;3D interactive visualization is worth a thousand pictures&amp;rdquo;.</description>
+    </item>
+    
+    <item>
       <title>Fountain codes and animated QR</title>
       <link>https://divan.dev/posts/fountaincodes/</link>
       <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
