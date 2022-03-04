@@ -38,18 +38,6 @@
       <div class="tag-line">
         <a href="https://divan.dev/talks">My Talks</a>
       </div>
-      <div style="margin: 10px auto; max-width: 760px">
-        <div class="alert">
-          <h4>Most popular articles</h4>
-          <ul>
-            <li><a href="/posts/go_concurrency_visualize/">Visualizing Concurrency in Go</a></li>
-            <li><a href="/posts/visual_programming_go/">Rethinking Visual Programming with Go</a></li>
-            <li><a href="/posts/animatedqr/">Animated QR data transfer with Gomobile and Gopherjs</a></li>
-            <li><a href="/posts/flutter_go/">Thought Experiment: Flutter in Go</a></li>
-            <li><a href="/posts/webgl_go/">Creating WebGL apps with Go</a></li>
-          </ul>
-        </div>
-      </div>
       <div class="sns-links hidden-print">
   
   <a href="mailto:ivan.daniluk@gmail.com">
@@ -108,7 +96,7 @@
   </header>
   <div>
     The newest release of Go – Go 1.13 – finally introduced full support for Go Modules – brilliant and long-awaited solution for built-in dependency versioning problem. Modules now enabled by default, and virtually make GOPATH obsolete.
-Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &ldquo;GOPATH mode&rdquo; (as being opposite to the &ldquo;modules mode&rdquo;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.
+Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &ldquo;GOPATH mode&rdquo; (as being opposite to the &ldquo;modules mode&quot;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.
   </div>
   
   <footer>
@@ -181,7 +169,7 @@ It starts with an almost existential frustration of working with code as a text.
     <div class="post-meta clearfix">
       <div class="post-date pull-left">
         Posted on
-        <time datetime="2018-12-10T00:00:00&#43;01:00">
+        <time datetime="2018-12-10T00:00:00&#43;02:00">
           Dec 10, 2018
         </time>
       </div>
@@ -215,8 +203,7 @@ It&rsquo;s often said &ldquo;A picture is worth a thousand words&rdquo;, but in 
     </div>
   </header>
   <div>
-    (source: Anders Sune Berg)
-In the previous article I&rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.
+    (source: Anders Sune Berg)In the previous article I&rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame. And in practice, it often did, of course.
   </div>
   
   <footer>

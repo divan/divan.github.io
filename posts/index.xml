@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on divan&#39;s blog</title>
@@ -6,11 +6,7 @@
     <description>Recent content in Posts on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 30 Sep 2019 09:04:59 +0200</lastBuildDate>
-    
-	<atom:link href="https://divan.dev/posts/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 30 Sep 2019 09:04:59 +0200</lastBuildDate><atom:link href="https://divan.dev/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>I still ❤️ you, GOPATH</title>
       <link>https://divan.dev/posts/gopath/</link>
@@ -18,7 +14,7 @@
       
       <guid>https://divan.dev/posts/gopath/</guid>
       <description>The newest release of Go – Go 1.13 – finally introduced full support for Go Modules – brilliant and long-awaited solution for built-in dependency versioning problem. Modules now enabled by default, and virtually make GOPATH obsolete.
-Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &amp;ldquo;GOPATH mode&amp;rdquo; (as being opposite to the &amp;ldquo;modules mode&amp;rdquo;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.</description>
+Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &amp;ldquo;GOPATH mode&amp;rdquo; (as being opposite to the &amp;ldquo;modules mode&amp;quot;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.</description>
     </item>
     
     <item>
@@ -44,7 +40,7 @@ It starts with an almost existential frustration of working with code as a text.
     <item>
       <title>Creating WebGL apps with Go</title>
       <link>https://divan.dev/posts/webgl_go/</link>
-      <pubDate>Mon, 10 Dec 2018 00:00:00 +0100</pubDate>
+      <pubDate>Mon, 10 Dec 2018 00:00:00 +0200</pubDate>
       
       <guid>https://divan.dev/posts/webgl_go/</guid>
       <description>TL;DR In this article I&amp;rsquo;ll share my experience building an interactive 3D WebGL-based application for peer-to-peer messaging protocol simulation without writing any single line in JS. You&amp;rsquo;ll learn how GopherJS and Vecty framework can dramatically lower the complexity of building WebGL-enabled web apps in Go.
@@ -57,8 +53,7 @@ It&amp;rsquo;s often said &amp;ldquo;A picture is worth a thousand words&amp;rdq
       <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
       
       <guid>https://divan.dev/posts/fountaincodes/</guid>
-      <description>(source: Anders Sune Berg)
-In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.</description>
+      <description>(source: Anders Sune Berg)In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame. And in practice, it often did, of course.</description>
     </item>
     
     <item>

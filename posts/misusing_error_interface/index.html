@@ -41,18 +41,6 @@
       <div class="tag-line">
         <a href="https://divan.dev/talks">My Talks</a>
       </div>
-      <div style="margin: 10px auto; max-width: 760px">
-        <div class="alert">
-          <h4>Most popular articles</h4>
-          <ul>
-            <li><a href="/posts/go_concurrency_visualize/">Visualizing Concurrency in Go</a></li>
-            <li><a href="/posts/visual_programming_go/">Rethinking Visual Programming with Go</a></li>
-            <li><a href="/posts/animatedqr/">Animated QR data transfer with Gomobile and Gopherjs</a></li>
-            <li><a href="/posts/flutter_go/">Thought Experiment: Flutter in Go</a></li>
-            <li><a href="/posts/webgl_go/">Creating WebGL apps with Go</a></li>
-          </ul>
-        </div>
-      </div>
       <div class="sns-links hidden-print">
   
   <a href="mailto:ivan.daniluk@gmail.com">
@@ -105,21 +93,15 @@
     </div>
   </header>
   <section>
-    
-
-<p>I used to think that misunderstanding interfaces in Go can lead, at most, to not very readable code and worse maintainability. From my observations misusing interfaces becomes visible usually during refactorings, where you questioning what this type or abstraction actually represents. But, at least, the code tends to work and it&rsquo;s not buggy.</p>
-
+    <p>I used to think that misunderstanding interfaces in Go can lead, at most, to not very readable code and worse maintainability. From my observations misusing interfaces becomes visible usually during refactorings, where you questioning what this type or abstraction actually represents. But, at least, the code tends to work and it&rsquo;s not buggy.</p>
 <h1 id="the-bug">The bug</h1>
-
 <p>But here is the interesting piece of code that actually was buggy:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">SomeFunc</span>()
 <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">err</span>.(<span style="color:#a6e22e">MyError</span>); !<span style="color:#a6e22e">ok</span> {
     <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
-}</code></pre></div>
-<p>Quite idiomatic, right?  Error type naming is good, following <a href="https://github.com/golang/go/wiki/Errors#naming">recommended way to name error types and variables</a>.  We use here normal <a href="https://golang.org/doc/effective_go.html#interface_conversions">type assertion</a>, &ldquo;extracting&rdquo; underlying static type from an interface. If an error doesn&rsquo;t have this type inside, we should log it.</p>
-
+}
+</code></pre></div><p>Quite idiomatic, right?  Error type naming is good, following <a href="https://github.com/golang/go/wiki/Errors#naming">recommended way to name error types and variables</a>.  We use here normal <a href="https://golang.org/doc/effective_go.html#interface_conversions">type assertion</a>, &ldquo;extracting&rdquo; underlying static type from an interface. If an error doesn&rsquo;t have this type inside, we should log it.</p>
 <p>But it didn&rsquo;t work. Variable <code>ok</code> was always true.</p>
-
 <p>First, I checked <code>SomeFunc()</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SomeFunc</span>() <span style="color:#66d9ef">error</span> {
     <span style="color:#75715e">// case 1: we want caller to print this error
@@ -131,57 +113,41 @@
     <span style="color:#75715e">// case 2: we want caller to ignore this error
 </span><span style="color:#75715e"></span>    <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;my error&#34;</span>)
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">MyError</span>(<span style="color:#a6e22e">err</span>)
-}</code></pre></div>
-<p>Well, it&rsquo;s a bit smelly, but looks kinda ok. In the first case, we definitely do not return <code>MyError</code>, so type assertion should reflect this. Why was <code>ok</code> true in this case?</p>
-
+}
+</code></pre></div><p>Well, it&rsquo;s a bit smelly, but looks kinda ok. In the first case, we definitely do not return <code>MyError</code>, so type assertion should reflect this. Why was <code>ok</code> true in this case?</p>
 <p>Next jump to the definition of <code>MyError</code> gave me an answer:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyError</span> <span style="color:#66d9ef">error</span></code></pre></div>
-<p>What??</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyError</span> <span style="color:#66d9ef">error</span>
+</code></pre></div><p>What??</p>
 <p><code>MyError</code> was actually an interface type! Even more - it was &ldquo;synonym&rdquo; for <code>error</code> interface!</p>
-
 <p>Developer who wrote this code was assuming that</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyError</span> <span style="color:#66d9ef">error</span></code></pre></div>
-<p>is the same as:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyError</span> <span style="color:#66d9ef">error</span>
+</code></pre></div><p>is the same as:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyError</span> <span style="color:#66d9ef">struct</span> {
    <span style="color:#66d9ef">error</span>
-}</code></pre></div>
-<p>Which is more than far from the truth.</p>
-
+}
+</code></pre></div><p>Which is more than far from the truth.</p>
 <h1 id="understanding-interfaces">Understanding interfaces</h1>
-
 <p>If you do understand interfaces in Go, you will spot immediately that in a first case MyError is an interface type, while in the second case it is a concrete type.</p>
-
 <p>The tricky part here is that type assertion works both with concrete and interface types - it&rsquo;s ok to &ldquo;extract&rdquo; one interface from another. For example, you can &ldquo;reduce&rdquo; <code>io.ReadCloser</code> to <code>io.Reader</code> by this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">r</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rc</span>.(<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Reader</span>)</code></pre></div>
-<p>and it&rsquo;s perfectly valid case. It&rsquo;s <a href="https://golang.org/doc/effective_go.html#interface_conversions">in the spec</a>:</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">r</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rc</span>.(<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Reader</span>)
+</code></pre></div><p>and it&rsquo;s perfectly valid case. It&rsquo;s <a href="https://golang.org/doc/effective_go.html#interface_conversions">in the spec</a>:</p>
 <blockquote>
 <p>That type must either be the concrete type held by the interface, or a second interface type that the value can be converted to.</p>
 </blockquote>
-
 <p>I do believe that to truly understand interfaces you need to learn how they are implemented. I wrote a blog post some time ago with visual explanations of interfaces - <a href="https://divan.dev/posts/avoid_gotchas/">&ldquo;How to avoid go gotchas&rdquo;</a>. Here is a refresher picture what interface is under the hood:
-<img src="https://divan.dev/images/iface2.png" alt="interfaces" />
+<img src="https://divan.dev/images/iface2.png" alt="interfaces">
 If you haven&rsquo;t read it yet, <a href="https://divan.dev/posts/avoid_gotchas/">please do</a> - I&rsquo;m genuinely interested in a feedback and hope my way of explaining things works for others.</p>
-
 <p>Now, back to our the initial code. What was happening there is following:</p>
-
 <ul>
 <li><code>SomeFunc()</code> returns error of interface type <code>error</code> with a static type inside different from <code>MyError</code></li>
 <li>type assertion trying to &ldquo;extract&rdquo; interface <code>MyError</code> from interface <code>error</code></li>
 <li>as <code>MyError</code> was defined as the same type as <code>error</code>, any variable of type <code>error</code> automatically satisfies <code>MyError</code> interface as well</li>
 </ul>
-
 <p>Hence, type assertion <code>err.(MyError)</code> is always positive for any non-nil variable of type <code>error</code>.</p>
-
 <h1 id="conclusion">Conclusion</h1>
-
 <p>Misunderstanding interfaces can lead to some non-obvious bugs, so it&rsquo;s crucial to build a proper understanding of what concrete and interface types are in Go.</p>
-
 <p>If you feel like you don&rsquo;t have a clear picture, try one of my previous articles, where I tried to explain interfaces visually - <a href="https://divan.dev/posts/avoid_gotchas/">&ldquo;How to avoid Go gotchas&rdquo;</a>. And, as always, don&rsquo;t forget the (re)read the <a href="https://golang.org/doc/effective_go.html#interfaces_and_types">&ldquo;Effective Go&rdquo;</a>.</p>
-
 <p>Also, proper testing - when you test not only happy path - would have caught this bug before it went to production.</p>
-
 <p>Happy coding!</p>
 
   </section>

@@ -47,18 +47,6 @@
       <div class="tag-line">
         <a href="https://divan.dev/talks">My Talks</a>
       </div>
-      <div style="margin: 10px auto; max-width: 760px">
-        <div class="alert">
-          <h4>Most popular articles</h4>
-          <ul>
-            <li><a href="/posts/go_concurrency_visualize/">Visualizing Concurrency in Go</a></li>
-            <li><a href="/posts/visual_programming_go/">Rethinking Visual Programming with Go</a></li>
-            <li><a href="/posts/animatedqr/">Animated QR data transfer with Gomobile and Gopherjs</a></li>
-            <li><a href="/posts/flutter_go/">Thought Experiment: Flutter in Go</a></li>
-            <li><a href="/posts/webgl_go/">Creating WebGL apps with Go</a></li>
-          </ul>
-        </div>
-      </div>
       <div class="sns-links hidden-print">
   
   <a href="mailto:ivan.daniluk@gmail.com">
@@ -117,332 +105,78 @@
     </div>
   </header>
   <section>
-    
-
-<p><em>Note: this post was originally written for the <a href="https://blog.gopheracademy.com/advent-2015/introduction/">Go Advent 2015</a> series, but I discovered that a post with almost exactly the same subject (and even similar code!) already planned :) That&rsquo;s amazing.</em></p>
-
+    <p><em>Note: this post was originally written for the <a href="https://blog.gopheracademy.com/advent-2015/introduction/">Go Advent 2015</a> series, but I discovered that a post with almost exactly the same subject (and even similar code!) already planned :) That&rsquo;s amazing.</em></p>
 <p>Golang is often used for writing microservices and various backends. Often these type of software do some computation, read/write data on external storage and expose it&rsquo;s API via http handlers. All this functionality is remarkably easy to implement in Go and, especially if you&rsquo;re creating <a href="http://12factor.net">12factor</a>-compatible app, Go is your friend here.</p>
-
 <p>This functionality is also easy to test using built-in Go testing tooling. But here&rsquo;s the catch - unit testing or <em>small tests</em> doesn&rsquo;t guarantee that your service is working correctly. Even if you simply want to test your HTTP response codes, you have to inject dependencies first and connect your code to the external resources or storage. At this point you&rsquo;ll probably realize you need to write a proper integration test, which include not only your code but all dependent resources as well.</p>
-
 <p>But, how to do this without inventing your own scripts and harness code for mocking and starting services? How to make it as easy to use as a normal &lsquo;go test&rsquo; workflow? How to deal with setting up migrations and schemas for you databases? Finally, how to make it cross-platform, so you can easily run those tests on your Macbook as well as in your CI node?</p>
-
 <p>Let me show one of the possible solutions I use for a number of services for quite a long time. It leverages the power of <a href="https://www.docker.com">Docker</a> isolation and comfort of go test tooling, and thus very easy to use and, with little efforts, gives you truly cross-platform integration testing.</p>
-
 <p>As an example I&rsquo;ll take simple go-based webservice, which is often may be sufficient for REST-backends:</p>
-
 <ul>
 <li>REST-service based on <a href="https://github.com/gin-gonic/gin">gin</a> framework</li>
 <li>data storage - external MySQL database</li>
 <li><a href="https://bitbucket.org/liamstask/goose/">goose</a> tool for migrations</li>
 </ul>
-
 <h2 id="docker">Docker</h2>
-
 <p>So, yes, we will use <a href="https://www.docker.com">Docker</a> to handle all external dependencies (MySQL database in our case), and that&rsquo;s exactly the case where Docker shines. Nowadays internet is <a href="http://ctankersley.com/2014/09/30/docker-a-misunderstood-tool/">full</a> of <a href="http://www.rkn.io/2014/09/26/no-silver-bullets/">articles</a> and <a href="https://speakerdeck.com/rjschwei/docker-not-a-silver-bullet">talks</a> telling that Docker is not a &lsquo;silver bullet&rsquo;, and <a href="https://valdhaus.co/writings/docker-misconceptions/">putting</a> a <a href="http://sirupsen.com/production-docker/">lot of criticism</a> on many docker use cases. Of course, they&rsquo;re absolutely right and many of their points are valid, but in this particular case it&rsquo;s exactly the case where you should use Docker. It gives us everything we need - repeatability, isolation, speed, and portability.</p>
-
 <p>Let&rsquo;s start by creating <a href="http://docs.docker.com/engine/reference/builder/">Dockerfile</a> for our dependency service - MySQL database. Normally you would use official mysql docker image, but we have to wind up migrations with goose, so we&rsquo;d better off creating our custom MySQL debian image:</p>
-
-<pre><code class="dockerfile">FROM debian
-
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update
-RUN apt-get install -y mysql-server
-
-RUN sed -i -e«s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/» /etc/mysql/my.cnf
-
-RUN apt-get install -y golang git ca-certificates gcc
-ENV GOPATH /root
-RUN go get bitbucket.org/liamstask/goose/cmd/goose
-
-ADD. /db
-RUN \
-service mysql start && \
-sleep 10 && \
-while true; do mysql -e «SELECT 1» &> /dev/null; [ $? -eq 0 ] && break; echo -n "."; sleep 1; done && \
-mysql -e «GRANT ALL ON *.* to 'root'@'%'; FLUSH PRIVILEGES;» && \
-mysql -e «CREATE DATABASE mydb DEFAULT COLLATE utf8_general_ci;» && \
-/root/bin/goose -env=production up && \
-service mysql stop
-
-EXPOSE 3306
-CMD [«mysqld_safe»]</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>Then we build our image with <code>docker build -t mydb_test .</code> command and run it with <code>docker run -p 3306:3306 mydb_test</code>. The resulting container will have a fresh actual database instance with the latest migrations applied. Once the image is built it takes less than a second to start this container.</p>
-
 <p>The actual name of container and database is not important here, so we use <code>mydb</code> and <code>mydb_test</code> - simply a convention.</p>
-
 <h2 id="go-tests">Go tests</h2>
-
 <p>Now, it&rsquo;s time to write some Go code. Remember, we want our test to be portable and issued with <code>go test</code> command only. Let&rsquo;s start our service_test.go:</p>
-
-<pre><code class="go">// +build integration
-
-package main
-
-import (
-    "testing"
-)</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>We place build tag <code>integration</code> here to make sure this test will run only when explicitly asked with <code>--tags=integration</code> flag. Yes, the test itself is fast, but still requires an external tool (Docker), so we&rsquo;d better separate integration tests and unit tests.</p>
-
 <p>By the way, we could protect in with <a href="https://golang.org/pkg/testing/#Short">testing.Short</a> flag, but the behavior is opposite in this case - long tests run by default.</p>
-
-<pre><code class="go">
-if testing.Short() {
-        t.Skip("skipping test in short mode.")
-}</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <h3 id="running-docker-container">Running Docker container</h3>
-
 <p>Before running our tests, we need to start our dependencies. There are a few packages to work with <a href="https://docs.docker.com/engine/reference/api/docker_remote_api/">Docker Remote API</a> for Go, I will use the <a href="http://github.com/fsouza/go-dockerclient">one from fsouza</a>, which I successfully using for quite a long time. Install it with:</p>
-
-<pre><code class="sh">go get -u github.com/fsouza/go-dockerclient</code></pre>
-
+<!-- raw HTML omitted -->
 <p>To start the container, we have to write following code:</p>
-
-<pre><code class="go">client, err := docker.NewClientFromEnv()
-if err != nil {
-    t.Fatalf("Cannot connect to Docker daemon: %s", err)
-}
-c, err := client.CreateContainer(createOptions("mydb_test"))
-if err != nil {
-    t.Fatalf("Cannot create Docker container: %s", err)
-}
-defer func() {
-    if err := client.RemoveContainer(docker.RemoveContainerOptions{
-        ID:    c.ID,
-        Force: true,
-    }); err != nil {
-        t.Fatalf("cannot remove container: %s", err)
-    }
-}()
-
-err = client.StartContainer(c.ID, &docker.HostConfig{})
-if err != nil {
-    t.Fatalf("Cannot start Docker container: %s", err)
-}</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>createOptions() is a helper function returning struct with container creating options. We pass our docker container name to that function.</p>
-
-<pre><code class="go">func сreateOptions(dbname string) docker.CreateContainerOptions {
-    ports := make(map[docker.Port]struct{})
-    ports["3306"] = struct{}{}
-    opts := docker.CreateContainerOptions{
-        Config: &docker.Config{
-            Image:        dbname,
-            ExposedPorts: ports,
-        },
-    }
-
-    return opts
-}</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>After that we need to write code which will wait for DB to start, extract IP address for connection, form DSN for database/sql driver and open the actual connection:</p>
-
-<pre><code class="go">// wait for container to wake up
-if err := waitStarted(client, c.ID, 5*time.Second); err != nil {
-    t.Fatalf("Couldn't reach MySQL server for testing, aborting.")
-}
-c, err = client.InspectContainer(c.ID)
-if err != nil {
-    t.Fatalf("Couldn't inspect container: %s", err)
-}
-
-// determine IP address for MySQL
-ip = strings.TrimSpace(c.NetworkSettings.IPAddress)
-
-// wait MySQL to wake up
-if err := waitReachable(ip+":3306", 5*time.Second); err != nil {
-    t.Fatalf("Couldn't reach MySQL server for testing, aborting.")
-}</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>Here we wait for two actions to happen: first is to get network inside container up, so we can obtain it&rsquo;s IP address, and second, is MySQL service being actually started. Waiting functions are a bit tricky, so here they are:</p>
-
-<pre><code class="go">// waitReachable waits for hostport to became reachable for the maxWait time.
-func waitReachable(hostport string, maxWait time.Duration) error {
-    done := time.Now().Add(maxWait)
-    for time.Now().Before(done) {
-        c, err := net.Dial("tcp", hostport)
-        if err == nil {
-            c.Close()
-            return nil
-        }
-        time.Sleep(100 * time.Millisecond)
-    }
-    return fmt.Errorf("cannot connect %v for %v", hostport, maxWait)
-}
-
-// waitStarted waits for a container to start for the maxWait time.
-func waitStarted(client *docker.Client, id string, maxWait time.Duration) error {
-    done := time.Now().Add(maxWait)
-    for time.Now().Before(done) {
-        c, err := client.InspectContainer(id)
-        if err != nil {
-            break
-        }
-        if c.State.Running {
-            return nil
-        }
-        time.Sleep(100 * time.Millisecond)
-    }
-    return fmt.Errorf("cannot start container %s for %v", id, maxWait)
-}</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>Basically, it&rsquo;s enough to work with our container, but here is another issue comes in - if you run MacOS X or Windows, you use Docker via the proxy virtual machine with tiny linux, <code>docker-machine</code> (or its predecessor, <code>boot2docker</code>). It means you should use docker-machine&rsquo;s IP address and not real container IP, which is not exposed outside of the docker-host linux VM.</p>
-
 <h3 id="tuning-for-portability">Tuning for portability</h3>
-
 <p>Again, let&rsquo;s just write code to accomplish that, as it&rsquo;s quite trivial:</p>
-
-<pre><code class="go">// DockerMachineIP returns IP of docker-machine or boot2docker VM instance.
-//
-// If docker-machine or boot2docker is running and has IP, it will be used to
-// connect to dockerized services (MySQL, etc).
-//
-// Basically, it adds support for MacOS X and Windows.
-func DockerMachineIP() string {
-    // Docker-machine is a modern solution for docker in MacOS X.
-    // Try to detect it, with fallback to boot2docker
-    var dockerMachine bool
-    machine := os.Getenv("DOCKER_MACHINE_NAME")
-    if machine != "" {
-        dockerMachine = true
-    }
-
-    var buf bytes.Buffer
-
-    var cmd *exec.Cmd
-    if dockerMachine {
-        cmd = exec.Command("docker-machine", "ip", machine)
-    } else {
-        cmd = exec.Command("boot2docker", "ip")
-    }
-    cmd.Stdout = &buf
-
-    if err := cmd.Run(); err != nil {
-        // ignore error, as it's perfectly OK on Linux
-        return ""
-    }
-
-    return buf.String()
-}</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>For working with docker-machine we will also need to pass port forwarding configuration in CreateContainerOptions.</p>
-
 <p>At this point, the amount of supporting code becomes quite notable, and it&rsquo;s better to move all docker related code into separate a subpackage, perhaps in internal/ directory. Let&rsquo;s name it <code>internal/dockertest</code>. The source of this package can be <a href="http://pastebin.com/faUUN0M1">found here</a>.</p>
-
 <h3 id="running-from-tests">Running from tests</h3>
-
 <p>Now, all we need is to import our <code>internal/dockertest</code> subpackage and start MySQL with a single line:</p>
-
-<pre><code class="go">// start db in docker container
-dsn, deferFn, err := dockertest.StartMysql()
-if err != nil {
-    t.Fatalf("cannot start mysql in container for testing: %s", err)
-}
-defer deferFn()</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>Pass <code>dsn</code> to sql.Open() or your own service init function, and your code will connect to the database inside the container.
 Note, that StartMysql() returns also a defer function, which will properly stop and remove container. Our test code knows nothing about underlying mechanisms. It just works as if it was a normal MySQL resource.</p>
-
 <h3 id="testing-http-endpoints">Testing http endpoints</h3>
-
 <p>Next step is to test http-endpoints. We may want to test response codes, proper error messages, expected headers or data format and so on. And, following our desire to not depend on any external testing scripts, we want to run all the tests within the Go code. And Go allows us to do so using net/http/httptest package.</p>
-
 <p>Honestly, <code>httptest</code> was one of the most surprising things in Go, when I first saw it. net/http design was quite unusual and elegant for me, but httptest looked like a killer feature for testing http services. It leverages the power of interfaces in Go, and particularly, the http.ResponseWriter interface to achieve in-memory round-trip of http requests. We don&rsquo;t need to ask OS to open ports, deal with permissions and busy ports - it&rsquo;s all in memory.</p>
-
 <p>And as soon as gin framework implements http.Handler interface, which looks like this:</p>
-
-<pre><code class="go">type Handler interface {
-    ServeHTTP(ResponseWriter, *Request)
-}</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>we can use it transparently with httptest. I will also use amazing GoConvey testing framework, which implements behaviour-driven testing for Go, and fully compatible with the default <code>go test</code> workflow.</p>
-
-<pre><code class="go">func NewServer(db *sql.DB) *gin.Engine {
-    r := gin.Default()
-    r.Use(cors.Middleware(cors.Options{}))
-    // more middlewares ...
-
-    // Health check
-    r.GET("/ping", ping)
-
-    // CRUD resources
-    usersRes := &UsersResource{db: db}
-
-    // Define routes
-    api := r.Group("/api")
-    {
-        v1 := api.Group("/v1")
-        {
-            rest.CRUD(v1, "/users", usersRes)
-        }
-    }
-
-    return r
-}
-...
-r := NewServer(db)
-Convey("Users endpoints should respond correctly", t, func() {
-    Convey("User should return empty list", func() {
-        // it's safe to ignore error here, because we're manually entering URL
-        req, _ := http.NewRequest("GET", "http://localhost/api/v1/users", nil)
-        w := httptest.NewRecorder()
-        r.ServeHTTP(w, req)
-
-        So(w.Code, ShouldEqual, http.StatusOK)
-        body := strings.TrimSpace(w.Body.String())
-        So(body, ShouldEqual, "[]")
-    })
-})</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>GoConvey has also an astonishing web UI, I guarantee you will start writing more tests just to see that nice blinking &ldquo;PASS&rdquo; message! :)</p>
-
 <p>And now, after you get the idea, we can add more tests for testing basic CRUD functionality for our simple service:</p>
-
-<pre><code class="go">Convey("Create should return ID of a newly created user", func() {
-    user := &User{Name: "Test user"}
-    data, err := json.Marshal(user)
-    So(err, ShouldBeNil)
-    buf := bytes.NewBuffer(data)
-    req, err := http.NewRequest("POST", "http://localhost/api/v1/users", buf)
-    So(err, ShouldBeNil)
-    w := httptest.NewRecorder()
-    r.ServeHTTP(w, req)
-
-    So(w.Code, ShouldEqual, http.StatusOK)
-    body := strings.TrimSpace(w.Body.String())
-    So(body, ShouldEqual, "1")
-})
-Convey("List should return one user with name 'Test user'", func() {
-    req, _ := http.NewRequest("GET", "http://localhost/api/v1/users", nil)
-    w := httptest.NewRecorder()
-    r.ServeHTTP(w, req)
-
-    So(w.Code, ShouldEqual, http.StatusOK)
-    body := w.Body.Bytes()
-    var users []*User
-    err := json.Unmarshal(body, &users)
-    So(err, ShouldBeNil)
-    user := &User{
-        ID: 1,
-        Name: "Test user",
-    }
-    So(len(users), ShouldEqual, 1)
-    So(users[0], ShouldResemble, user)
-})</code></pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <h1 id="conclusion">Conclusion</h1>
-
 <p>As you may see, Go not only make testing a lot easiers but also make use of BDD and TDD methodologies very easy to follow and opens new possibilities for cross-platform integration- and acceptance- testing.</p>
-
-<p>This example provided here is simplified on purpose, but it&rsquo;s based on the real production code which is being tested in this way for more than 1.5 years and survived a number of refactorings and migrations&rsquo; updates. On my Macbook Air, the whole test, from start to end (compile code, run docker container in docker-machine and test ~35 http requests, shut down the container) it takes about 3 seconds. On native Linux system it&rsquo;s obviously a lot faster.</p>
-
+<p>This example provided here is simplified on purpose, but it&rsquo;s based on the real production code which is being tested in this way for more than 1.5 years and survived a number of refactorings and migrations' updates. On my Macbook Air, the whole test, from start to end (compile code, run docker container in docker-machine and test ~35 http requests, shut down the container) it takes about 3 seconds. On native Linux system it&rsquo;s obviously a lot faster.</p>
 <p>One may ask why not publish this code as a separate library, and make the whole task (and article) even shorter. But the point here is that for every different service there may be a different set of service connections, different usage patterns and so on. And what is really important is that with Go it&rsquo;s so easy to write this harness code for your needs, that you don&rsquo;t have an excuse not to do this. Whether you need many similar containers in parallel (probably, you&rsquo;ll need to randomize exposed ports), or you have to interconnect some services before starting them - you just write in Go, hiding all the complexity from the actual testing code.</p>
-
 <p>And always write tests! There is not excuse not to write them anymore.</p>
-
 <p>UPD: After writing the article, discovered the package <a href="https://github.com/ory-am/dockertest">dockertest</a> by Aeneas Rekkas (<a href="https://twitter.com/_aeneasr">@_aeneasr</a>), which does almost exactly the same as a code in this article, and looks pretty solid. Don&rsquo;t miss it out!</p>
 
   </section>

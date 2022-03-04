@@ -41,18 +41,6 @@
       <div class="tag-line">
         <a href="https://divan.dev/talks">My Talks</a>
       </div>
-      <div style="margin: 10px auto; max-width: 760px">
-        <div class="alert">
-          <h4>Most popular articles</h4>
-          <ul>
-            <li><a href="/posts/go_concurrency_visualize/">Visualizing Concurrency in Go</a></li>
-            <li><a href="/posts/visual_programming_go/">Rethinking Visual Programming with Go</a></li>
-            <li><a href="/posts/animatedqr/">Animated QR data transfer with Gomobile and Gopherjs</a></li>
-            <li><a href="/posts/flutter_go/">Thought Experiment: Flutter in Go</a></li>
-            <li><a href="/posts/webgl_go/">Creating WebGL apps with Go</a></li>
-          </ul>
-        </div>
-      </div>
       <div class="sns-links hidden-print">
   
   <a href="mailto:ivan.daniluk@gmail.com">
@@ -105,58 +93,32 @@
     </div>
   </header>
   <section>
-    
-
-<p>You&rsquo;ve probably heard that story about NPM community and <a href="https://www.npmjs.com/package/left-pad">LeftPad</a> package, that broke thousands JavaScript projects worldwide. There was a nice follow-up article titled <a href="http://www.haneycodes.net/npm-left-pad-have-we-forgotten-how-to-program/">&ldquo;Have We Forget How To Program&rdquo;</a> and one guy even created <a href="http://left-pad.io">left-pad.io</a> - Left-Pad As A Service web service. People got a lot of fun discussing this story.</p>
-
+    <p>You&rsquo;ve probably heard that story about NPM community and <a href="https://www.npmjs.com/package/left-pad">LeftPad</a> package, that broke thousands JavaScript projects worldwide. There was a nice follow-up article titled <a href="http://www.haneycodes.net/npm-left-pad-have-we-forgotten-how-to-program/">&ldquo;Have We Forget How To Program&rdquo;</a> and one guy even created <a href="http://left-pad.io">left-pad.io</a> - Left-Pad As A Service web service. People got a lot of fun discussing this story.</p>
 <p>I personally find this story amazing, because there is no single point of failure, but rather a set of things and coincidences resulted in a disaster. Every person I spoke about left-pad story sees it through it&rsquo;s own lens of concern. Some blame JS-community, some talks about how important vendoring is nowadays and others stands for absolutist views of the DRY principle.</p>
-
 <p>For me my lens were the chances of getting into something similar in Go ecosystem. Of course, after initial thinking, I came to resolution that there is nothing to worry about - Go community doesn&rsquo;t tend to create packages for every single simple function over there. Yes, someone inspired by NPM LeftPad story created <a href="https://github.com/keltia/leftpad">similar package for Go</a> - but the fact it was created after that fiasco story only confirms my  thoughts.</p>
-
 <p>Moreover, there is even a <a href="http://go-proverbs.github.io/">Go proverb</a> dedicated to this specific thing:</p>
-
 <blockquote>
 <p>A little copying is better than a little dependency.</p>
 </blockquote>
-
 <p>If you struggle to understand how it applies with DRY and why it&rsquo;s a wise point, I suggest you check out <a href="https://www.youtube.com/watch?v=PAAkCSZUG1c">this video</a> on a subject.</p>
-
 <p>But one thought was spinning in my head - can we do better and use tooling to check for the &lsquo;little dependency&rsquo;? I believe that tooling is a great way to enforce some good practices and views, and <code>go fmt</code> is a greates evidence of it. Why can&rsquo;t we make a tool that would check package imports and suggest to <em>&ldquo;take a look at this small LeftPad dependency of only one small function&rdquo;</em>?</p>
-
 <p>Meet <a href="https://github.com/divan/depscheck">depscheck</a>.</p>
-
 <h1 id="depscheck">DepsCheck</h1>
-
 <p>So, that&rsquo;s how <strong>depscheck</strong> was born. I spent a weekend, learning how to work with go/{ast,parser,types,loader} packages and after 10-th refactoring finally came up with a tool that was doing exactly I wanted to.</p>
-
 <p>Here is a description for GitHub:</p>
-
 <blockquote>
 <p>DepsCheck - Dependency checker for Golang (Go) packages. Prints stats and suggests to remove small LeftPad-like imports if any</p>
 </blockquote>
-
-<p>It analyzes package or arbitrary *.go files using AST-parser and calculates some stats about dependencies. Namely, number of calls/selectors of dependency, funcs/methods&rsquo; LOC (Lines Of Code), Cumulative LOCs (whenever possible, dropping it for recursion), Depth (number of nested calls to more external dependencies) and DepthInternal(the same, but for internal function calls). In most cases it&rsquo;s enough to make some calculations and analysis to find <em>&lsquo;small dependencies&rsquo;</em>.</p>
-
+<p>It analyzes package or arbitrary *.go files using AST-parser and calculates some stats about dependencies. Namely, number of calls/selectors of dependency, funcs/methods' LOC (Lines Of Code), Cumulative LOCs (whenever possible, dropping it for recursion), Depth (number of nested calls to more external dependencies) and DepthInternal(the same, but for internal function calls). In most cases it&rsquo;s enough to make some calculations and analysis to find <em>&lsquo;small dependencies&rsquo;</em>.</p>
 <h3 id="quick-intro">Quick Intro</h3>
-
 <p>Here is quick intro and dogfooding demo of the tool.</p>
-
 <p>First, install the tool:</p>
-
 <pre><code>go get github.com/divan/depscheck
-</code></pre>
-
-<p>Then invoke as simple as:</p>
-
+</code></pre><p>Then invoke as simple as:</p>
 <pre><code>depscheck -v github.com/divan/depscheck
-</code></pre>
-
-<p><img src="https://github.com/divan/depscheck/raw/master/demo/depscheck.png" alt="Demo" /></p>
-
+</code></pre><p><img src="https://github.com/divan/depscheck/raw/master/demo/depscheck.png" alt="Demo"></p>
 <p>There is a detailed table view of dependencies usage, totals and breakdown by packages, and in the end, the tool says - hey, your dependencies are sane. It means, no dependencies of suspiciously small usage size.</p>
-
 <p>In case it finds potential candidate for copying into your codebase and removing from the dependency list, it outputs something like this:</p>
-
 <pre><code>$ depscheck github.com/divan/expvarmon
 github.com/divan/expvarmon: 4 packages, 1022 LOC, 93 calls, 11 depth, 23 depth int.
  - Package byten (github.com/pyk/byten) is a good candidate for removing from dependencies.
@@ -164,16 +126,10 @@ github.com/divan/expvarmon: 4 packages, 1022 LOC, 93 calls, 11 depth, 23 depth i
  - Package ranges (github.com/bsiegert/ranges) is a good candidate for removing from dependencies.
    Only 29 LOC used, in 1 calls, with 0 level of nesting
 Run with -v option to see detailed stats for dependencies.
-</code></pre>
-
-<p>And by the way, in an example above it totally make sense. Rerunning with <code>-v</code> options to see the details, it&rsquo;s easy to see that package only uses single flat function from <code>ranges</code> of 29 lines of code - ranges.Parse, and it can be easily copied to my codebase, if license permits, of course. It removes the whole bunch of burden in case I&rsquo;ll need to vendor dependencies or use some vendoring tools.</p>
-
+</code></pre><p>And by the way, in an example above it totally make sense. Rerunning with <code>-v</code> options to see the details, it&rsquo;s easy to see that package only uses single flat function from <code>ranges</code> of 29 lines of code - ranges.Parse, and it can be easily copied to my codebase, if license permits, of course. It removes the whole bunch of burden in case I&rsquo;ll need to vendor dependencies or use some vendoring tools.</p>
 <p>Of course, this suggestion doesn&rsquo;t mean you have to do it. It just asks you to pay attention to these particular imports if you want to make your codebase a little bit better. It&rsquo;s up to me to decide what to do with this import. The tools suggestions are recommendation only.</p>
-
 <h3 id="how-small-is-small-dependency">How small is small dependency</h3>
-
 <p>You may ask now - how do you determine if the dependency is small enough to be a candidate for elimination? Good question, and I don&rsquo;t have one single source of truth here, so I&rsquo;ve implemented it based on my view of common sense here. To be short, here is the responsible method at the moment of writing this article:</p>
-
 <pre><code>// CanBeAvoided attempts to classify if package usage is small enough
 // to suggest user avoid this package as a dependency and
 // instead copy/embed it's code into own project (if license permits).
@@ -199,29 +155,18 @@ func (p *PackageStat) CanBeAvoided() bool {
 
 	return true
 }
-</code></pre>
-
-<p>As you can see, it&rsquo;s pretty straightforward, no machine learning here. Just hardcore universal constants :) It&rsquo;s not perfect, but hey, at least, it can detect LeftPad package, mentioned above!</p>
-
+</code></pre><p>As you can see, it&rsquo;s pretty straightforward, no machine learning here. Just hardcore universal constants :) It&rsquo;s not perfect, but hey, at least, it can detect LeftPad package, mentioned above!</p>
 <pre><code>$ depscheck leftpad.go
 main: 1 packages, 17 LOC, 1 calls, 0 depth, 1 depth int.
  - Package leftpad (github.com/keltia/leftpad) is a good candidate for removing from dependencies.
    Only 17 LOC used, in 1 calls, with 1 level of nesting
 Run with -v option to see detailed stats for dependencies.
-</code></pre>
-
-<p>I&rsquo;m looking forward to hear suggestions on how to do it better. Maybe it&rsquo;s worth to calculate total LOC of the package and look at the percentage of LOC involved? Feel free to tell your view on how small is &ldquo;small dependency&rdquo; could be from the perspective of the machine.</p>
-
+</code></pre><p>I&rsquo;m looking forward to hear suggestions on how to do it better. Maybe it&rsquo;s worth to calculate total LOC of the package and look at the percentage of LOC involved? Feel free to tell your view on how small is &ldquo;small dependency&rdquo; could be from the perspective of the machine.</p>
 <p>Anyway, it&rsquo;s always possible to manually inspect detailed output and filter small enough dependencies by yourself.</p>
-
 <p>Also, please, don&rsquo;t rely on these numbers heavily. It&rsquo;s likely to be somehow incorrect in some cases. Yes, it&rsquo;s tested with simple cases, but there are lot of cases, where it&rsquo;s even impossible to tell what is a &ldquo;correct&rdquo; value. For example, how do you calculate Cumulative number of lines for two functions with circular dependency? There are also probably some bugs I didn&rsquo;t catch (hey, it survived 10 refactorings in 3 days!), so feel free to open an issue or send a PR.</p>
-
 <h1 id="stdlib">Stdlib</h1>
-
 <p>Depscheck also can work with stdlib packages. Normally it treats stdlib imports as &lsquo;internal&rsquo; and doesn&rsquo;t analyze/report them. But you can explicitly ask for that using <code>-stdlib</code> command line flag. Suggestions are silenced in this mode because stdlib is smarter than this tool. Anyway, it can give interesting insights into your package or application.</p>
-
 <p>For example, here is the sample output for checking against stdlib <code>time</code> package (though, you can use -stdlib flag for any package, not only stdlib):</p>
-
 <pre><code>$ depscheck -stdlib -v time
 time: 4 packages, 294 LOC, 50 calls, 17 depth, 3 depth int.
 +---------+-------+----------+--------+-------+-----+--------+-------+----------+
@@ -250,10 +195,7 @@ time: 4 packages, 294 LOC, 50 calls, 17 depth, 3 depth int.
 | sync    | sync    |     2 |     2 |     90 |     2 |        3 |
 | syscall | syscall |    10 |    15 |    196 |    15 |        0 |
 +---------+---------+-------+-------+--------+-------+----------+
-</code></pre>
-
-<p>You may even run it against the whole stdlib and build some charts in RStudio or your favorite statistics tool. Let&rsquo;s use <code>go list std</code> command to get all stdlib packages names and feed them to <em>depcheck</em>. There is a special <code>-totalonly</code> flag, which tells depscheck to output only totals oneliner, which is easily parseable:</p>
-
+</code></pre><p>You may even run it against the whole stdlib and build some charts in RStudio or your favorite statistics tool. Let&rsquo;s use <code>go list std</code> command to get all stdlib packages names and feed them to <em>depcheck</em>. There is a special <code>-totalonly</code> flag, which tells depscheck to output only totals oneliner, which is easily parseable:</p>
 <pre><code>$ for i in $(go list std); do depscheck -stdlib -totalonly $i; done
 archive/tar: 13 packages, 3328 LOC, 174 calls, 5 depth, 78 depth int.
 archive/zip: 13 packages, 2284 LOC, 184 calls, 24 depth, 84 depth int.
@@ -277,20 +219,12 @@ crypto/elliptic: 3 packages, 2677 LOC, 298 calls, 4 depth, 180 depth int.
 crypto/hmac: 3 packages, 19 LOC, 15 calls, 0 depth, 1 depth int.
 crypto/md5: 3 packages, 5 LOC, 5 calls, 0 depth, 0 depth int.
 ...
-</code></pre>
-
-<p>A couple of manipulations to convert it to CSV and here is the histogram of number of imported packages in stdlib:</p>
-
-<p><img src="/images/stdlib_deps.png" alt="Histogram" /></p>
-
+</code></pre><p>A couple of manipulations to convert it to CSV and here is the histogram of number of imported packages in stdlib:</p>
+<p><img src="/images/stdlib_deps.png" alt="Histogram"></p>
 <p>So, feel free to play with this statistics. Maybe you&rsquo;ll find it useful.</p>
-
 <h1 id="conclusion">Conclusion</h1>
-
 <p>I constantly admire the long-striking power of the core ideas around Go design. Simple grammar and spec allowed me to build this tool in a weekend, without any prior experience of working with AST representation of source code. It&rsquo;s inherently hard, but the guys behind Go&rsquo;s source code parsing packages are doing amazing job. I benefit every single day by different linters, bundled together in <a href="https://github.com/alecthomas/gometalinter">GoMetaLinter</a> package (a must have thing!), and these static code analysis tools are making our code better.</p>
-
 <p>Now I also feel a little bit safer because that Go proverb mentioned in the beginning is now materialized in a depscheck tool. And hopefully, it will make us, as a community, one more step further from the slightest possibility to fall into the trend that resulted in that LeftPad fiasco.</p>
-
 <p>Happy coding!</p>
 
   </section>

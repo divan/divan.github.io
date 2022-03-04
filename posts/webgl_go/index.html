@@ -11,7 +11,7 @@
   
   <meta property="og:type" content="article" />
   
-  <meta property="og:article:published_time" content="2018-12-10T00:00:00&#43;01:00" />
+  <meta property="og:article:published_time" content="2018-12-10T00:00:00&#43;02:00" />
   
   <meta property="og:article:tag" content="golang" />
   
@@ -42,18 +42,6 @@
       
       <div class="tag-line">
         <a href="https://divan.dev/talks">My Talks</a>
-      </div>
-      <div style="margin: 10px auto; max-width: 760px">
-        <div class="alert">
-          <h4>Most popular articles</h4>
-          <ul>
-            <li><a href="/posts/go_concurrency_visualize/">Visualizing Concurrency in Go</a></li>
-            <li><a href="/posts/visual_programming_go/">Rethinking Visual Programming with Go</a></li>
-            <li><a href="/posts/animatedqr/">Animated QR data transfer with Gomobile and Gopherjs</a></li>
-            <li><a href="/posts/flutter_go/">Thought Experiment: Flutter in Go</a></li>
-            <li><a href="/posts/webgl_go/">Creating WebGL apps with Go</a></li>
-          </ul>
-        </div>
       </div>
       <div class="sns-links hidden-print">
   
@@ -97,7 +85,7 @@
     <div class="post-meta clearfix">
       <div class="post-date pull-left">
         Posted on
-        <time datetime="2018-12-10T00:00:00&#43;01:00">
+        <time datetime="2018-12-10T00:00:00&#43;02:00">
           Dec 10, 2018
         </time>
       </div>
@@ -109,54 +97,29 @@
     </div>
   </header>
   <section>
-    
-
-<p><em>TL;DR In this article I&rsquo;ll share my experience building an interactive 3D WebGL-based application for peer-to-peer messaging protocol simulation without writing any single line in JS. You&rsquo;ll learn how GopherJS and Vecty framework can dramatically lower the complexity of building WebGL-enabled web apps in Go.</em></p>
-
-<p><img src="/images/go-webgl/demo.gif" alt="demo" /></p>
-
+    <p><em>TL;DR In this article I&rsquo;ll share my experience building an interactive 3D WebGL-based application for peer-to-peer messaging protocol simulation without writing any single line in JS. You&rsquo;ll learn how GopherJS and Vecty framework can dramatically lower the complexity of building WebGL-enabled web apps in Go.</em></p>
+<p><img src="/images/go-webgl/demo.gif" alt="demo"></p>
 <p>It&rsquo;s often said &ldquo;A <em>picture</em> is <em>worth a thousand</em> words&rdquo;, but in the era of high-DPI screens and big data, the new idiom is now truer – <em>&ldquo;3D interactive visualization is worth a thousand pictures&rdquo;</em>.</p>
-
 <p>Third dimension and interactivity can add exponentially more to the picture or story you want to show to your users, readers or clients. A single look at the data in 3 dimensions in a split of a second can tell you more than a 30-page report.</p>
-
 <p>However, in 2018 it&rsquo;s still prohibitively hard to build interactive 3D visualizations. For some common use cases such as statistical analysis of large datasets, there are tools such as <a href="https://plot.ly/online-chart-maker/">Plotly Chart Studio</a> exists. But once you find yourself looking for the non-common case, you have only two options – write it yourself or drop the idea. Very often we choose the latter.</p>
-
 <p>Of course, 3D engines and frameworks aren&rsquo;t a new thing in software engineering – they&rsquo;ve been there since the rise of personal computers. And nowadays, every computer has a powerful GPU unit, and every OS ships with its own API for the native 3D graphics. But if you want to share your 3D graphics with people around the world, you have to use web platform and display it in the browser. And that essentially locks you into one particular language – JavaScript, and one particular 3D engine – WebGL.</p>
-
 <p>And that&rsquo;s where the problems start to pile up. JavaScript ecosystem is notorious for often breaking API, JS fatigue, outdated documentation and bunch of other problems. It&rsquo;s just hard to write long-term maintainable code, especially if you have a background in strongly typed languages.</p>
-
 <p>Go, on the other hand, is famous for its simplicity, readability and performance. Wouldn&rsquo;t it be nice to write 3D with WebGL in Go?</p>
-
 <p>But, first, let&rsquo;s do a quick recap of what&rsquo;s WebGL and how does it really work.</p>
-
 <h2 id="webgl">WebGL</h2>
-
 <p>WebGL is a rasterization engine – a relatively tiny layer between the GPU and user&rsquo;s JS code. It takes control code in JavaScript and <a href="https://en.wikipedia.org/wiki/OpenGL_Shading_Language">GLSL</a> (OpenGL Shader Language) and draws lines, points and triangles using your OS capacity to talk to GPU. In order to work, WebGL must be implemented by the browser, and, luckily, <a href="https://caniuse.com/#feat=webgl">all major browsers already do support it</a>.</p>
-
 <p>On top of WebGL there are <a href="https://en.wikipedia.org/wiki/List_of_WebGL_frameworks">third-party libraries and frameworks exist</a> – like <a href="http://babylonjs.com">Three.js</a>, <a href="http://babylonjs.com">Babylon.js</a> or <a href="https://aframe.io">A-Frame</a>. They abstract many of the complexities of working with raw shader code, points and triangles, and provide higher-level tools like &ldquo;<em>material</em>&rdquo;, &ldquo;<em>mesh</em>&rdquo;, &ldquo;<em>geometry</em>&rdquo;, &ldquo;<em>camera</em>&rdquo;, &ldquo;<em>light</em>&rdquo; etc.</p>
-
 <p>The most popular library is probably <a href="http://babylonjs.com">Three.js</a>, and it has really nice and clean API. I would love to have something similar in Go. Maybe we can use GopherJS to automatically transpile Go code into JS?</p>
-
 <h2 id="gopherjs">GopherJS</h2>
-
 <p><a href="https://github.com/gopherjs/gopherjs">GopherJS</a> is incredible. Seriously.</p>
-
 <p>When I first heard about Go-to-JS compiler a few years ago, my first reaction was &ldquo;cool, but it&rsquo;s unlikely to change anything&rdquo;. Later, on <a href="http://2016.dotgo.eu">dotGo 2016 conference</a> in Paris, one of the GopherJS developers, and now a member of the Go team, <a href="https://dmitri.shuralyov.com/about">Dmitry Shuravlyov</a> gave a <a href="https://www.youtube.com/watch?v=9XTl1d4nwdY">fascinating talk about GopherJS</a> - go watch it, even if it&rsquo;s 2 years old. When you realize that even the networking code like <code>net/http</code>  just works and you can send AJAX-queries by calling Go&rsquo;s <code>http.Get()</code>, you start realizing the power of this piece of technology.</p>
-
 <p>A lot of already written Go code can be immediately available for use in the browser in a few seconds. Many JS libraries – like <a href="https://godoc.org/myitcv.io/react">React</a>, <a href="https://github.com/wvell/go-angularjs">Angular</a>, <a href="https://github.com/oskca/gopherjs-vue">VueJS</a>, <a href="https://github.com/iansmith/d3">D3</a>, <a href="https://github.com/gopherjs/jquery">jQuery</a> etc –  already <a href="https://github.com/gopherjs/gopherjs/wiki/bindings">have bindings</a> for GopherJS, and it&rsquo;s usually easy to create custom bindings for the JS library you really need. In most cases, you may implement bindings just for a subset you need.</p>
-
 <p>Installation is really simple, just run <code>go get -u github.com/gopherjs/gopherjs</code>:</p>
-
-<p><img src="/images/go-webgl/gopherjs.png" alt="gopherjs" /></p>
-
+<p><img src="/images/go-webgl/gopherjs.png" alt="gopherjs"></p>
 <h2 id="building-our-first-webgl-app-in-go">Building our first WebGL app in Go</h2>
-
 <p>So how can we create a web app with GopherJS and Three.js? We&rsquo;ll need bindings for Three.js first.</p>
-
 <p>I found a proof-of-concept package <a href="https://github.com/Lngramos/three">https://github.com/Lngramos/three</a> that implemented most basic bindings to three.js. One of the design goals seems to provide the same API in Go, as the JS version. In the process, I started changing it at a faster pace than the original author&rsquo;s PR reviewing pace, so I ended up using my forked version with the same name. While the current version works well for my needs, it&rsquo;s really far from being even 10% complete, and the more I work with it, the more I want to refactor it from scratch. The problem is that Three.js exploits inheritance and some interesting properties, so to speak, of JavaScript type system, so it doesn&rsquo;t map well to Go. So as I accumulate more experience working with it, the new design will probably come up.</p>
-
 <p>Compare JS and Go usage of three.js.</p>
-
 <p>JS:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">scene</span>, <span style="color:#a6e22e">renderer</span>, <span style="color:#a6e22e">light</span>, <span style="color:#a6e22e">camera</span>;
 <span style="color:#a6e22e">camera</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">PerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">w</span><span style="color:#f92672">/</span><span style="color:#a6e22e">h</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span> );
@@ -166,27 +129,20 @@
 <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">setSize</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">h</span>);
 <span style="color:#a6e22e">light</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">AmbientLight</span>( <span style="color:#ae81ff">0xffffff</span> );
 <span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">light</span>);
-</code></pre></div>
-<p>Go:</p>
+</code></pre></div><p>Go:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">camera</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewPerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">w</span><span style="color:#f92672">/</span><span style="color:#a6e22e">h</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span>)
 <span style="color:#a6e22e">camera</span>.<span style="color:#a6e22e">Position</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">1500</span>)
 <span style="color:#a6e22e">scene</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewScene</span>()
 <span style="color:#a6e22e">renderer</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewWebGLRenderer</span>()
 <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">SetSize</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">h</span>, <span style="color:#66d9ef">true</span>)
 <span style="color:#a6e22e">light</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewAmbientlLight</span>(<span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;white&#34;</span>))
-<span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">light</span>)</code></pre></div>
-<p>The similarity is so striking that it&rsquo;s probably feasible to write a static-analysis tool that will convert Three.js based code into Go code automatically!</p>
-
-<h2 id="three-js-hello-world-in-go">Three.js Hello, World in Go</h2>
-
+<span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">light</span>)
+</code></pre></div><p>The similarity is so striking that it&rsquo;s probably feasible to write a static-analysis tool that will convert Three.js based code into Go code automatically!</p>
+<h2 id="threejs-hello-world-in-go">Three.js Hello, World in Go</h2>
 <p>Now, let&rsquo;s create the new project:</p>
-
 <pre><code>mkdir $(go env GOPATH)/src/github.com/divan/go-webgl-example
 cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
-</code></pre>
-
-<p>And create two files – <code>main.go</code> and <code>index.html</code>, which we will use to start our app in the browser:</p>
-
+</code></pre><p>And create two files – <code>main.go</code> and <code>index.html</code>, which we will use to start our app in the browser:</p>
 <p><code>index.html</code> doesn&rsquo;t nothing more than just defining a single canvas tag, which will be used for WebGL rendering, and including <code>three.js</code> code with our GopheJS-generated <code>go-webgl-example.js</code> code:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
 &lt;<span style="color:#f92672">html</span>&gt;
@@ -202,8 +158,8 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
         &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
         &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;go-webgl-example.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
     &lt;/<span style="color:#f92672">body</span>&gt;
-&lt;/<span style="color:#f92672">html</span>&gt;</code></pre></div>
-<p><code>main.go</code> is responsible for the high-level logic of our 3D app – setting up the scene, the camera, lights, objects, and handling animations and user interaction:</p>
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div><p><code>main.go</code> is responsible for the high-level logic of our 3D app – setting up the scene, the camera, lights, objects, and handling animations and user interaction:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
 <span style="color:#f92672">import</span> (
@@ -252,30 +208,19 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
         <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">Render</span>(<span style="color:#a6e22e">scene</span>, <span style="color:#a6e22e">camera</span>)
     }
     <span style="color:#a6e22e">animate</span>()
-}</code></pre></div>
-<p>All you have to do now is just run:</p>
-
+}
+</code></pre></div><p>All you have to do now is just run:</p>
 <p>gopherjs build</p>
-
 <p>and in a split of a second, it&rsquo;ll generate two files - <code>go-webgl-example.js</code> and <code>go-webgl-example.js.map</code> in the current directory.</p>
-
 <p>Next, point your browser to the <code>index.html</code> file in the current directory, and you should see this:</p>
-
-<p><img src="/images/go-webgl/hello_world.gif" alt="hello, world" /></p>
-
+<p><img src="/images/go-webgl/hello_world.gif" alt="hello, world"></p>
 <p>This example is not quite impressive, plus it&rsquo;s not structured well – everything is in one function, and even <code>animate</code> callback had to be implemented as closure to avoid making common variables, such as <code>camera</code> or <code>renderer</code> global ones.</p>
-
 <p>For real applications we would want to have a much more flexible structure, ability to abstract things into different types and sub-packages, refactor it easily, write tests for logic, etc. We also need something more than just WebGL canvas – probably some introduction text, input controls for animation parameters, ability to upload files with data, etc. But, wait, for that we need DOM manipulation, and write code in HTML and CSS, and use popular JS frameworks. Luckily, there is as a fantastic framework exists that allows you to write web components in pure Go. It&rsquo;s called <a href="https://github.com/gopherjs/vecty">Vecty</a>, is obviously based on GopherJS, is quite mature and it&rsquo;s fantastic.</p>
-
-<h1 id="vecty-write-your-next-frontend-in-go">Vecty – write your next frontend in Go</h1>
-
-<p><img src="/images/go-webgl/vecty.png" alt="vecty" /></p>
-
+<h1 id="vecty--write-your-next-frontend-in-go">Vecty – write your next frontend in Go</h1>
+<p><img src="/images/go-webgl/vecty.png" alt="vecty"></p>
 <p><a href="https://github.com/gopherjs/vecty">Vecty</a> is a library for GopherJS that allows you to build frontend apps using high-level components (or widgets) and providing the abstraction layer over DOM and many browser&rsquo;s JS APIs. In a way, it&rsquo;s similar to React (and even advertised as a React-like library), but I&rsquo;m happy to disagree with this – it is way simpler and much more pleasant to work with.</p>
-
 <p>The basic concept in Vecty is the <a href="https://godoc.org/github.com/gopherjs/vecty#Component">Component</a> interface - any type implementing it can represent a visual component within a Vecty application. To define new Component, you simply create a type that embeds <code>vecty.Core</code> and implement <code>Render()</code> method.</p>
-
-<p><sub>page.go</sub></p>
+<p><!-- raw HTML omitted -->page.go<!-- raw HTML omitted --></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
 <span style="color:#f92672">import</span> (
@@ -298,10 +243,10 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
             ),
         ),
     )
-}</code></pre></div>
-<p>Don&rsquo;t be scared by those verbose lines in <code>Render()</code> method. As soon as you start building DOM tree that way you realize how incredibly useful it is: no open/closing tags, super easy copy/paste operation (if you need to move some DOM nodes around), the structure is clear and makes sense, and it’s all strongly typed!</p>
+}
 
-<p><sub>main.go</sub></p>
+</code></pre></div><p>Don&rsquo;t be scared by those verbose lines in <code>Render()</code> method. As soon as you start building DOM tree that way you realize how incredibly useful it is: no open/closing tags, super easy copy/paste operation (if you need to move some DOM nodes around), the structure is clear and makes sense, and it’s all strongly typed!</p>
+<p><!-- raw HTML omitted -->main.go<!-- raw HTML omitted --></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
 <span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;github.com/gopherjs/vecty&#34;</span>
@@ -311,48 +256,30 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
     <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">SetTitle</span>(<span style="color:#e6db74">&#34;Hello world&#34;</span>)
     <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">AddStylesheet</span>(<span style="color:#75715e">/* ... add your css... */</span>)
     <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">RenderBody</span>(<span style="color:#a6e22e">page</span>)
-}</code></pre></div>
-<p>Run <code>gopherjs build</code> and open <code>index.html</code>:</p>
-
-<p><img src="/images/go-webgl/vecty_hello.png" alt="vecty hello world" /></p>
-
+}
+</code></pre></div><p>Run <code>gopherjs build</code> and open <code>index.html</code>:</p>
+<p><img src="/images/go-webgl/vecty_hello.png" alt="vecty hello world"></p>
 <p>The most impressive thing with this basic example is how much simpler everything seems to be comparing to frontend development in the traditional way:</p>
-
 <ul>
 <li>there is no need for project bootstrap generators (like <code>yo</code>) that generate tons of files just for the empty file</li>
 <li>there are no overcomplicated building tools that require you to read books on how to use them – build pipeline is crazy fast and simple (and you always have <code>go generate</code> at your service for the rest)</li>
 <li>a magic-free code – it&rsquo;s just an ordinary Go code, you can understand every single part of it just by reading it</li>
 <li>it is strongly typed – in practice, you will almost never see errors in browser&rsquo;s console, but when you do, it&rsquo;ll show you stack traces with .go files and line numbers</li>
 </ul>
-
 <p>Now, Vecty is positioning itself as an experimental work-in-progress project, which it definitely is, but from my experience, it&rsquo;s already more than useful for writing relatively decent small web apps.</p>
-
 <p>I wrote a few apps with it already, and I never had more fun writing frontends!</p>
-
 <p>So I want to share with you my experience building web app for p2p-messaging protocol visualization in pure Go, using Vecty and three.js bindings.</p>
-
 <h1 id="p2p-messaging-visualization">P2P messaging visualization</h1>
-
 <h2 id="problem">Problem</h2>
-
 <p>I&rsquo;ve been working recently on peer-to-peer messaging protocol for <a href="https://en.wikipedia.org/wiki/Ethereum">Ethereum</a> network, called <a href="https://github.com/ethereum/wiki/wiki/Whisper">Whisper</a> (not to be confused with Signal&rsquo;s <a href="https://en.wikipedia.org/wiki/Open_Whisper_Systems">Open Whisper Systems</a> or <a href="https://en.wikipedia.org/wiki/Whisper_(app)">Whisper</a> media platform), and there was one problem – most people don&rsquo;t have intuition about message propagation in p2p-networks. We&rsquo;re so used to the centralized systems, that all our understanding of scales, timings, limits and weak points are based purely on the hierarchical topologies and client-server model.</p>
-
-<p>And there is no wonder – to understand the behaviour of the complex network system, we need data, and for data, we collect metrics. Peer-to-peer networks are often used and designed to combat issues that centralization creates, and centralized data collection is one of them. So generally we don&rsquo;t have metrics and data in large-scale p2p-network, which is good for the security of those systems, but bad for developers&rsquo; understanding of its behaviour.</p>
-
+<p>And there is no wonder – to understand the behaviour of the complex network system, we need data, and for data, we collect metrics. Peer-to-peer networks are often used and designed to combat issues that centralization creates, and centralized data collection is one of them. So generally we don&rsquo;t have metrics and data in large-scale p2p-network, which is good for the security of those systems, but bad for developers' understanding of its behaviour.</p>
 <p>So the obvious solution is to use network simulation software like <a href="https://omnetpp.org">OMNET++</a> or <a href="http://peersim.sourceforge.net">PeerSim</a>, but in order to use it with custom p2p protocol code, that should have been ported first to C++ to use with those libraries. In the case of Whisper protocol, it&rsquo;s written in Go, as a part of <a href="https://github.com/ethereum/go-ethereum/tree/master/whisper/whisperv6">go-ethereum</a> package, and the complexity and usefulness of the task was daunting. I wanted to have a simulator, where I can change algorithm or tune parameters, and in a couple of minutes see changes visualized and collect data from the simulator.</p>
-
 <p>And that was the idea – to build a simulator, network graph visualization in 3D, collect data and visualize message propagation, add interactivity to the interface, where I could choose different networks, choose simulation parameters, replay simulation and analyze stats.</p>
-
 <p>For that, I needed to code a frontend app with 3D visualization, write a simulator that can use an existing Go code and connect them. Most of the work had to be on the frontend part.</p>
-
 <p>So that&rsquo;s where I decided to combine my experiments with GopherJS and WebGL, and to give Vecty a try.</p>
-
 <h2 id="ui-and-widgets">UI and widgets</h2>
-
 <p>The first thing you realize is that you&rsquo;ll have to write your own widgets. Luckily there are no special rules for that – just create your widgets as types in separate .go files, and move them into the separate package when it makes sense.</p>
-
 <p>The whole UI for the app consisted from sidebar with a bunch of configuration selectors and file uploads handling, and three tabs with different screens – first one is WebGL canvas with visualization.</p>
-
 <p>Each widget is just a Vecty component, created and rendered from within the other component. You specify the layout, classes, CSS styles right there in <code>Render()</code> method. Here is a code for a network selector widget with custom upload option, for example:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Render implements the vecty.Component interface for NetworkSelector.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">NetworkSelector</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
@@ -380,53 +307,35 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
         <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">descriptionBlock</span>(),
         <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">If</span>(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">isCustom</span>, <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">upload</span>),
     )
-}</code></pre></div>
-<p>There are a few interesting things to note here:</p>
-
+}
+</code></pre></div><p>There are a few interesting things to note here:</p>
 <ul>
 <li>style and classes (markup) should be inside the <code>vecty.Markup</code> function</li>
 <li><code>vecty/event</code> package provides handlers for most DOM events, and you just have to provide function or method in a callback fashion</li>
 <li>whenever you want to replace verbose parts with something more descriptive, it&rsquo;s easy just to make a new function with the code, and simply call it from Render – like <code>n.descriptionBlock()</code> or <code>n.networkOptions()</code></li>
 <li>for conditional rendering, Vecty offers to nice helpers - <code>vecty.If()</code> and <code>vecty.MarkupIf()</code>, which allows you to build pretty advanced presentation logic of your components</li>
 </ul>
-
-<p><img src="/images/go-webgl/widgets.gif" alt="ui1" /></p>
-
+<p><img src="/images/go-webgl/widgets.gif" alt="ui1"></p>
 <p>For CSS I&rsquo;ve chosen surprisingly good framework called <a href="https://bulma.io">Bulma</a>, but you can use whatever framework you prefer, like <a href="http://getbootstrap.com">Bootstrap</a> or <a href="https://materializecss.com">Material Design</a>.</p>
-
 <h2 id="force-directed-graphs">Force-directed graphs</h2>
-
 <p>Another essential part of the app was the ability to render the network graphs. Traditionally, such graphs are drawn using force-directed graph algorithm. The idea is simple:</p>
-
 <ol>
 <li>place all network nodes in 3D space pseudo-randomly</li>
 <li>apply repelling force between nodes (each node repels from each)</li>
 <li>apply spring-like force between nodes that have links (when the distance is closer than some value L, nodes repel, and attract otherwise)</li>
 <li>run this in the loop sufficient amount of times, till the system reach stable energy state</li>
 </ol>
-
 <p>My implementation of it is far from perfect and has a lot of space for optimization, but it works fast and accurate enough for my case. For step 2 I use <a href="https://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation">Barne-Hut approximation</a> method to speed up the calculation.</p>
-
-<p><img src="/images/go-webgl/graph.gif" alt="force directed graph" /></p>
-
+<p><img src="/images/go-webgl/graph.gif" alt="force directed graph"></p>
 <p>The output of the algorithm is a 3D coordinates for each node. All we have to do now is to render objects and links with the given coordinates via WebGL.</p>
-
 <h3 id="simulation">Simulation</h3>
-
 <p>Simulation code as well is written in Go, and currently does relatively simple thing: starts in-memory network, launches Whisper nodes (based on the real code), sends a message, and records events like &ldquo;message received&rdquo; or &ldquo;message sent&rdquo; from each node in the network, and dumps it into special log file, called &ldquo;propagation log&rdquo;, which can be analyzed and visualized further.</p>
-
 <p>Simulation part is the heaviest one, so it&rsquo;s not wise to run it in the browser – despite the goroutines support in GopherJS, the code is still limited by JS engine design and can use only one core in the browser. So this part can be run natively on the server and talk to frontend via the network.</p>
-
 <h1 id="putting-it-together">Putting it together</h1>
-
 <p>The coolest thing about current setup is that you can choose which part will run in the browser, and which on the backend almost on the fly – it&rsquo;s the same Go code. For example, in a first attempt, I designed app in a way that physics simulation for force-directed graph was running on the backend, and then sending the result to the browser via WebSocket. But If I wanted to change the simulation parameter or run a single iteration on a keypress, I had to implement it as one more command for WebSocket protocol, and it was tedious. It turned out to be so much simpler just to move this part of code into the browser and call natively from the Vecty keypress handler.</p>
-
-<p><img src="/images/go-webgl/p2psim.png" alt="p2p sim" /></p>
-
+<p><img src="/images/go-webgl/p2psim.png" alt="p2p sim"></p>
 <p>The result, while still being a work in progress, is so much more than I had imagined when I started to work on it.</p>
-
 <p>You can see a demo of the app here:</p>
-
 <div class="embed video-player">
 	<center>
 		<iframe class="youtube-player" type="text/html" width="760" height="457" src="http://www.youtube.com/embed/z2Zrfz6xxng" allowfullscreen frameborder="0">
@@ -434,40 +343,26 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 	</center>
 </div>
 
-
 <p>You can try it right now online as well (without the simulation part):</p>
-
 <p>link to the online app</p>
-
 <h1 id="conclusions">Conclusions</h1>
-
 <p>While main hopes and expectations in the frontend world revolve around WebAssembly and the upcoming possibility to write code for browsers in pretty much every language, GopherJS and Vecty already provide an excellent playground to test out UI framework designs. There is a <a href="https://github.com/gopherjs/vecty/pull/215">pending PR</a> into Vecty with WebAssembly support, by the way.</p>
-
 <p>To me, using Go in a web application has a nice property of making typically overly complicated process so much simpler.</p>
-
 <ul>
 <li>it&rsquo;s easier to start (compare &ldquo;hello, world&rdquo; in Vecty with <code>create-react-app</code> helper tool output – it&rsquo;s 2 files and 592 bytes vs 29890 files and 1MB + 270MB of dependencies)</li>
 <li>it&rsquo;s easier to develop – the only command you have to learn is <code>gopherjs build</code>, the rest is the same, you can use Go tooling for building, testing, benchmarking, static analysis, etc.</li>
 <li>it&rsquo;s easier to read and write code – Vecty was designed with strong a focus on simplicity and performance, so you will not find new weird concepts, so typical for frontend frameworks. There is no <code>$scopes</code>, no <code>mapDispatchToProps(dispatch, [props])</code> madness, no implicit magic behind every concept, no breaking changes every single release, no multiple ways to do the same thing and no permanently outdated tutorials. It&rsquo;s just pure developer&rsquo;s pleasure to work with.</li>
 </ul>
-
 <p>As I said earlier, that&rsquo;s the coolest experience with frontend development I ever had.</p>
-
 <p>However, there were drawbacks too:</p>
-
 <ul>
 <li>Go frontend community is young, and there is no abundance of component libraries. So the most widgets you&rsquo;ll have to implement yourself. (The good news, of course, is that it&rsquo;s really easy)</li>
 <li>GopherJS is an incredibly powerful tool, but it&rsquo;s still JavaScript code in the end, which is being run in the browser&rsquo;s sandbox, and they have certain restriction and limitations. Inability to use more than 1 CPU core is one of the major ones.</li>
 </ul>
-
 <p>It&rsquo;s also important to understand, that large-scale web applications (like Gmail-scale) will probably require much more maturity from the Go framework. And Vecty definitely not a production ready replacement for the modern Web development practices. But for many cases where you need small decent frontend apps, it&rsquo;s actually a great fit already. Just a couple of days ago I&rsquo;ve read a <a href="https://overthinkdciscores.com/2018/12/03/using-data-to-visualize-connections-between-composers">post</a> where author was building web app for displaying and analyzing graphs of connections between composers. That&rsquo;s the perfect target audience :)</p>
-
 <p>As for WebGL, ability to use from Go opened a whole new world of possibilities for me, giving the promise of writing well-structured, readable, testable and maintainable apps, that will work in a few years without any changes. It&rsquo;s good to keep an eye on advancements in 3D graphics for the web like <a href="https://en.wikipedia.org/wiki/WebGPU">WebGPU</a>, but if you want to write it today, WebGL is a way to go.</p>
-
-<p>And finally, while learning and working with GopherJS, Vecty and three.js bindings, I had a pleasure to one more time realize how incredibly friendly and helpful Go community is. When I just started playing with Vecty and was a bit confused with the proper way to use WebGL canvas from within Vecty, I went straight to the #vecty channel on <a href="https://invite.slack.golangbridge.org">Gophers&rsquo; Slack</a> and humbly asked for advice. The Vecty author, <a href="https://github.com/slimsag">Stephen Gutekanst</a>, not only answered my question in a great detail, but also created and published the library that does exactly what I needed, and thoroughly commented it and explained how to use it.</p>
-
+<p>And finally, while learning and working with GopherJS, Vecty and three.js bindings, I had a pleasure to one more time realize how incredibly friendly and helpful Go community is. When I just started playing with Vecty and was a bit confused with the proper way to use WebGL canvas from within Vecty, I went straight to the #vecty channel on <a href="https://invite.slack.golangbridge.org">Gophers' Slack</a> and humbly asked for advice. The Vecty author, <a href="https://github.com/slimsag">Stephen Gutekanst</a>, not only answered my question in a great detail, but also created and published the library that does exactly what I needed, and thoroughly commented it and explained how to use it.</p>
 <h1 id="links">Links</h1>
-
 <ul>
 <li><a href="https://github.com/gopherjs/gopherjs">https://github.com/gopherjs/gopherjs</a></li>
 <li><a href="https://github.com/gopherjs/vecty">https://github.com/gopherjs/vecty</a></li>

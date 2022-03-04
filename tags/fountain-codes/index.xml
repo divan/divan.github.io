@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>fountain codes on divan&#39;s blog</title>
@@ -6,19 +6,14 @@
     <description>Recent content in fountain codes on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 01 Dec 2018 16:55:00 +0200</lastBuildDate>
-    
-	<atom:link href="https://divan.dev/tags/fountain-codes/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 01 Dec 2018 16:55:00 +0200</lastBuildDate><atom:link href="https://divan.dev/tags/fountain-codes/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Fountain codes and animated QR</title>
       <link>https://divan.dev/posts/fountaincodes/</link>
       <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
       
       <guid>https://divan.dev/posts/fountaincodes/</guid>
-      <description>(source: Anders Sune Berg)
-In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.</description>
+      <description>(source: Anders Sune Berg)In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame. And in practice, it often did, of course.</description>
     </item>
     
   </channel>

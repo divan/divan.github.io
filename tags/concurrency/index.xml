@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>concurrency on divan&#39;s blog</title>
@@ -6,11 +6,7 @@
     <description>Recent content in concurrency on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 24 Jan 2016 18:31:12 -0300</lastBuildDate>
-    
-	<atom:link href="https://divan.dev/tags/concurrency/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 24 Jan 2016 18:31:12 -0300</lastBuildDate><atom:link href="https://divan.dev/tags/concurrency/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Visualizing Concurrency in Go</title>
       <link>https://divan.dev/posts/go_concurrency_visualize/</link>
