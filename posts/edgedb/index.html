@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta property="og:title" content=" My experience with EdgeDB &middot;  divan&#39;s blog" />
+  
+  <meta property="og:site_name" content="divan&#39;s blog" />
+  <meta property="og:url" content="https://divan.dev/posts/edgedb/" />
+  
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:article:published_time" content="2022-07-26T18:11:29&#43;03:00" />
+  
+  
+  
+
+  <title>
+     My experience with EdgeDB &middot;  divan&#39;s blog
+  </title>
+
+  <link rel="stylesheet" href="https://divan.dev/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/main.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/highlight.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/animate.css" />
+  <link rel="stylesheet" href="https://divan.dev/css/font-awesome.min.css" />
+  <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
+  
+  
+</head>
+<body>
+    <header class="global-header">
+    <section class="header-text">
+      <h1><a href="https://divan.dev/" onmouseover="this.className+='animated pulse'">divan&#39;s blog</a></h1>
+	  
+      <div class="tag-line">
+        random thoughts on Go and software design
+      </div>
+      
+      <div class="tag-line">
+        <a href="https://divan.dev/talks">My Talks</a>
+      </div>
+      <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+      
+      <a href="https://divan.dev/" class="btn-header btn-back hidden-xs">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        &nbsp;Home
+      </a>
+      
+      
+    </section>
+  </header>
+  <main class="container">
+
+
+<article>
+  <header>
+    <h1 class="text-primary">My experience with EdgeDB</h1>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2022-07-26T18:11:29&#43;03:00">
+          Jul 26, 2022
+        </time>
+      </div>
+      <div class="pull-right">
+        
+      </div>
+    </div>
+  </header>
+  <section>
+    <p>Tomorrow is an announcement of EdgeDB 2.0, and I realized that I&rsquo;ve never shared my experience with it, and it&rsquo;s been more than a year since I switched every project I could to EdgeDB. So here is a short post on it.</p>
+<h1 id="what-is-edgedb">What is EdgeDB?</h1>
+<p>It&rsquo;s an open-source relational/graph database built on top of Postgres.</p>
+<p>Unlike many other databases, it doesn&rsquo;t reinvent the underlying engine and uses battle-tested Postgres. But it reinvents everything else for you as a database user. For me, the two most important innovations here are – query language and tooling.</p>
+<h2 id="query-language">Query language</h2>
+<p>There is no SQL in EdgeDB. It has its own query language called EdgeQL, and it&rsquo;s a game changer.</p>
+<p>It turns this:</p>
+<p><img src="/images/edgedb_sql.jpeg" alt="SQL"></p>
+<p>into this:</p>
+<p><img src="/images/edgedb_edgeql.jpeg" alt="EdgeQL"></p>
+<p>After EdgeQL, I don&rsquo;t want to return to SQL ever again. It&rsquo;s strongly typed, object-oriented, makes linking stuff a toy, enables stupidly easy deep querying, and maps to how humans think about querying data really well (humans don&rsquo;t think in JOINs, for example).</p>
+<p>I wasn&rsquo;t a fan of SQL before, but let&rsquo;s admit, there really was no alternative. We had to hone our SQL skills and become increasingly skilled in SQL.</p>
+<p>The thing is, after a couple of days of learning and practicing EdgeQL (with a <a href="https://www.edgedb.com/easy-edgedb">fantastic book-style tutorial</a>), I realized that database schema modeling became an unusually pleasant and lightweight task. Once so much of the accidental complexity that comes with SQL suddenly evaporated, it became obvious how inefficient and weird SQL as a query language is.</p>
+<blockquote>
+<p>After EdgeQL, I don&rsquo;t want to return to SQL ever again.</p>
+</blockquote>
+<p>So if you&rsquo;re a hardcore SQL user proud of their 20+ years of SQL experience – don&rsquo;t try EdgeQL. It&rsquo;s always hard to downgrade your identity from &ldquo;master in something overly-complicated&rdquo; to &ldquo;newbie in better-and-less-complicated&rdquo;.</p>
+<p>EdgeQL is actually easy to master. You can learn like 80% of it just from its <a href="https://www.edgedb.com/docs/guides/quickstart#ref-quickstart">quickstart</a> and <a href="https://www.edgedb.com/docs/edgeql/select">overview</a>.</p>
+<p><img src="/images/edgeql_update.png" alt="update"></p>
+<p>In fact, I like EdgeQL so much that I&rsquo;d love it to be a standalone standard. It would be cool to have implementations of, say, EdgeDBLite - file-based database that talks EdgeQL. :)</p>
+<h2 id="tooling">Tooling</h2>
+<p>If you work with some technology daily, every bit of convenience or inconvenience sums up over time and forms your overall experience. I often use a satisfaction-money analogy - every minute spent using service/app/device is either +0.1$ or -0.1$ depending on how you feel using it. Well, EdgeDB experience translates to just earning money non-stop.</p>
+<p>It follows the already popular pattern of one binary that does everything (think <code>go</code> or <code>flutter</code> commands). Install or update servers, create/destroy database, repl, manage migrations, backups and projects – all in one package, and most of the time, &ldquo;it just works&rdquo;. EdgeDB reinvents a bit the way how you interact with the database - the concept of &ldquo;project&rdquo; links the database to your project automagically, so you don&rsquo;t need to bother with DSNs or configurations. It &ldquo;just works&rdquo;.</p>
+<p>After decades of constant googling the exact SQL command for granting root access for localhost, that&rsquo;s very refreshing.</p>
+<h1 id="features">Features</h1>
+<p>Some of the features you might find interesting:</p>
+<ul>
+<li>ridiculously easy <a href="https://www.edgedb.com/docs/guides/relations">many-to-many relation</a> modelling.</li>
+<li><a href="https://www.edgedb.com/docs/graphql/index">embedded GraphQL</a> (you can connect frontend directly)</li>
+<li><a href="https://www.edgedb.com/docs/datamodel/computeds">computeds</a> (like <code>rating := math::mean(.ratings.score)</code> in the example above)</li>
+<li><a href="https://www.edgedb.com/docs/edgeql/paths#backlinks">backlinks</a> (traversing links in reverse)</li>
+<li>uuid, collection, scalar, abstract and other types (my most favourite is <code>cal::local_datetime</code>)</li>
+<li><a href="https://www.edgedb.com/docs/edgeql/paths#backlinks">inheritance</a>, <a href="https://www.edgedb.com/docs/datamodel/constraints">constraints</a> and <a href="https://www.edgedb.com/docs/guides/introspection/index">other scary stuff</a></li>
+</ul>
+<h1 id="my-experience-so-far">My experience so far</h1>
+<p>I started using EdgeDB more than one year ago. First, I migrated a small personal project, reflected a bit, then switched one of the company&rsquo;s projects. Most of my projects are relatively small practical user-facing services, and I often have the luxury of working alone on the whole thing and the freedom to choose tools I see as most fit. I wish I could tell more, but I&rsquo;m migrating couple of public projects, so will blog about it once they up.</p>
+<p>With EdgeDB, it&rsquo;s mostly an &ldquo;it just works&rdquo; experience. Most things are easily discoverable through tinkering, but when you can&rsquo;t figure out something – EdgeDB has fantastic <a href="https://www.edgedb.com/docs">documentation</a>. Really, one of the best docs sites I&rsquo;ve used.</p>
+<h2 id="production-readiness">Production readiness</h2>
+<p>I have used EdgeDB &ldquo;in production&rdquo; since last autumn. I use quotes because some people might put more constraints on the definition of &ldquo;in production&rdquo; than just being used in actual business service. Since then EdgeDB command line tool went through some refactoring, I had to update my automation scripts once (like replacing <code>migrate</code> with <code>migration</code> command name), but that&rsquo;s it.</p>
+<p>Mentally I was prepared to pay the price for risks associated with early-adopter tech, but there were zero issues so far.</p>
+<h2 id="expressiveness">Expressiveness</h2>
+<p>The time I used to spend on googling SQL wizardry sites or ORM limitations workarounds now freed. EdgeQL just makes sense. In most cases, I just express what exactly I want to get from DB, and it&rsquo;s actually readable. Meaning, another developer will be able to understand what exactly I was asking from the database just by reading the query.</p>
+<p>Also, often I can avoid transactions because with EdgeQL, I can do multiple nested updates with a single query. Simplicity is complicated, yeah.</p>
+<h2 id="migrations">Migrations</h2>
+<p>One of the coolest things is having migrations out of the box. You change the schema, run <code>edgedb migration create</code>, which generates a migration file, and on the server, apply it with <code>edgedb migration apply</code>. Migrations are chained with hashes, so you can&rsquo;t just randomly change migration without screwing everything up :) Also, when you create new migrations, the default mode is interactive, and the command line prompt asks you to confirm every change. While I know it&rsquo;s relatively easy to code, it feels &ldquo;smart&rdquo; - like some careful assistant goes through your changes and asks you to double-check - <code>did you really make this property required?</code>.</p>
+<h2 id="performance">Performance</h2>
+<p>I don&rsquo;t have a high demand for database performance, as I don&rsquo;t work with petabytes of data and try to avoid high-load as much as I can, but having Postgres under the hood suggests that speed is not going to be a bottleneck (compared to other databases). EdgeDB itself is written in Python (I wish it was in Go, but authors were more skilled and confident in Python), but, again, it&rsquo;s mostly wrapper/edgeql/cli/pool layer, not the actual query engine.</p>
+<p>There were some benchmarks around. Probably this one is the best link to start: <a href="https://github.com/edgedb/imdbench">https://github.com/edgedb/imdbench</a></p>
+<p><img src="https://github.com/edgedb/imdbench/raw/master/docs/sql_thru.png" alt="performance"></p>
+<h2 id="go-client-library">Go client library</h2>
+<p>I use Go for all backend stuff, so having <a href="https://github.com/edgedb/edgedb-go">native Go library for EdgeQL</a> was a pleasant discovery at the beginning. EdgeDB has <a href="https://www.edgedb.com/docs/clients/index">official libraries</a> for Typescript/JS, Python, and Go, and community ones for .Net and Elixir.</p>
+<p>Go library is not as developed as Typescript&rsquo;s one, but it&rsquo;s quite complete and actively maintained. It obviously doesn&rsquo;t use stdlib&rsquo;s <code>database/sql</code> because who needs SQL anymore.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;context&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;github.com/edgedb/edgedb-go&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ctx</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">client</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">edgedb</span>.<span style="color:#a6e22e">CreateClient</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">edgedb</span>.<span style="color:#a6e22e">Options</span>{})
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Close</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> (
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">age</span>   <span style="color:#66d9ef">int64</span> = <span style="color:#ae81ff">21</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">users</span> []<span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">ID</span>   <span style="color:#a6e22e">edgedb</span>.<span style="color:#a6e22e">UUID</span> <span style="color:#e6db74">`edgedb:&#34;id&#34;`</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Name</span> <span style="color:#66d9ef">string</span>      <span style="color:#e6db74">`edgedb:&#34;name&#34;`</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">query</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">&#34;SELECT User{name} FILTER .age = &lt;int64&gt;$0&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Query</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">query</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">users</span>, <span style="color:#a6e22e">age</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>As you can see, it&rsquo;s relatively low-level and expressive. If you have projects where the database layer is adequately isolated, rewriting client code from, say, MySQL to EdgeDB is fairly straightforward (in terms of using the library, not the queries).</p>
+<p>My only trouble with Go implementation is the implementation of optional values. EdgeQL has a concept of <code>optional</code>, which is similar to NULL in SQL. In many Go database drivers, we used to have <code>sql.Null&lt;Type&gt;</code> and EdgeDB Go library introduced <code>edgedb.Optional&lt;Type&gt;</code>. While I agree that this approach is expressive and correct, I often find myself wishing it was just using pointers for optional values. Switching field from required to optional sometimes means rewriting too many lines of code just to allow that, and it often looks ugly.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Club is used to read Club from EdgeDB.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Club</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ID</span>     <span style="color:#a6e22e">edgedb</span>.<span style="color:#a6e22e">UUID</span> <span style="color:#e6db74">`edgedb:&#34;id&#34;`</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Name</span>   <span style="color:#66d9ef">string</span>      <span style="color:#e6db74">`edgedb:&#34;name&#34;`</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">City</span>   <span style="color:#a6e22e">City</span>        <span style="color:#e6db74">`edgedb:&#34;city&#34;`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Members</span> []<span style="color:#a6e22e">Person</span> <span style="color:#e6db74">`edgedb:&#34;members&#34;`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">edgedb</span>.<span style="color:#a6e22e">Optional</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Get, Set and Unser implement OptionalMarshaller for edgedb.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Club</span>) <span style="color:#a6e22e">Get</span>() (<span style="color:#a6e22e">Club</span>, <span style="color:#66d9ef">bool</span>) { <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">b</span>, !<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Missing</span>() }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Club</span>) <span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">club</span> <span style="color:#a6e22e">Club</span>)     { <span style="color:#f92672">*</span><span style="color:#a6e22e">b</span> = <span style="color:#a6e22e">club</span>; <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">SetMissing</span>(<span style="color:#66d9ef">false</span>) }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Club</span>) <span style="color:#a6e22e">Unset</span>()            { <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">SetMissing</span>(<span style="color:#66d9ef">true</span>) }
+</span></span></code></pre></div><p>For example, in the code that converts data model structure to protobuf, now optional <code>City</code> field requires 5 more lines instead of 1. I have most of this code autogenerated, but still – it takes time to figure out how to deal with optionals in EdgeDB Go library.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// clubToPB converts DB Club to the protobuf structure.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">clubToPB</span>(<span style="color:#a6e22e">club</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">Club</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">Club</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ret</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">Club</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Id</span>:     <span style="color:#a6e22e">club</span>.<span style="color:#a6e22e">ID</span>.<span style="color:#a6e22e">String</span>(),
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Name</span>:   <span style="color:#a6e22e">club</span>.<span style="color:#a6e22e">Name</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// City:   cityToPB(club.City),
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// optional fields
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">val</span>, <span style="color:#a6e22e">set</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">club</span>.<span style="color:#a6e22e">City</span>.<span style="color:#a6e22e">Get</span>(); <span style="color:#a6e22e">set</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ret</span>.<span style="color:#a6e22e">City</span> = <span style="color:#a6e22e">cityToPB</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">val</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ret</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="upgrades">Upgrades</h2>
+<p>EdgeDB abstracts away a lot of complexity related to the server versioning and updates. EdgeDB CLI tool basically handles everything itself. It shows you when new updates are available, shows installed server versions, allows you to upgrade instances, etc.</p>
+<p>It works so smoothly it&rsquo;s even suspicious.</p>
+<p>But right now it pulls the new 2.0 RC server version, and I&rsquo;m not worrying at all. All experience with EdgeDB tells me that it&rsquo;s safe and easy.</p>
+<p><img src="/images/edgedb_upgrade.png" alt="upgrade"></p>
+<h2 id="communication-and-support">Communication and support</h2>
+<p>As an early adopter, I was and still am enjoying an extremely fast responses and an incredible level of help in the official EdgeDB channels. Sometimes I had situations where I could not find the best or most logical solution, and in most cases, there was a clear solution I overlooked in the docs.</p>
+<p>I&rsquo;m unsure if the same level of communication will be when 90% of the planet switches to EdgeQL, and kids will be asking &ldquo;what is SQL?&rdquo; but let&rsquo;s see.</p>
+<h1 id="edgedb-20">EdgeDB 2.0</h1>
+<p>So tomorrow&rsquo;s release brings some new juicy stuff:</p>
+<ul>
+<li>EdgeDB UI - web app with visual schema layout, editor, repl, and god knows what else. As anticipated, it looks fantastic, but I have yet to try it in practice.</li>
+</ul>
+<p><img src="/images/edgedb_ui.png" alt="UI"></p>
+<ul>
+<li><a href="https://www.edgedb.com/docs/changelog/2_x"> New stuff</a> like group query, global schema variables, object-level security, new deletion policies (and long-awaited &ldquo;on delete delete target&rdquo;), direct EdgeQL over HTTP, and others.</li>
+</ul>
+<h1 id="things-i-dont-like-or-worried-about">Things I don&rsquo;t like or worried about</h1>
+<p>I have two major concerns with EdgeDB and using it as a go-to DB for all the projects.</p>
+<h2 id="1-the-promise-of-compatibility">1. The promise of compatibility?</h2>
+<p>So far, everything is going great. Some minor updates, nothing with breaking changes. But I&rsquo;d love to see a commitment to the promise of compatibility. EdgeDB seems to be well designed, so as soon as the design is good enough, there is an enormous value in making it permanent (at least for the next 10 years). It hurts to see how quickly community tutorials and bits of code became obsolete in a year or two because of incompatible API changes.</p>
+<h2 id="2-growing-feature-set">2. Growing Feature Set</h2>
+<p>EdgeDB already has way more features than I need, and the set seems to be growing. The more powerful EdgeQL becomes, the more it blurs the line between database and server, and the more choices I, as a developer, have to make - &ldquo;should this be in a backend logic or this super-smart database schema?&rdquo;. Those are day-to-day practical questions, and they keep adding cognitive load.</p>
+<p>With an embedded HTTP server, it makes sense to push EdgeDB in the direction where it can replace the backend server completely for most projects. Still, I&rsquo;d love to have just a good, reliable database that has this awesome query language and engine.</p>
+<p>I tried to use inheritance, for example, but it doesn&rsquo;t really map onto the Go types, so I had to model schema accordingly. Polymorphic fields are something I&rsquo;ll probably never use. Or another example, in EdgeDB 2.0, there is a new <code>cal::date_duration</code> type, but is it justified? <code>cal::local_date</code> and <code>cal::relative_duration</code> are both super helpful types, but duration in days can be easily expressed in integers. Why another type? To simplify +/- operators in EdgeQL? Why not add <code>meters_distance</code> then? At some point, we&rsquo;ll start to have libraries inside EdgeQL?</p>
+<p>I know I&rsquo;m a minority here – most people welcome more features – but I see a feature set as a vector space, with features being basis vectors. Every new feature increases the dimensionality and complexity of the optimal solution search within the feature set, which increases cognitive load. I&rsquo;m not saying that finding the right balance for the feature set is easy, but it is worth the effort in the long run..</p>
+<p>Anyway, let&rsquo;s hope EdgeDB will be stable and consistent and won&rsquo;t grow too much. So far, its feature set is just right.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>In short, I don&rsquo;t even consider conventional relational databases for future projects anymore. Switching back to SQL feels like changing from Flutter to Ncurses or Go to Assembler.</p>
+<p>For me, EdgeDB is the single most important advance in databases in the last 20 years. I&rsquo;m aware that I can change my mind in the future as I gain more experience, but hey, I&rsquo;ve been using EdgeDB daily for more than a year, and so far, nothing has affected my excitement. The more I use it, the more I trust EdgeDB my data.</p>
+<p>The work  EdgeDB folks have done - with EdgeDB itself, query language, the website, tools, and community-building - is outright impressive. Mad respect to the team.</p>
+<p>And it seems they are just warming up.</p>
+<p><img src="/images/edgedb_postsql.png" alt="https://edgedb.com"></p>
+<p>EdgeDB 2.0 Launch day link is here, if you wonder: <a href="https://lu.ma/edgedb">https://lu.ma/edgedb</a></p>
+
+  </section>
+  <footer>
+    <section class="author-info row">
+      <div class="author-avatar col-md-2">
+        
+        <img alt="Author Avatar" src="/images/avatar.jpg" />
+        
+      </div>
+      <div class="author-meta col-md-6">
+        
+        
+		<div class="author-bio">Gopher. Public speaker.<br />
+			Follow me at <a href="https://twitter.com/idanyliuk" target="_blank">@idanyliuk</a><br />
+			You can always <a href="https://www.buymeacoffee.com/divan">buy me a coffee</a><br />
+		</div>
+        
+      </div>
+      
+      <div class="author-contact col-md-4">
+        <a href="mailto:ivan.daniluk@gmail.com">
+          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          &nbsp;Contact me
+        </a>
+      </div>
+      
+    </section>
+    <ul class="pager">
+      
+      <li class="previous"><a href="https://divan.dev/posts/war/"><span aria-hidden="true">&larr;</span> Older</a></li>
+      
+      
+      <li class="next disabled"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+  </main>
+  <footer class="container global-footer">
+    <div class="copyright-note pull-left">
+      
+    </div>
+    <div class="sns-links hidden-print">
+  
+  <a href="mailto:ivan.daniluk@gmail.com">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://twitter.com/idanyliuk" target="_blank">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  
+  
+  <a href="https://github.com/divan" target="_blank">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <script src="https://divan.dev/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-70805978-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  
+  
+</body>
+</html>
+

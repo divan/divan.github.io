@@ -13,7 +13,8 @@
       <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
       
       <guid>https://divan.dev/posts/fountaincodes/</guid>
-      <description>(source: Anders Sune Berg)In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame. And in practice, it often did, of course.</description>
+      <description>(source: Anders Sune Berg)
+In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.</description>
     </item>
     
   </channel>

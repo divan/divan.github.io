@@ -34,6 +34,7 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
+  
 </head>
 <body>
     <header class="global-header">
@@ -174,7 +175,7 @@ Note, that StartMysql() returns also a defer function, which will properly stop 
 <!-- raw HTML omitted -->
 <h1 id="conclusion">Conclusion</h1>
 <p>As you may see, Go not only make testing a lot easiers but also make use of BDD and TDD methodologies very easy to follow and opens new possibilities for cross-platform integration- and acceptance- testing.</p>
-<p>This example provided here is simplified on purpose, but it&rsquo;s based on the real production code which is being tested in this way for more than 1.5 years and survived a number of refactorings and migrations' updates. On my Macbook Air, the whole test, from start to end (compile code, run docker container in docker-machine and test ~35 http requests, shut down the container) it takes about 3 seconds. On native Linux system it&rsquo;s obviously a lot faster.</p>
+<p>This example provided here is simplified on purpose, but it&rsquo;s based on the real production code which is being tested in this way for more than 1.5 years and survived a number of refactorings and migrations&rsquo; updates. On my Macbook Air, the whole test, from start to end (compile code, run docker container in docker-machine and test ~35 http requests, shut down the container) it takes about 3 seconds. On native Linux system it&rsquo;s obviously a lot faster.</p>
 <p>One may ask why not publish this code as a separate library, and make the whole task (and article) even shorter. But the point here is that for every different service there may be a different set of service connections, different usage patterns and so on. And what is really important is that with Go it&rsquo;s so easy to write this harness code for your needs, that you don&rsquo;t have an excuse not to do this. Whether you need many similar containers in parallel (probably, you&rsquo;ll need to randomize exposed ports), or you have to interconnect some services before starting them - you just write in Go, hiding all the complexity from the actual testing code.</p>
 <p>And always write tests! There is not excuse not to write them anymore.</p>
 <p>UPD: After writing the article, discovered the package <a href="https://github.com/ory-am/dockertest">dockertest</a> by Aeneas Rekkas (<a href="https://twitter.com/_aeneasr">@_aeneasr</a>), which does almost exactly the same as a code in this article, and looks pretty solid. Don&rsquo;t miss it out!</p>
@@ -205,19 +206,6 @@ Note, that StartMysql() returns also a defer function, which will properly stop 
       </div>
       
     </section>
-    
-    <hr/>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_shortname = 'divanblog';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/go_errors/"><span aria-hidden="true">&larr;</span> Older</a></li>

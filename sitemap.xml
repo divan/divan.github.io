@@ -3,18 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://divan.dev/</loc>
-    <lastmod>2022-03-04T03:39:32+02:00</lastmod>
+    <lastmod>2022-07-26T18:11:29+03:00</lastmod>
+  </url><url>
+    <loc>https://divan.dev/posts/edgedb/</loc>
+    <lastmod>2022-07-26T18:11:29+03:00</lastmod>
   </url><url>
     <loc>https://divan.dev/posts/</loc>
-    <lastmod>2022-03-04T03:39:32+02:00</lastmod>
+    <lastmod>2022-07-26T18:11:29+03:00</lastmod>
   </url><url>
     <loc>https://divan.dev/tags/</loc>
     <lastmod>2022-03-04T03:39:32+02:00</lastmod>
   </url><url>
-    <loc>https://divan.dev/posts/war/</loc>
+    <loc>https://divan.dev/tags/war/</loc>
     <lastmod>2022-03-04T03:39:32+02:00</lastmod>
   </url><url>
-    <loc>https://divan.dev/tags/war/</loc>
+    <loc>https://divan.dev/posts/war/</loc>
     <lastmod>2022-03-04T03:39:32+02:00</lastmod>
   </url><url>
     <loc>https://divan.dev/tags/golang/</loc>
@@ -39,7 +42,7 @@
     <lastmod>2019-01-12T14:55:00+02:00</lastmod>
   </url><url>
     <loc>https://divan.dev/posts/webgl_go/</loc>
-    <lastmod>2018-12-10T00:00:00+02:00</lastmod>
+    <lastmod>2018-12-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://divan.dev/tags/coding-theory/</loc>
     <lastmod>2018-12-01T16:55:00+02:00</lastmod>

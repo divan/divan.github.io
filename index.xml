@@ -6,7 +6,18 @@
     <description>Recent content on divan&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 04 Mar 2022 03:39:32 +0200</lastBuildDate><atom:link href="https://divan.dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 26 Jul 2022 18:11:29 +0300</lastBuildDate><atom:link href="https://divan.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My experience with EdgeDB</title>
+      <link>https://divan.dev/posts/edgedb/</link>
+      <pubDate>Tue, 26 Jul 2022 18:11:29 +0300</pubDate>
+      
+      <guid>https://divan.dev/posts/edgedb/</guid>
+      <description>Tomorrow is an announcement of EdgeDB 2.0, and I realized that I&amp;rsquo;ve never shared my experience with it, and it&amp;rsquo;s been more than a year since I switched every project I could to EdgeDB. So here is a short post on it.
+What is EdgeDB? It&amp;rsquo;s an open-source relational/graph database built on top of Postgres.
+Unlike many other databases, it doesn&amp;rsquo;t reinvent the underlying engine and uses battle-tested Postgres. But it reinvents everything else for you as a database user.</description>
+    </item>
+    
     <item>
       <title>War</title>
       <link>https://divan.dev/posts/war/</link>
@@ -25,7 +36,7 @@ I&amp;rsquo;m safe, but everything that makes me me – is not.</description>
       
       <guid>https://divan.dev/posts/gopath/</guid>
       <description>The newest release of Go – Go 1.13 – finally introduced full support for Go Modules – brilliant and long-awaited solution for built-in dependency versioning problem. Modules now enabled by default, and virtually make GOPATH obsolete.
-Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &amp;ldquo;GOPATH mode&amp;rdquo; (as being opposite to the &amp;ldquo;modules mode&amp;quot;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.</description>
+Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &amp;ldquo;GOPATH mode&amp;rdquo; (as being opposite to the &amp;ldquo;modules mode&amp;rdquo;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.</description>
     </item>
     
     <item>
@@ -51,7 +62,7 @@ It starts with an almost existential frustration of working with code as a text.
     <item>
       <title>Creating WebGL apps with Go</title>
       <link>https://divan.dev/posts/webgl_go/</link>
-      <pubDate>Mon, 10 Dec 2018 00:00:00 +0200</pubDate>
+      <pubDate>Mon, 10 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>https://divan.dev/posts/webgl_go/</guid>
       <description>TL;DR In this article I&amp;rsquo;ll share my experience building an interactive 3D WebGL-based application for peer-to-peer messaging protocol simulation without writing any single line in JS. You&amp;rsquo;ll learn how GopherJS and Vecty framework can dramatically lower the complexity of building WebGL-enabled web apps in Go.
@@ -64,7 +75,8 @@ It&amp;rsquo;s often said &amp;ldquo;A picture is worth a thousand words&amp;rdq
       <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
       
       <guid>https://divan.dev/posts/fountaincodes/</guid>
-      <description>(source: Anders Sune Berg)In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame. And in practice, it often did, of course.</description>
+      <description>(source: Anders Sune Berg)
+In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.</description>
     </item>
     
     <item>
@@ -105,8 +117,8 @@ err := SomeFunc() if _, ok := err.</description>
       <pubDate>Fri, 04 Nov 2016 13:25:35 +0100</pubDate>
       
       <guid>https://divan.dev/posts/avoid_gotchas/</guid>
-      <description>TL;DR by learning internals  a gotcha is a valid construct in a system, program or programming language that works as documented but is counter-intuitive and almost invites mistakes because it is both easy to invoke and unexpected or unreasonable in its outcome (source: wikipedia)
- Go programming language has some gotchas and there is a number of good articles explaining them. I find those articles very important, especially for the newcomers in Go, as I see people run into those gotchas every now and then.</description>
+      <description>TL;DR by learning internals a gotcha is a valid construct in a system, program or programming language that works as documented but is counter-intuitive and almost invites mistakes because it is both easy to invoke and unexpected or unreasonable in its outcome (source: wikipedia)
+Go programming language has some gotchas and there is a number of good articles explaining them. I find those articles very important, especially for the newcomers in Go, as I see people run into those gotchas every now and then.</description>
     </item>
     
     <item>
@@ -127,7 +139,7 @@ My journey to GopherCon started on a cold winter day in the apartments in the ce
       <guid>https://divan.dev/posts/go_get_private/</guid>
       <description>As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing moments. One of them is automating repeatable build process using containers along with using dependencies in private repositories.
 Private repositories on Github are often is a source of confusion when using go get, but it has easy workaround by adding two lines to your .gitconfig:
-[url &amp;quot;git@github.com:&amp;quot;] insteadOf = https://github.</description>
+[url &amp;#34;git@github.com:&amp;#34;] insteadOf = https://github.</description>
     </item>
     
     <item>

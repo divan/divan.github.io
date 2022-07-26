@@ -28,6 +28,7 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
+  
 </head>
 <body>
     <header class="global-header">
@@ -101,7 +102,7 @@
 <p>A little copying is better than a little dependency.</p>
 </blockquote>
 <p>If you struggle to understand how it applies with DRY and why it&rsquo;s a wise point, I suggest you check out <a href="https://www.youtube.com/watch?v=PAAkCSZUG1c">this video</a> on a subject.</p>
-<p>But one thought was spinning in my head - can we do better and use tooling to check for the &lsquo;little dependency&rsquo;? I believe that tooling is a great way to enforce some good practices and views, and <code>go fmt</code> is a greates evidence of it. Why can&rsquo;t we make a tool that would check package imports and suggest to <em>&ldquo;take a look at this small LeftPad dependency of only one small function&rdquo;</em>?</p>
+<p>But one thought was spinning in my head - can we do better and use tooling to check for the &rsquo;little dependency&rsquo;? I believe that tooling is a great way to enforce some good practices and views, and <code>go fmt</code> is a greates evidence of it. Why can&rsquo;t we make a tool that would check package imports and suggest to <em>&ldquo;take a look at this small LeftPad dependency of only one small function&rdquo;</em>?</p>
 <p>Meet <a href="https://github.com/divan/depscheck">depscheck</a>.</p>
 <h1 id="depscheck">DepsCheck</h1>
 <p>So, that&rsquo;s how <strong>depscheck</strong> was born. I spent a weekend, learning how to work with go/{ast,parser,types,loader} packages and after 10-th refactoring finally came up with a tool that was doing exactly I wanted to.</p>
@@ -109,17 +110,17 @@
 <blockquote>
 <p>DepsCheck - Dependency checker for Golang (Go) packages. Prints stats and suggests to remove small LeftPad-like imports if any</p>
 </blockquote>
-<p>It analyzes package or arbitrary *.go files using AST-parser and calculates some stats about dependencies. Namely, number of calls/selectors of dependency, funcs/methods' LOC (Lines Of Code), Cumulative LOCs (whenever possible, dropping it for recursion), Depth (number of nested calls to more external dependencies) and DepthInternal(the same, but for internal function calls). In most cases it&rsquo;s enough to make some calculations and analysis to find <em>&lsquo;small dependencies&rsquo;</em>.</p>
+<p>It analyzes package or arbitrary *.go files using AST-parser and calculates some stats about dependencies. Namely, number of calls/selectors of dependency, funcs/methods&rsquo; LOC (Lines Of Code), Cumulative LOCs (whenever possible, dropping it for recursion), Depth (number of nested calls to more external dependencies) and DepthInternal(the same, but for internal function calls). In most cases it&rsquo;s enough to make some calculations and analysis to find <em>&lsquo;small dependencies&rsquo;</em>.</p>
 <h3 id="quick-intro">Quick Intro</h3>
 <p>Here is quick intro and dogfooding demo of the tool.</p>
 <p>First, install the tool:</p>
-<pre><code>go get github.com/divan/depscheck
+<pre tabindex="0"><code>go get github.com/divan/depscheck
 </code></pre><p>Then invoke as simple as:</p>
-<pre><code>depscheck -v github.com/divan/depscheck
+<pre tabindex="0"><code>depscheck -v github.com/divan/depscheck
 </code></pre><p><img src="https://github.com/divan/depscheck/raw/master/demo/depscheck.png" alt="Demo"></p>
 <p>There is a detailed table view of dependencies usage, totals and breakdown by packages, and in the end, the tool says - hey, your dependencies are sane. It means, no dependencies of suspiciously small usage size.</p>
 <p>In case it finds potential candidate for copying into your codebase and removing from the dependency list, it outputs something like this:</p>
-<pre><code>$ depscheck github.com/divan/expvarmon
+<pre tabindex="0"><code>$ depscheck github.com/divan/expvarmon
 github.com/divan/expvarmon: 4 packages, 1022 LOC, 93 calls, 11 depth, 23 depth int.
  - Package byten (github.com/pyk/byten) is a good candidate for removing from dependencies.
    Only 19 LOC used, in 1 calls, with 2 level of nesting
@@ -130,12 +131,12 @@ Run with -v option to see detailed stats for dependencies.
 <p>Of course, this suggestion doesn&rsquo;t mean you have to do it. It just asks you to pay attention to these particular imports if you want to make your codebase a little bit better. It&rsquo;s up to me to decide what to do with this import. The tools suggestions are recommendation only.</p>
 <h3 id="how-small-is-small-dependency">How small is small dependency</h3>
 <p>You may ask now - how do you determine if the dependency is small enough to be a candidate for elimination? Good question, and I don&rsquo;t have one single source of truth here, so I&rsquo;ve implemented it based on my view of common sense here. To be short, here is the responsible method at the moment of writing this article:</p>
-<pre><code>// CanBeAvoided attempts to classify if package usage is small enough
+<pre tabindex="0"><code>// CanBeAvoided attempts to classify if package usage is small enough
 // to suggest user avoid this package as a dependency and
-// instead copy/embed it's code into own project (if license permits).
+// instead copy/embed it&#39;s code into own project (if license permits).
 func (p *PackageStat) CanBeAvoided() bool {
 	// If this dependency is using another dependencies,
-	// it's almost for sure - no. For internal dependency, let's
+	// it&#39;s almost for sure - no. For internal dependency, let&#39;s
 	// allow just two level of nesting.
 	if p.Depth &gt; 0 {
 		return false
@@ -156,7 +157,7 @@ func (p *PackageStat) CanBeAvoided() bool {
 	return true
 }
 </code></pre><p>As you can see, it&rsquo;s pretty straightforward, no machine learning here. Just hardcore universal constants :) It&rsquo;s not perfect, but hey, at least, it can detect LeftPad package, mentioned above!</p>
-<pre><code>$ depscheck leftpad.go
+<pre tabindex="0"><code>$ depscheck leftpad.go
 main: 1 packages, 17 LOC, 1 calls, 0 depth, 1 depth int.
  - Package leftpad (github.com/keltia/leftpad) is a good candidate for removing from dependencies.
    Only 17 LOC used, in 1 calls, with 1 level of nesting
@@ -167,7 +168,7 @@ Run with -v option to see detailed stats for dependencies.
 <h1 id="stdlib">Stdlib</h1>
 <p>Depscheck also can work with stdlib packages. Normally it treats stdlib imports as &lsquo;internal&rsquo; and doesn&rsquo;t analyze/report them. But you can explicitly ask for that using <code>-stdlib</code> command line flag. Suggestions are silenced in this mode because stdlib is smarter than this tool. Anyway, it can give interesting insights into your package or application.</p>
 <p>For example, here is the sample output for checking against stdlib <code>time</code> package (though, you can use -stdlib flag for any package, not only stdlib):</p>
-<pre><code>$ depscheck -stdlib -v time
+<pre tabindex="0"><code>$ depscheck -stdlib -v time
 time: 4 packages, 294 LOC, 50 calls, 17 depth, 3 depth int.
 +---------+-------+----------+--------+-------+-----+--------+-------+----------+
 |   PKG   | RECV  |   NAME   |  TYPE  | COUNT | LOC | LOCCUM | DEPTH | DEPTHINT |
@@ -196,7 +197,7 @@ time: 4 packages, 294 LOC, 50 calls, 17 depth, 3 depth int.
 | syscall | syscall |    10 |    15 |    196 |    15 |        0 |
 +---------+---------+-------+-------+--------+-------+----------+
 </code></pre><p>You may even run it against the whole stdlib and build some charts in RStudio or your favorite statistics tool. Let&rsquo;s use <code>go list std</code> command to get all stdlib packages names and feed them to <em>depcheck</em>. There is a special <code>-totalonly</code> flag, which tells depscheck to output only totals oneliner, which is easily parseable:</p>
-<pre><code>$ for i in $(go list std); do depscheck -stdlib -totalonly $i; done
+<pre tabindex="0"><code>$ for i in $(go list std); do depscheck -stdlib -totalonly $i; done
 archive/tar: 13 packages, 3328 LOC, 174 calls, 5 depth, 78 depth int.
 archive/zip: 13 packages, 2284 LOC, 184 calls, 24 depth, 84 depth int.
 bufio: 4 packages, 84 LOC, 60 calls, 0 depth, 0 depth int.
@@ -253,19 +254,6 @@ crypto/md5: 3 packages, 5 LOC, 5 calls, 0 depth, 0 depth int.
       </div>
       
     </section>
-    
-    <hr/>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_shortname = 'divanblog';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/go_concurrency_visualize/"><span aria-hidden="true">&larr;</span> Older</a></li>

@@ -11,7 +11,7 @@
   
   <meta property="og:type" content="article" />
   
-  <meta property="og:article:published_time" content="2018-12-10T00:00:00&#43;02:00" />
+  <meta property="og:article:published_time" content="2018-12-10T00:00:00Z" />
   
   <meta property="og:article:tag" content="golang" />
   
@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="https://divan.dev/css/font-awesome.min.css" />
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
+  
   
 </head>
 <body>
@@ -85,7 +86,7 @@
     <div class="post-meta clearfix">
       <div class="post-date pull-left">
         Posted on
-        <time datetime="2018-12-10T00:00:00&#43;02:00">
+        <time datetime="2018-12-10T00:00:00Z">
           Dec 10, 2018
         </time>
       </div>
@@ -121,95 +122,95 @@
 <p>I found a proof-of-concept package <a href="https://github.com/Lngramos/three">https://github.com/Lngramos/three</a> that implemented most basic bindings to three.js. One of the design goals seems to provide the same API in Go, as the JS version. In the process, I started changing it at a faster pace than the original author&rsquo;s PR reviewing pace, so I ended up using my forked version with the same name. While the current version works well for my needs, it&rsquo;s really far from being even 10% complete, and the more I work with it, the more I want to refactor it from scratch. The problem is that Three.js exploits inheritance and some interesting properties, so to speak, of JavaScript type system, so it doesn&rsquo;t map well to Go. So as I accumulate more experience working with it, the new design will probably come up.</p>
 <p>Compare JS and Go usage of three.js.</p>
 <p>JS:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">scene</span>, <span style="color:#a6e22e">renderer</span>, <span style="color:#a6e22e">light</span>, <span style="color:#a6e22e">camera</span>;
-<span style="color:#a6e22e">camera</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">PerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">w</span><span style="color:#f92672">/</span><span style="color:#a6e22e">h</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span> );
-<span style="color:#a6e22e">camera</span>.<span style="color:#a6e22e">position</span>.<span style="color:#a6e22e">set</span>( <span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">1500</span> );
-<span style="color:#a6e22e">scene</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">Scene</span>();
-<span style="color:#a6e22e">renderer</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">WebGLRenderer</span>();
-<span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">setSize</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">h</span>);
-<span style="color:#a6e22e">light</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">AmbientLight</span>( <span style="color:#ae81ff">0xffffff</span> );
-<span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">light</span>);
-</code></pre></div><p>Go:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">camera</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewPerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">w</span><span style="color:#f92672">/</span><span style="color:#a6e22e">h</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span>)
-<span style="color:#a6e22e">camera</span>.<span style="color:#a6e22e">Position</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">1500</span>)
-<span style="color:#a6e22e">scene</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewScene</span>()
-<span style="color:#a6e22e">renderer</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewWebGLRenderer</span>()
-<span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">SetSize</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">h</span>, <span style="color:#66d9ef">true</span>)
-<span style="color:#a6e22e">light</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewAmbientlLight</span>(<span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;white&#34;</span>))
-<span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">light</span>)
-</code></pre></div><p>The similarity is so striking that it&rsquo;s probably feasible to write a static-analysis tool that will convert Three.js based code into Go code automatically!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">scene</span>, <span style="color:#a6e22e">renderer</span>, <span style="color:#a6e22e">light</span>, <span style="color:#a6e22e">camera</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">camera</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">PerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">w</span><span style="color:#f92672">/</span><span style="color:#a6e22e">h</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span> );
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">camera</span>.<span style="color:#a6e22e">position</span>.<span style="color:#a6e22e">set</span>( <span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">1500</span> );
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">scene</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">Scene</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">renderer</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">WebGLRenderer</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">setSize</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">h</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">light</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">THREE</span>.<span style="color:#a6e22e">AmbientLight</span>( <span style="color:#ae81ff">0xffffff</span> );
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">light</span>);
+</span></span></code></pre></div><p>Go:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">camera</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewPerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">w</span><span style="color:#f92672">/</span><span style="color:#a6e22e">h</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">camera</span>.<span style="color:#a6e22e">Position</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">1500</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">scene</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewScene</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">renderer</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewWebGLRenderer</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">SetSize</span>(<span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">h</span>, <span style="color:#66d9ef">true</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">light</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewAmbientlLight</span>(<span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;white&#34;</span>))
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">light</span>)
+</span></span></code></pre></div><p>The similarity is so striking that it&rsquo;s probably feasible to write a static-analysis tool that will convert Three.js based code into Go code automatically!</p>
 <h2 id="threejs-hello-world-in-go">Three.js Hello, World in Go</h2>
 <p>Now, let&rsquo;s create the new project:</p>
-<pre><code>mkdir $(go env GOPATH)/src/github.com/divan/go-webgl-example
+<pre tabindex="0"><code>mkdir $(go env GOPATH)/src/github.com/divan/go-webgl-example
 cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 </code></pre><p>And create two files – <code>main.go</code> and <code>index.html</code>, which we will use to start our app in the browser:</p>
 <p><code>index.html</code> doesn&rsquo;t nothing more than just defining a single canvas tag, which will be used for WebGL rendering, and including <code>three.js</code> code with our GopheJS-generated <code>go-webgl-example.js</code> code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
-&lt;<span style="color:#f92672">html</span>&gt;
-    &lt;<span style="color:#f92672">head</span>&gt;
-        &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">utf-8</span>&gt;
-        &lt;<span style="color:#f92672">title</span>&gt;Go WebGL app&lt;/<span style="color:#f92672">title</span>&gt;
-        &lt;<span style="color:#f92672">style</span>&gt;
-            <span style="color:#f92672">body</span> { <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>; }
-            <span style="color:#f92672">canvas</span> { <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>; <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span> }
-        &lt;/<span style="color:#f92672">style</span>&gt;
-    &lt;/<span style="color:#f92672">head</span>&gt;
-    &lt;<span style="color:#f92672">body</span>&gt;
-        &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-        &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;go-webgl-example.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-    &lt;/<span style="color:#f92672">body</span>&gt;
-&lt;/<span style="color:#f92672">html</span>&gt;
-</code></pre></div><p><code>main.go</code> is responsible for the high-level logic of our 3D app – setting up the scene, the camera, lights, objects, and handling animations and user interaction:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
-
-<span style="color:#f92672">import</span> (
-    <span style="color:#e6db74">&#34;github.com/divan/three&#34;</span>
-    <span style="color:#e6db74">&#34;github.com/gopherjs/gopherjs/js&#34;</span>
-)
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-    <span style="color:#a6e22e">width</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;innerWidth&#34;</span>).<span style="color:#a6e22e">Float</span>()
-    <span style="color:#a6e22e">height</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;innerHeight&#34;</span>).<span style="color:#a6e22e">Float</span>()
-
-    <span style="color:#a6e22e">renderer</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewWebGLRenderer</span>()
-    <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">SetSize</span>(<span style="color:#a6e22e">width</span>, <span style="color:#a6e22e">height</span>, <span style="color:#66d9ef">true</span>)
-    <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;document&#34;</span>).<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;body&#34;</span>).<span style="color:#a6e22e">Call</span>(<span style="color:#e6db74">&#34;appendChild&#34;</span>, <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;domElement&#34;</span>))
-
-    <span style="color:#75715e">// setup camera and scene
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">camera</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewPerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">width</span><span style="color:#f92672">/</span><span style="color:#a6e22e">height</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span>)
-    <span style="color:#a6e22e">camera</span>.<span style="color:#a6e22e">Position</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">500</span>)
-
-    <span style="color:#a6e22e">scene</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewScene</span>()
-
-    <span style="color:#75715e">// lights
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">light</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewDirectionalLight</span>(<span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;white&#34;</span>), <span style="color:#ae81ff">1</span>)
-    <span style="color:#a6e22e">light</span>.<span style="color:#a6e22e">Position</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">256</span>, <span style="color:#ae81ff">256</span>)
-    <span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">light</span>)
-
-    <span style="color:#75715e">// material
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">params</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMaterialParameters</span>()
-    <span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">Color</span> = <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;blue&#34;</span>)
-    <span style="color:#a6e22e">mat</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMeshLambertMaterial</span>(<span style="color:#a6e22e">params</span>)
-
-    <span style="color:#75715e">// cube object
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">geom</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewBoxGeometry</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">BoxGeometryParameters</span>{
-        <span style="color:#a6e22e">Width</span>:  <span style="color:#ae81ff">200</span>,
-        <span style="color:#a6e22e">Height</span>: <span style="color:#ae81ff">200</span>,
-        <span style="color:#a6e22e">Depth</span>:  <span style="color:#ae81ff">200</span>,
-    })
-    <span style="color:#a6e22e">mesh</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMesh</span>(<span style="color:#a6e22e">geom</span>, <span style="color:#a6e22e">mat</span>)
-    <span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">mesh</span>)
-
-    <span style="color:#75715e">// start animation
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">animate</span> <span style="color:#66d9ef">func</span>()
-    <span style="color:#a6e22e">animate</span> = <span style="color:#66d9ef">func</span>() {
-        <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Call</span>(<span style="color:#e6db74">&#34;requestAnimationFrame&#34;</span>, <span style="color:#a6e22e">animate</span>)
-        <span style="color:#a6e22e">mesh</span>.<span style="color:#a6e22e">Rotation</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#a6e22e">mesh</span>.<span style="color:#a6e22e">Rotation</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;y&#34;</span>).<span style="color:#a6e22e">Float</span>()<span style="color:#f92672">+</span><span style="color:#ae81ff">0.01</span>)
-        <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">Render</span>(<span style="color:#a6e22e">scene</span>, <span style="color:#a6e22e">camera</span>)
-    }
-    <span style="color:#a6e22e">animate</span>()
-}
-</code></pre></div><p>All you have to do now is just run:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">html</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">utf-8</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">title</span>&gt;Go WebGL app&lt;/<span style="color:#f92672">title</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">style</span>&gt;
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">body</span> { <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>; }
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">canvas</span> { <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>; <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span> }
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">style</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">body</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;go-webgl-example.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">body</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">html</span>&gt;
+</span></span></code></pre></div><p><code>main.go</code> is responsible for the high-level logic of our 3D app – setting up the scene, the camera, lights, objects, and handling animations and user interaction:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;github.com/divan/three&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;github.com/gopherjs/gopherjs/js&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">width</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;innerWidth&#34;</span>).<span style="color:#a6e22e">Float</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">height</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;innerHeight&#34;</span>).<span style="color:#a6e22e">Float</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">renderer</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewWebGLRenderer</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">SetSize</span>(<span style="color:#a6e22e">width</span>, <span style="color:#a6e22e">height</span>, <span style="color:#66d9ef">true</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;document&#34;</span>).<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;body&#34;</span>).<span style="color:#a6e22e">Call</span>(<span style="color:#e6db74">&#34;appendChild&#34;</span>, <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;domElement&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// setup camera and scene
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">camera</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewPerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">width</span><span style="color:#f92672">/</span><span style="color:#a6e22e">height</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">camera</span>.<span style="color:#a6e22e">Position</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">500</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">scene</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewScene</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// lights
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">light</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewDirectionalLight</span>(<span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;white&#34;</span>), <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">light</span>.<span style="color:#a6e22e">Position</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">256</span>, <span style="color:#ae81ff">256</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">light</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// material
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">params</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMaterialParameters</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">Color</span> = <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;blue&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mat</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMeshLambertMaterial</span>(<span style="color:#a6e22e">params</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// cube object
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">geom</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewBoxGeometry</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">BoxGeometryParameters</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Width</span>:  <span style="color:#ae81ff">200</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Height</span>: <span style="color:#ae81ff">200</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Depth</span>:  <span style="color:#ae81ff">200</span>,
+</span></span><span style="display:flex;"><span>    })
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mesh</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMesh</span>(<span style="color:#a6e22e">geom</span>, <span style="color:#a6e22e">mat</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">mesh</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// start animation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">animate</span> <span style="color:#66d9ef">func</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">animate</span> = <span style="color:#66d9ef">func</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Call</span>(<span style="color:#e6db74">&#34;requestAnimationFrame&#34;</span>, <span style="color:#a6e22e">animate</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">mesh</span>.<span style="color:#a6e22e">Rotation</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#a6e22e">mesh</span>.<span style="color:#a6e22e">Rotation</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;y&#34;</span>).<span style="color:#a6e22e">Float</span>()<span style="color:#f92672">+</span><span style="color:#ae81ff">0.01</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">Render</span>(<span style="color:#a6e22e">scene</span>, <span style="color:#a6e22e">camera</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">animate</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>All you have to do now is just run:</p>
 <p>gopherjs build</p>
 <p>and in a split of a second, it&rsquo;ll generate two files - <code>go-webgl-example.js</code> and <code>go-webgl-example.js.map</code> in the current directory.</p>
 <p>Next, point your browser to the <code>index.html</code> file in the current directory, and you should see this:</p>
@@ -221,43 +222,42 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 <p><a href="https://github.com/gopherjs/vecty">Vecty</a> is a library for GopherJS that allows you to build frontend apps using high-level components (or widgets) and providing the abstraction layer over DOM and many browser&rsquo;s JS APIs. In a way, it&rsquo;s similar to React (and even advertised as a React-like library), but I&rsquo;m happy to disagree with this – it is way simpler and much more pleasant to work with.</p>
 <p>The basic concept in Vecty is the <a href="https://godoc.org/github.com/gopherjs/vecty#Component">Component</a> interface - any type implementing it can represent a visual component within a Vecty application. To define new Component, you simply create a type that embeds <code>vecty.Core</code> and implement <code>Render()</code> method.</p>
 <p><!-- raw HTML omitted -->page.go<!-- raw HTML omitted --></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
-
-<span style="color:#f92672">import</span> (
-    <span style="color:#e6db74">&#34;github.com/gopherjs/vecty&#34;</span>
-    <span style="color:#e6db74">&#34;github.com/gopherjs/vecty/elem&#34;</span>
-)
-
-<span style="color:#75715e">// Page is a top-level app component.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Page</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Core</span>
-    <span style="color:#a6e22e">article</span> <span style="color:#66d9ef">string</span>
-}
-
-<span style="color:#75715e">// Render implements vecty.Component for Page.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">p</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Page</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Body</span>(
-        <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
-            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Heading1</span>(
-                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">article</span>),
-            ),
-        ),
-    )
-}
-
-</code></pre></div><p>Don&rsquo;t be scared by those verbose lines in <code>Render()</code> method. As soon as you start building DOM tree that way you realize how incredibly useful it is: no open/closing tags, super easy copy/paste operation (if you need to move some DOM nodes around), the structure is clear and makes sense, and it’s all strongly typed!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;github.com/gopherjs/vecty&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;github.com/gopherjs/vecty/elem&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Page is a top-level app component.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Page</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Core</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">article</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Render implements vecty.Component for Page.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">p</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Page</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Body</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Heading1</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">article</span>),
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Don&rsquo;t be scared by those verbose lines in <code>Render()</code> method. As soon as you start building DOM tree that way you realize how incredibly useful it is: no open/closing tags, super easy copy/paste operation (if you need to move some DOM nodes around), the structure is clear and makes sense, and it’s all strongly typed!</p>
 <p><!-- raw HTML omitted -->main.go<!-- raw HTML omitted --></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
-
-<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;github.com/gopherjs/vecty&#34;</span>
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-    <span style="color:#a6e22e">page</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Page</span>{<span style="color:#a6e22e">article</span>: <span style="color:#e6db74">&#34;Creating WebGL apps with Go&#34;</span>,}
-    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">SetTitle</span>(<span style="color:#e6db74">&#34;Hello world&#34;</span>)
-    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">AddStylesheet</span>(<span style="color:#75715e">/* ... add your css... */</span>)
-    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">RenderBody</span>(<span style="color:#a6e22e">page</span>)
-}
-</code></pre></div><p>Run <code>gopherjs build</code> and open <code>index.html</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;github.com/gopherjs/vecty&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">page</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Page</span>{<span style="color:#a6e22e">article</span>: <span style="color:#e6db74">&#34;Creating WebGL apps with Go&#34;</span>,}
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">SetTitle</span>(<span style="color:#e6db74">&#34;Hello world&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">AddStylesheet</span>(<span style="color:#75715e">/* ... add your css... */</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">RenderBody</span>(<span style="color:#a6e22e">page</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Run <code>gopherjs build</code> and open <code>index.html</code>:</p>
 <p><img src="/images/go-webgl/vecty_hello.png" alt="vecty hello world"></p>
 <p>The most impressive thing with this basic example is how much simpler everything seems to be comparing to frontend development in the traditional way:</p>
 <ul>
@@ -272,7 +272,7 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 <h1 id="p2p-messaging-visualization">P2P messaging visualization</h1>
 <h2 id="problem">Problem</h2>
 <p>I&rsquo;ve been working recently on peer-to-peer messaging protocol for <a href="https://en.wikipedia.org/wiki/Ethereum">Ethereum</a> network, called <a href="https://github.com/ethereum/wiki/wiki/Whisper">Whisper</a> (not to be confused with Signal&rsquo;s <a href="https://en.wikipedia.org/wiki/Open_Whisper_Systems">Open Whisper Systems</a> or <a href="https://en.wikipedia.org/wiki/Whisper_(app)">Whisper</a> media platform), and there was one problem – most people don&rsquo;t have intuition about message propagation in p2p-networks. We&rsquo;re so used to the centralized systems, that all our understanding of scales, timings, limits and weak points are based purely on the hierarchical topologies and client-server model.</p>
-<p>And there is no wonder – to understand the behaviour of the complex network system, we need data, and for data, we collect metrics. Peer-to-peer networks are often used and designed to combat issues that centralization creates, and centralized data collection is one of them. So generally we don&rsquo;t have metrics and data in large-scale p2p-network, which is good for the security of those systems, but bad for developers' understanding of its behaviour.</p>
+<p>And there is no wonder – to understand the behaviour of the complex network system, we need data, and for data, we collect metrics. Peer-to-peer networks are often used and designed to combat issues that centralization creates, and centralized data collection is one of them. So generally we don&rsquo;t have metrics and data in large-scale p2p-network, which is good for the security of those systems, but bad for developers&rsquo; understanding of its behaviour.</p>
 <p>So the obvious solution is to use network simulation software like <a href="https://omnetpp.org">OMNET++</a> or <a href="http://peersim.sourceforge.net">PeerSim</a>, but in order to use it with custom p2p protocol code, that should have been ported first to C++ to use with those libraries. In the case of Whisper protocol, it&rsquo;s written in Go, as a part of <a href="https://github.com/ethereum/go-ethereum/tree/master/whisper/whisperv6">go-ethereum</a> package, and the complexity and usefulness of the task was daunting. I wanted to have a simulator, where I can change algorithm or tune parameters, and in a couple of minutes see changes visualized and collect data from the simulator.</p>
 <p>And that was the idea – to build a simulator, network graph visualization in 3D, collect data and visualize message propagation, add interactivity to the interface, where I could choose different networks, choose simulation parameters, replay simulation and analyze stats.</p>
 <p>For that, I needed to code a frontend app with 3D visualization, write a simulator that can use an existing Go code and connect them. Most of the work had to be on the frontend part.</p>
@@ -281,34 +281,34 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 <p>The first thing you realize is that you&rsquo;ll have to write your own widgets. Luckily there are no special rules for that – just create your widgets as types in separate .go files, and move them into the separate package when it makes sense.</p>
 <p>The whole UI for the app consisted from sidebar with a bunch of configuration selectors and file uploads handling, and three tabs with different screens – first one is WebGL canvas with visualization.</p>
 <p>Each widget is just a Vecty component, created and rendered from within the other component. You specify the layout, classes, CSS styles right there in <code>Render()</code> method. Here is a code for a network selector widget with custom upload option, for example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Render implements the vecty.Component interface for NetworkSelector.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">NetworkSelector</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Widget</span>(
-        <span style="color:#a6e22e">Header</span>(<span style="color:#e6db74">&#34;Network graph:&#34;</span>),
-        <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
-            <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
-                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;select&#34;</span>, <span style="color:#e6db74">&#34;is-fullwidth&#34;</span>),
-                <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">Change</span>(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">onChange</span>),
-            ),
-            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Select</span>(
-                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
-                    <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">Change</span>(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">onChange</span>),
-                ),
-                <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">networkOptions</span>(),
-                <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Option</span>(
-                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
-                        <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Property</span>(<span style="color:#e6db74">&#34;value&#34;</span>, <span style="color:#e6db74">&#34;upload&#34;</span>),
-                        <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Property</span>(<span style="color:#e6db74">&#34;selected&#34;</span>, <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">isCustom</span>),
-                    ),
-                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Upload custom...&#34;</span>),
-                ),
-            ),
-        ),
-        <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">descriptionBlock</span>(),
-        <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">If</span>(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">isCustom</span>, <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">upload</span>),
-    )
-}
-</code></pre></div><p>There are a few interesting things to note here:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Render implements the vecty.Component interface for NetworkSelector.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">NetworkSelector</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Widget</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Header</span>(<span style="color:#e6db74">&#34;Network graph:&#34;</span>),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;select&#34;</span>, <span style="color:#e6db74">&#34;is-fullwidth&#34;</span>),
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">Change</span>(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">onChange</span>),
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Select</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">Change</span>(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">onChange</span>),
+</span></span><span style="display:flex;"><span>                ),
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">networkOptions</span>(),
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Option</span>(
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Property</span>(<span style="color:#e6db74">&#34;value&#34;</span>, <span style="color:#e6db74">&#34;upload&#34;</span>),
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Property</span>(<span style="color:#e6db74">&#34;selected&#34;</span>, <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">isCustom</span>),
+</span></span><span style="display:flex;"><span>                    ),
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Upload custom...&#34;</span>),
+</span></span><span style="display:flex;"><span>                ),
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">descriptionBlock</span>(),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">If</span>(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">isCustom</span>, <span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">upload</span>),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>There are a few interesting things to note here:</p>
 <ul>
 <li>style and classes (markup) should be inside the <code>vecty.Markup</code> function</li>
 <li><code>vecty/event</code> package provides handlers for most DOM events, and you just have to provide function or method in a callback fashion</li>
@@ -359,7 +359,7 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 </ul>
 <p>It&rsquo;s also important to understand, that large-scale web applications (like Gmail-scale) will probably require much more maturity from the Go framework. And Vecty definitely not a production ready replacement for the modern Web development practices. But for many cases where you need small decent frontend apps, it&rsquo;s actually a great fit already. Just a couple of days ago I&rsquo;ve read a <a href="https://overthinkdciscores.com/2018/12/03/using-data-to-visualize-connections-between-composers">post</a> where author was building web app for displaying and analyzing graphs of connections between composers. That&rsquo;s the perfect target audience :)</p>
 <p>As for WebGL, ability to use from Go opened a whole new world of possibilities for me, giving the promise of writing well-structured, readable, testable and maintainable apps, that will work in a few years without any changes. It&rsquo;s good to keep an eye on advancements in 3D graphics for the web like <a href="https://en.wikipedia.org/wiki/WebGPU">WebGPU</a>, but if you want to write it today, WebGL is a way to go.</p>
-<p>And finally, while learning and working with GopherJS, Vecty and three.js bindings, I had a pleasure to one more time realize how incredibly friendly and helpful Go community is. When I just started playing with Vecty and was a bit confused with the proper way to use WebGL canvas from within Vecty, I went straight to the #vecty channel on <a href="https://invite.slack.golangbridge.org">Gophers' Slack</a> and humbly asked for advice. The Vecty author, <a href="https://github.com/slimsag">Stephen Gutekanst</a>, not only answered my question in a great detail, but also created and published the library that does exactly what I needed, and thoroughly commented it and explained how to use it.</p>
+<p>And finally, while learning and working with GopherJS, Vecty and three.js bindings, I had a pleasure to one more time realize how incredibly friendly and helpful Go community is. When I just started playing with Vecty and was a bit confused with the proper way to use WebGL canvas from within Vecty, I went straight to the #vecty channel on <a href="https://invite.slack.golangbridge.org">Gophers&rsquo; Slack</a> and humbly asked for advice. The Vecty author, <a href="https://github.com/slimsag">Stephen Gutekanst</a>, not only answered my question in a great detail, but also created and published the library that does exactly what I needed, and thoroughly commented it and explained how to use it.</p>
 <h1 id="links">Links</h1>
 <ul>
 <li><a href="https://github.com/gopherjs/gopherjs">https://github.com/gopherjs/gopherjs</a></li>
@@ -393,19 +393,6 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
       </div>
       
     </section>
-    
-    <hr/>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_shortname = 'divanblog';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/fountaincodes/"><span aria-hidden="true">&larr;</span> Older</a></li>

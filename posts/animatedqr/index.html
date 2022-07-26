@@ -28,6 +28,7 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
+  
 </head>
 <body>
     <header class="global-header">
@@ -135,64 +136,64 @@
 <p>Honestly, I never had more fun writing frontends.</p>
 <p>I&rsquo;ll blog more about my recent experience with Vecty, including developing WebGL apps, but the point is – after writing quite a few projects in React, Angulars and Ember, doing it in a well-designed language is such a breath of fresh air! I can now write pretty decent web apps without writing any single line of Javascript, and, in most cases, &ldquo;it just works&rdquo;!</p>
 <p>Just to tease you, here is how you write a web app in Go these days:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
-
-<span style="color:#f92672">import</span> (
-    <span style="color:#e6db74">&#34;github.com/gopherjs/vecty&#34;</span>
-)
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewApp</span>()
-
-    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">SetTitle</span>(<span style="color:#e6db74">&#34;My App&#34;</span>)
-    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">AddStylesheet</span>(<span style="color:#75715e">/* ... add your css... */</span>)
-    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">RenderBody</span>(<span style="color:#a6e22e">app</span>)
-}
-</code></pre></div><p>The app is just a type – a struct that embeds <code>vecty.Core</code> type – and it has to implement <code>vecty.Component</code> interface. That&rsquo;s it! Constructing DOM objects seems a bit verbose at start, but you fully appreciate how actually great it is only when start refactoring the code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// App is a top-level app component.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">App</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Core</span>
-
-    <span style="color:#a6e22e">session</span>      <span style="color:#f92672">*</span><span style="color:#a6e22e">Session</span>
-    <span style="color:#a6e22e">settings</span>     <span style="color:#f92672">*</span><span style="color:#a6e22e">Settings</span>
-    <span style="color:#75715e">// any other stuff you need,
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// it&#39;s just a struct
-</span><span style="color:#75715e"></span>}
-
-<span style="color:#75715e">// Render implements the vecty.Component interface.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">a</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">App</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Body</span>(
-        <span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">header</span>(),
-        <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
-            <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
-                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;columns&#34;</span>),
-            ),
-            <span style="color:#75715e">// Left half
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
-                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
-                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;column&#34;</span>, <span style="color:#e6db74">&#34;is-half&#34;</span>),
-                ),
-                <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">QR</span>()), <span style="color:#75715e">// QR display zone
-</span><span style="color:#75715e"></span>            ),
-            <span style="color:#75715e">// Right half
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
-                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
-                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;column&#34;</span>, <span style="color:#e6db74">&#34;is-half&#34;</span>),
-                ),
-                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">If</span>(!<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">Started</span>(), <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
-                    <span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">settings</span>,
-                )),
-                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">If</span>(<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">Started</span>(), <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
-                    <span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">resultsTable</span>,
-                )),
-            ),
-        ),
-        <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
-            <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">KeyDown</span>(<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">KeyListener</span>),
-        ),
-    )
-}
-</code></pre></div><p>You&rsquo;re probably looking at this code and thinking how verbose it is, and it definitely is, but it&rsquo;s so pleasant to work with! No open/closing tags, super easy copy/paste operation (if you need to move some DOM nodes around), the structure is clear and makes sense, and it&rsquo;s all strongly typed! You&rsquo;ll appreciate its verbosity after writing your own components, I&rsquo;m quite sure.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;github.com/gopherjs/vecty&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewApp</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">SetTitle</span>(<span style="color:#e6db74">&#34;My App&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">AddStylesheet</span>(<span style="color:#75715e">/* ... add your css... */</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">RenderBody</span>(<span style="color:#a6e22e">app</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The app is just a type – a struct that embeds <code>vecty.Core</code> type – and it has to implement <code>vecty.Component</code> interface. That&rsquo;s it! Constructing DOM objects seems a bit verbose at start, but you fully appreciate how actually great it is only when start refactoring the code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// App is a top-level app component.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">App</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Core</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">session</span>      <span style="color:#f92672">*</span><span style="color:#a6e22e">Session</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">settings</span>     <span style="color:#f92672">*</span><span style="color:#a6e22e">Settings</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// any other stuff you need,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// it&#39;s just a struct
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Render implements the vecty.Component interface.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">a</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">App</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Body</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">header</span>(),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;columns&#34;</span>),
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Left half
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;column&#34;</span>, <span style="color:#e6db74">&#34;is-half&#34;</span>),
+</span></span><span style="display:flex;"><span>                ),
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">QR</span>()), <span style="color:#75715e">// QR display zone
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            ),
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Right half
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;column&#34;</span>, <span style="color:#e6db74">&#34;is-half&#34;</span>),
+</span></span><span style="display:flex;"><span>                ),
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">If</span>(!<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">Started</span>(), <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">settings</span>,
+</span></span><span style="display:flex;"><span>                )),
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">If</span>(<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">Started</span>(), <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">resultsTable</span>,
+</span></span><span style="display:flex;"><span>                )),
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">KeyDown</span>(<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">KeyListener</span>),
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>You&rsquo;re probably looking at this code and thinking how verbose it is, and it definitely is, but it&rsquo;s so pleasant to work with! No open/closing tags, super easy copy/paste operation (if you need to move some DOM nodes around), the structure is clear and makes sense, and it&rsquo;s all strongly typed! You&rsquo;ll appreciate its verbosity after writing your own components, I&rsquo;m quite sure.</p>
 <p>Vecty is said to be a React-like framework, but it&rsquo;s not completely accurate. There are GopherjS bindings to React exists - <a href="https://github.com/myitcv/x/blob/master/react/_doc/README.md">myitcv.io/react</a>, but I don&rsquo;t think we need to follow the same steps as React did. When you write frontend in Vecty, you realize how much simpler things are. You don&rsquo;t need most of the hidden magic and new terms that most JavaScript frameworks invent – they&rsquo;re all just accidental complexity. You still just need types and functions and methods and connect and call them properly, that&rsquo;s it.</p>
 <p>For the CSS I used surprisingly good CSS framework called <a href="https://bulma.io">Bulma</a> - it has some sane and meaningful naming, making resulting UI code really digestible.</p>
 <p>The real magic happens on the compilation stage, though. You just run <code>gopherjs build</code>, and in less than a second, you got your compiled JS ready to be included in your page or server by your server. When I first run it, I expected to see a bunch of errors, warnings, unreadable messages, but no - it&rsquo;s blazingly fast, silent and only reports compilation errors as oneliners. In the browsers, by the way, if panic is thrown, you see stacktraces with references to Go files (not the transpiled JS) and line numbers in it. Isn&rsquo;t it cool?</p>
@@ -291,19 +292,6 @@
       </div>
       
     </section>
-    
-    <hr/>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_shortname = 'divanblog';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/wakemeupinthemiddleofthenight/"><span aria-hidden="true">&larr;</span> Older</a></li>

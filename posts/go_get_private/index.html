@@ -30,6 +30,7 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
+  
 </head>
 <body>
     <header class="global-header">
@@ -99,27 +100,27 @@
   <section>
     <p>As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing moments. One of them is automating repeatable build process using containers along with using dependencies in private repositories.</p>
 <p>Private repositories on Github are often is a <a href="https://github.com/golang/go/issues/9697">source of confusion</a> when using <code>go get</code>, but it has easy workaround by adding two lines to your <code>.gitconfig</code>:</p>
-<pre><code>[url &quot;git@github.com:&quot;]
+<pre tabindex="0"><code>[url &#34;git@github.com:&#34;]
 	insteadOf = https://github.com/
 </code></pre><p>or as a oneliner:</p>
-<pre><code>git config --global url.&quot;git@github.com:&quot;.insteadOf &quot;https://github.com/&quot;
+<pre tabindex="0"><code>git config --global url.&#34;git@github.com:&#34;.insteadOf &#34;https://github.com/&#34;
 </code></pre><p>But the most confusing part is trying to make the whole build process work inside the container. I will use Docker as an example, as it&rsquo;s most popular container at the moment.</p>
 <h2 id="the-problem">The problem</h2>
 <p>Imagine, you have two packages <code>github.com/company/foo</code> and <code>github.com/company/bar</code>, where <code>foo</code> imports <code>bar</code>:</p>
-<pre><code>foo.go:
-import &quot;github.com/company/bar&quot;
+<pre tabindex="0"><code>foo.go:
+import &#34;github.com/company/bar&#34;
 </code></pre><p>In normal workflow, you setup GOPATH, you SSH keys, gitconfig and you&rsquo;re done - simple <code>go get github.com/company/foo</code> will work and download both packages:</p>
-<pre><code>$ go get -v github.com/company/foo
+<pre tabindex="0"><code>$ go get -v github.com/company/foo
 github.com/company/foo (download)
 github.com/company/bar (download)
 </code></pre><p>But now, you want to make the build process reproducible on any machine, even on CI instance, so you pack everything in Docker container. You will probably use simple Dockerfile based on official <code>golang</code>:</p>
 <p><strong>Dockerfile</strong>:</p>
-<pre><code>FROM golang:1.6
+<pre tabindex="0"><code>FROM golang:1.6
 
 ADD . /go/src/github.com/company/foo
 CMD cd /go/src/github.com/company/foo; go get github.com/company/bar &amp;&amp; go build -o /go/bin/foo
 </code></pre><p><strong>Build script</strong></p>
-<pre><code>docker build -t foo-build . 				# build image
+<pre tabindex="0"><code>docker build -t foo-build . 				# build image
 docker run --name=foo-build foo-build		# compile binary
 docker cp foo-build:/foo foo				# copy binary to fs
 docker rm -f foo-build						# remove container
@@ -128,17 +129,17 @@ docker rmi -f foo-build						# remove image
 <h2 id="the-solution">The solution</h2>
 <h3 id="ssh-vs-https">ssh vs https</h3>
 <p>First of all, on the building stage (<code>docker run ...</code>) you will encounter the following error message:</p>
-<pre><code># cd .; git clone https://github.com/company/bar /go/src/github.com/company/bar
-Cloning into '/go/src/github.com/company/bar'...
-fatal: could not read Username for 'https://github.com': No such device or address
+<pre tabindex="0"><code># cd .; git clone https://github.com/company/bar /go/src/github.com/company/bar
+Cloning into &#39;/go/src/github.com/company/bar&#39;...
+fatal: could not read Username for &#39;https://github.com&#39;: No such device or address
 package github.com/company/bar: exit status 128
 </code></pre><p>What it does mean, is that your access to github is granted using SSH keys, but <code>git</code> command, which is invoked by <code>go get</code>, is trying to clone repository using HTTPS form and you don&rsquo;t have credentials set up.</p>
 <p>Workaround for this is easy, and described in the beginning of this post, so we just have to add this to our Dockerfile right before calling <code>go get</code>:</p>
-<pre><code>RUN echo &quot;[url \&quot;git@github.com:\&quot;]\n\tinsteadOf = https://github.com/&quot; &gt;&gt; /root/.gitconfig
+<pre tabindex="0"><code>RUN echo &#34;[url \&#34;git@github.com:\&#34;]\n\tinsteadOf = https://github.com/&#34; &gt;&gt; /root/.gitconfig
 </code></pre><h3 id="keys">Keys</h3>
 <p>The next error you&rsquo;ll see is host key verification error:</p>
-<pre><code># cd .; git clone https://github.com/company/bar /go/src/github.com/company/bar
-Cloning into '/go/src/github.com/company/bar'...
+<pre tabindex="0"><code># cd .; git clone https://github.com/company/bar /go/src/github.com/company/bar
+Cloning into &#39;/go/src/github.com/company/bar&#39;...
 Host key verification failed.
 fatal: Could not read from remote repository.
 
@@ -151,33 +152,33 @@ package github.com/company/bar: exit status 128
 <p>What we can do, is to mount volume using docker&rsquo;s <code>-v</code> command line flag. The first approach will be probably to mount the whole <code>~/.ssh</code> directory, but it&rsquo;s tricky</p>
 <p><code>docker run --name=foo-build -v ~/.ssh:/root/.ssh foo-build</code></p>
 <p>This command will work as expected on MacOS X (using latest Docker Beta, at least), but not in Linux box. The reason is the files ownership for <code>~/.ssh/config</code> file. The <code>ssh</code> (which is invoked by <code>git</code>, which is invoked by <code>go get</code>) expects this file to have the same user ownership as a running user. Inside the container the user is <code>root</code>, but the mounted directory most probably has ovnership of your normal Linux user, say, <code>developer</code> and inside the container it looks like:</p>
-<pre><code>$ ls ~/.ssh/config
+<pre tabindex="0"><code>$ ls ~/.ssh/config
 -rw-r--r--  1 1000  1000  147 Jun  1 19:20 /root/.ssh/config
 </code></pre><p>making SSH to complain and abort:</p>
-<pre><code>Bad owner or permissions on ~/.ssh/config
+<pre tabindex="0"><code>Bad owner or permissions on ~/.ssh/config
 </code></pre><p>The solution is to mount only the key and workaround host checking later.</p>
-<pre><code>docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa foo-build
+<pre tabindex="0"><code>docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa foo-build
 </code></pre><p>Error will be the same, though, but rerunning it with <code>-t</code> option, we&rsquo;ll see the reason:</p>
-<pre><code>$ docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa -t foo-build
-The authenticity of host 'github.com (192.30.252.128)' can't be established.
+<pre tabindex="0"><code>$ docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa -t foo-build
+The authenticity of host &#39;github.com (192.30.252.128)&#39; can&#39;t be established.
 RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48.
 Are you sure you want to continue connecting (yes/no)?
 </code></pre><p>Of course, we don&rsquo;t want to interact manually with ssh prompt, so we have to find a way to force it. There is an SSH client option for that, called StrictHostChecking.</p>
 <h3 id="stricthostchecking">StrictHostChecking</h3>
 <p>Typically, you have file named <code>~/.ssh/known_hosts</code>, which holds information about, well, known hosts. But in our container, there is no such file, so we have to use the client option to supress those checks. The easiest way to do this is to put this option into the <code>~/.ssh/config</code> file - yes, the one we had ownership problems with.</p>
 <p>But, we only need one option, so it&rsquo;s ok to create this file on the fly inside the container. Add to Dockerfile:</p>
-<pre><code>RUN mkdir /root/.ssh &amp;&amp; echo &quot;StrictHostKeyChecking no &quot; &gt; /root/.ssh/config
+<pre tabindex="0"><code>RUN mkdir /root/.ssh &amp;&amp; echo &#34;StrictHostKeyChecking no &#34; &gt; /root/.ssh/config
 </code></pre><p>Rerun the <code>docker run</code> step and you&rsquo;ll finally have success!</p>
 <h3 id="conclusion">Conclusion</h3>
 <p>The final Dockerfile:</p>
-<pre><code>FROM golang:1.6
+<pre tabindex="0"><code>FROM golang:1.6
 
-RUN echo &quot;[url \&quot;git@github.com:\&quot;]\n\tinsteadOf = https://github.com/&quot; &gt;&gt; /root/.gitconfig
-RUN mkdir /root/.ssh &amp;&amp; echo &quot;StrictHostKeyChecking no &quot; &gt; /root/.ssh/config
+RUN echo &#34;[url \&#34;git@github.com:\&#34;]\n\tinsteadOf = https://github.com/&#34; &gt;&gt; /root/.gitconfig
+RUN mkdir /root/.ssh &amp;&amp; echo &#34;StrictHostKeyChecking no &#34; &gt; /root/.ssh/config
 ADD .  /go/src/github.com/company/foo
 CMD cd /go/src/github.com/company/foo &amp;&amp; go get github.com/company/bar &amp;&amp; go build -o /foo
 </code></pre><p>and the build steps:</p>
-<pre><code>docker build -t foo-build .
+<pre tabindex="0"><code>docker build -t foo-build .
 docker run --name=foo-build -v ~/.ssh/id_rsa:/root/.ssh/id_rsa foo-build
 docker cp foo-build:/foo foo
 docker rm -f foo-build
@@ -211,19 +212,6 @@ docker rmi -f foo-build
       </div>
       
     </section>
-    
-    <hr/>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_shortname = 'divanblog';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/leftpad_and_go/"><span aria-hidden="true">&larr;</span> Older</a></li>

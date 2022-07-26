@@ -291,9 +291,7 @@ article section img {
 
 /* Support dark mode in MacOS */
 /* Dark mode */
-/*
 @media (prefers-color-scheme: dark) {
-	*/
     body {
         background: #000000;
         color: white;
@@ -337,9 +335,7 @@ article section img {
 		background-color: rgba(51, 122, 183, 1.0);
 		color: rgba(255, 255, 255, 1.0);
 	}
-	/*
 }
-*/
 
 img[src$='#center']
 {

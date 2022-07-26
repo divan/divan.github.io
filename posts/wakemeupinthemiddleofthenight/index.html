@@ -28,6 +28,7 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
+  
 </head>
 <body>
     <header class="global-header">
@@ -97,38 +98,38 @@
 <p>It went surprisingly well, and while most of the people were conscious about the topic, one thing seemed to be still confusing - what to log and when. I think we&rsquo;re all more or less agree that we should log only when program requires human to take a look. It wasn&rsquo;t a case, let&rsquo;s say, 10 years ago - there were no ELK, solid solutions for metrics or tracing - we were using logs for everything, then were building &ldquo;log analyzers&rdquo; to deal with a vast amount of information. But now, when we have all these best practices, powerful time-series databases, visualization platforms, tracing tools - what should we print to the log?</p>
 <p>One of the coolest approaches to clarify this question I&rsquo;ve found in the brilliant article by Daniel Lebrero <a href="https://labs.ig.com/logging-level-wrong-abstraction">&ldquo;Logging levels: the wrong abstractions&rdquo;</a> (thanks <a href="https://twitter.com/kasiazien">@katzien</a> for sharing this article). The idea is to rename the log levels, at least temporarily, and see how your perception of it changes.</p>
 <p>So, let&rsquo;s say you&rsquo;re using any of the popular logging packages for Go, and you probably have these calls all over your code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Error</span>(<span style="color:#e6db74">&#34;some error&#34;</span>)
-<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Warning</span>(<span style="color:#e6db74">&#34;some warning&#34;</span>)
-<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#e6db74">&#34;some info&#34;</span>)
-<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Debug</span>(<span style="color:#e6db74">&#34;some debug information&#34;</span>)
-</code></pre></div><p>Looks familiar, right?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Error</span>(<span style="color:#e6db74">&#34;some error&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Warning</span>(<span style="color:#e6db74">&#34;some warning&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#e6db74">&#34;some info&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Debug</span>(<span style="color:#e6db74">&#34;some debug information&#34;</span>)
+</span></span></code></pre></div><p>Looks familiar, right?</p>
 <p>Now, let&rsquo;s rename those calls to:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#e6db74">&#34;some error&#34;</span>)
-<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">ToInvestigateTomorrow</span>(<span style="color:#e6db74">&#34;some warning&#34;</span>)
-<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">InProdEnv</span>(<span style="color:#e6db74">&#34;some info&#34;</span>)
-<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">InTestEnv</span>(<span style="color:#e6db74">&#34;some debug information&#34;</span>)
-</code></pre></div><p>How does it look like? :)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#e6db74">&#34;some error&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">ToInvestigateTomorrow</span>(<span style="color:#e6db74">&#34;some warning&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">InProdEnv</span>(<span style="color:#e6db74">&#34;some info&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">InTestEnv</span>(<span style="color:#e6db74">&#34;some debug information&#34;</span>)
+</span></span></code></pre></div><p>How does it look like? :)</p>
 <p>Yeah, renaming <code>Error()</code> method of your logger into <code>WakeMeUpInTheMiddleOfTheNight()</code> not only makes it harder to type and forces you think twice, but also gives you a very straightforward answer to the question &ldquo;Should I print this to the log?&rdquo;. Do you want to be woken up in the middle of the night when this error occurs?</p>
 <p>You may quickly create an wrapper for your logger (even if you use <code>log.Println(&quot;[ERROR] error message&quot;)</code> approach) and have something like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">LoggerWrapper</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#f92672">*</span><span style="color:#a6e22e">Logger</span>
-}
-
-<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">l</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">LoggerWrapper</span>) <span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#a6e22e">fmt</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">args</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">interface</span>{}) {
-    <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">Error</span>(<span style="color:#a6e22e">fmt</span>, <span style="color:#a6e22e">args</span><span style="color:#f92672">...</span>)
-}
-<span style="color:#f92672">...</span>
-<span style="color:#a6e22e">logger</span>.<span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#e6db74">&#34;something failed&#34;</span>)
-</code></pre></div><p>Just try it.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">LoggerWrapper</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span><span style="color:#a6e22e">Logger</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">l</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">LoggerWrapper</span>) <span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#a6e22e">fmt</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">args</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">interface</span>{}) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">Error</span>(<span style="color:#a6e22e">fmt</span>, <span style="color:#a6e22e">args</span><span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">logger</span>.<span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#e6db74">&#34;something failed&#34;</span>)
+</span></span></code></pre></div><p>Just try it.
 You may want to use <code>gofmt</code> tool for that:</p>
-<pre><code>gofmt -w -l -r &quot;log.Error -&gt; log.WakeMeUpInTheMiddleOfTheNight&quot; .
+<pre tabindex="0"><code>gofmt -w -l -r &#34;log.Error -&gt; log.WakeMeUpInTheMiddleOfTheNight&#34; .
 </code></pre><p>I tried to do this with some of my projects and it was pretty interesting.</p>
 <p>For example, when you see:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#e6db74">&#34;Migrations failed&#34;</span>)
-</code></pre></div><p>It makes sense. If running migrations process has failed, it&rsquo;s a sign that something went terribly wrong and I want to be woken up in the middle of the night to investigate this. But when you see this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#e6db74">&#34;Page not found&#34;</span>)
-<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">WriteHeader</span>(<span style="color:#a6e22e">htttp</span>.<span style="color:#a6e22e">StatusNotFound</span>)
-</code></pre></div><p>it immediately raises your eyebrow, Really, do you want to be woken up because of someone requested wrong URL?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#e6db74">&#34;Migrations failed&#34;</span>)
+</span></span></code></pre></div><p>It makes sense. If running migrations process has failed, it&rsquo;s a sign that something went terribly wrong and I want to be woken up in the middle of the night to investigate this. But when you see this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">WakeMeUpInTheMiddleOfTheNight</span>(<span style="color:#e6db74">&#34;Page not found&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">WriteHeader</span>(<span style="color:#a6e22e">htttp</span>.<span style="color:#a6e22e">StatusNotFound</span>)
+</span></span></code></pre></div><p>it immediately raises your eyebrow, Really, do you want to be woken up because of someone requested wrong URL?</p>
 <h1 id="conclusion">Conclusion</h1>
 <p>I personally find this idea brilliant, even in a form of mental excercise. It also makes you realize that you don&rsquo;t really need that &ldquo;WARN&rdquo; error level - what does it even mean? If it can wait till tomorrow - make it just normal log message, so human will read it and react. &ldquo;DEBUG&rdquo; is literally a normal log messages for the program running in a test or development mode. And, as you may guess, &ldquo;INFO&rdquo; is really redundant.</p>
 <p>So I would argue, what you need in most cases is just two logging levels: normal message and error message (probably decorated with filename:line or stacktrace in some cases).</p>
@@ -161,19 +162,6 @@ You may want to use <code>gofmt</code> tool for that:</p>
       </div>
       
     </section>
-    
-    <hr/>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_shortname = 'divanblog';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/misusing_error_interface/"><span aria-hidden="true">&larr;</span> Older</a></li>

@@ -33,6 +33,7 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
+  
 </head>
 <body>
     <header class="global-header">
@@ -102,7 +103,7 @@
   <section>
     <p><img src="/images/gopath.png" alt="gopath"></p>
 <p>The newest release of Go – <a href="https://golang.org/doc/go1.13">Go 1.13</a> – finally introduced full support for <a href="https://blog.golang.org/using-go-modules">Go Modules</a> – brilliant and long-awaited solution for built-in dependency versioning problem. Modules now enabled by default, and virtually make GOPATH obsolete.</p>
-<p>Technically speaking, GOPATH is still supported, and <a href="https://golang.org/doc/go1.13">Go 1.13 Release Notes</a> uses term &ldquo;<em>GOPATH mode</em>&rdquo; (as being opposite to the &ldquo;<em>modules mode</em>&quot;), but still, to me this is a tectonic shift in the Go development ecosystem evolution. Now you or your static analysis tools no longer can assume that all code lives in one large directory.</p>
+<p>Technically speaking, GOPATH is still supported, and <a href="https://golang.org/doc/go1.13">Go 1.13 Release Notes</a> uses term &ldquo;<em>GOPATH mode</em>&rdquo; (as being opposite to the &ldquo;<em>modules mode</em>&rdquo;), but still, to me this is a tectonic shift in the Go development ecosystem evolution. Now you or your static analysis tools no longer can assume that all code lives in one large directory.</p>
 <p>A lot of people ardently hate the mere idea and the concept of GOPATH. Thousands of people were spending hours trying to configure a single environment variable before starting with Go (no comments on that). Not surprisingly, the fact that you can now work on Go programs in any directory was cheered upon quite vocally.</p>
 <p><img src="/images/gopath_hate.jpg" alt="gopath_hate"></p>
 <p>And yet.</p>
@@ -128,7 +129,7 @@
 <p><img src="/images/gopath_tree.png" alt="gopath tree"></p>
 <p>GOPATH made my filesystem much more organized and cleaner. I still use this setup today for everything, and can&rsquo;t imagine any better layout. Change my mind.</p>
 <h2 id="gopath-hacking-code">GOPATH: hacking code</h2>
-<p>Next, the point I haven&rsquo;t appreciate enough until started hacking with Go static analysis tools – it&rsquo;s how easy GOPATH made the job of code analysis tools' authors. No system-wide special directories that change from one OS to another, no separate directories for different Go versions, no version solving problem (that&rsquo;s my favourite, haha) – it&rsquo;s just a single environment variable, just do <code>os.Getenv()</code> and you have access to all the code you need.</p>
+<p>Next, the point I haven&rsquo;t appreciate enough until started hacking with Go static analysis tools – it&rsquo;s how easy GOPATH made the job of code analysis tools&rsquo; authors. No system-wide special directories that change from one OS to another, no separate directories for different Go versions, no version solving problem (that&rsquo;s my favourite, haha) – it&rsquo;s just a single environment variable, just do <code>os.Getenv()</code> and you have access to all the code you need.</p>
 <p>It made life easier for us, humans, too. You, know, unless you work for NASA, software development is rarely one-way translation of the spec into the code. It&rsquo;s almost always a two-way process, a tinkering and an experimentation, a creation and discovery, it&rsquo;s like Escher&rsquo;s drawing hands – hands drawing the hands, drawing the hands. We need the ability to change parts of the program and its dependencies quickly, see how it changed the behaviour, update our mental models and update the code and so on.</p>
 <p>This easy hacking capability is often underrated and underappreciated. GOPATH made this task a breeze – just jump to any code in your editor, change it, check the result, and then decide what to do. It could be just debug printf statement or potential fix of the dependency that will go directly to the pull-request from your change. You could do this not leaving your editor window.</p>
 <p>With GOPATH I was always sure in two things:</p>
@@ -188,19 +189,6 @@
       </div>
       
     </section>
-    
-    <hr/>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_shortname = 'divanblog';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/visual_programming_go/"><span aria-hidden="true">&larr;</span> Older</a></li>

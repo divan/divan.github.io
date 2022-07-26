@@ -25,6 +25,9 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
+  
+  <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="divan&#39;s blog" />
+  
 </head>
 <body>
     <header class="global-header">
@@ -69,7 +72,7 @@
       </a>
       
       
-      <a href="https://divan.dev/posts/index.xml" class="btn-header btn-subscribe hidden-xs">
+      <a href="/posts/index.xml" class="btn-header btn-subscribe hidden-xs">
         <i class="fa fa-rss" aria-hidden="true"></i>
         &nbsp;Subscribe
       </a>
@@ -80,6 +83,34 @@
 
 <section class="article-list">
   <h1>Posts</h1>
+  
+  <hr/>
+  <article>
+  <header>
+    <h2><a href="https://divan.dev/posts/edgedb/">My experience with EdgeDB</a></h2>
+    <div class="post-meta clearfix">
+      <div class="post-date pull-left">
+        Posted on
+        <time datetime="2022-07-26T18:11:29&#43;03:00">
+          Jul 26, 2022
+        </time>
+      </div>
+    </div>
+  </header>
+  <div>
+    Tomorrow is an announcement of EdgeDB 2.0, and I realized that I&rsquo;ve never shared my experience with it, and it&rsquo;s been more than a year since I switched every project I could to EdgeDB. So here is a short post on it.
+What is EdgeDB? It&rsquo;s an open-source relational/graph database built on top of Postgres.
+Unlike many other databases, it doesn&rsquo;t reinvent the underlying engine and uses battle-tested Postgres. But it reinvents everything else for you as a database user.
+  </div>
+  
+  <footer>
+    <ul class="pager">
+      <li class="next"><a href="https://divan.dev/posts/edgedb/">Read more <span aria-hidden="true">&raquo;</span></a></li>
+    </ul>
+  </footer>
+  
+</article>
+
   
   <hr/>
   <article>
@@ -124,7 +155,7 @@ I&rsquo;m safe, but everything that makes me me – is not.
   </header>
   <div>
     The newest release of Go – Go 1.13 – finally introduced full support for Go Modules – brilliant and long-awaited solution for built-in dependency versioning problem. Modules now enabled by default, and virtually make GOPATH obsolete.
-Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &ldquo;GOPATH mode&rdquo; (as being opposite to the &ldquo;modules mode&quot;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.
+Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &ldquo;GOPATH mode&rdquo; (as being opposite to the &ldquo;modules mode&rdquo;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.
   </div>
   
   <footer>
@@ -197,7 +228,7 @@ It starts with an almost existential frustration of working with code as a text.
     <div class="post-meta clearfix">
       <div class="post-date pull-left">
         Posted on
-        <time datetime="2018-12-10T00:00:00&#43;02:00">
+        <time datetime="2018-12-10T00:00:00Z">
           Dec 10, 2018
         </time>
       </div>
@@ -231,7 +262,8 @@ It&rsquo;s often said &ldquo;A picture is worth a thousand words&rdquo;, but in 
     </div>
   </header>
   <div>
-    (source: Anders Sune Berg)In the previous article I&rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame. And in practice, it often did, of course.
+    (source: Anders Sune Berg)
+In the previous article I&rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.
   </div>
   
   <footer>
@@ -340,8 +372,8 @@ err := SomeFunc() if _, ok := err.
     </div>
   </header>
   <div>
-    TL;DR by learning internals  a gotcha is a valid construct in a system, program or programming language that works as documented but is counter-intuitive and almost invites mistakes because it is both easy to invoke and unexpected or unreasonable in its outcome (source: wikipedia)
- Go programming language has some gotchas and there is a number of good articles explaining them. I find those articles very important, especially for the newcomers in Go, as I see people run into those gotchas every now and then.
+    TL;DR by learning internals a gotcha is a valid construct in a system, program or programming language that works as documented but is counter-intuitive and almost invites mistakes because it is both easy to invoke and unexpected or unreasonable in its outcome (source: wikipedia)
+Go programming language has some gotchas and there is a number of good articles explaining them. I find those articles very important, especially for the newcomers in Go, as I see people run into those gotchas every now and then.
   </div>
   
   <footer>
@@ -396,7 +428,7 @@ My journey to GopherCon started on a cold winter day in the apartments in the ce
   <div>
     As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing moments. One of them is automating repeatable build process using containers along with using dependencies in private repositories.
 Private repositories on Github are often is a source of confusion when using go get, but it has easy workaround by adding two lines to your .gitconfig:
-[url &quot;git@github.com:&quot;] insteadOf = https://github.
+[url &#34;git@github.com:&#34;] insteadOf = https://github.
   </div>
   
   <footer>

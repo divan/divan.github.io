@@ -37,6 +37,7 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
+  
 </head>
 <body>
     <header class="global-header">
@@ -119,13 +120,13 @@
 <ul>
 <li><strong>Everything &ldquo;special&rdquo; was confusing</strong> – <em>&ldquo;special method named constructor&rdquo;</em>, <em>&ldquo;special syntax for initialization&rdquo;</em>, <em>&ldquo;special syntax for overriding methods&rdquo;</em> etc.</li>
 <li><strong>Everything &ldquo;hidden&rdquo; was confusing</strong> – <em>&ldquo;from which import this class comes from? it&rsquo;s hidden, and you can&rsquo;t see it by reading a code&rdquo;</em>, <em>&ldquo;why we write a constructor in this class but don&rsquo;t write in another? it&rsquo;s there, but it&rsquo;s hidden&rdquo;</em> and so on</li>
-<li><strong>Everything &ldquo;ambiguous&rdquo; was confusing</strong> – <em>&ldquo;so should I use named or position parameter here?&quot;</em>, <em>&ldquo;should it be final or const variable?&quot;</em>, <em>&ldquo;should I use normal function syntax or &lsquo;this short syntax&rsquo;?&quot;</em> etc.</li>
+<li><strong>Everything &ldquo;ambiguous&rdquo; was confusing</strong> – <em>&ldquo;so should I use named or position parameter here?&rdquo;</em>, <em>&ldquo;should it be final or const variable?&rdquo;</em>, <em>&ldquo;should I use normal function syntax or &rsquo;this short syntax&rsquo;?&rdquo;</em> etc.</li>
 </ul>
 <p>This triplet - &ldquo;special&rdquo;, &ldquo;hidden&rdquo; and &ldquo;ambiguous&rdquo; - probably captures the essence of what people call &ldquo;magic&rdquo; in programming languages. Those are features designed to help us write simpler and cleaner code, but, in fact, they add more confusion and more cognitive load to reading programs.</p>
 <p>And that&rsquo;s exactly where Go took a vastly different stance and guards its positions fiercely. Go is virtually non-magical language – it minimizes amount of special/hidden/ambiguous constructs to the lowest possible amount. It comes with its own list of shortages, however.</p>
 <h3 id="the-problem-with-go">The problem with Go</h3>
 <p>As we&rsquo;re talking about Flutter, which is a UI framework, we have to look at Go as a tool for describing/specifying UI. UI framework is a massively complicated subject to deal with – it literally requires creating a specialized language to handle the amount of essential complexity. One of the most popular ways to do so is to create <a href="https://en.wikipedia.org/wiki/Domain-specific_language">DSL</a> - Domain-specific Language – and the common knowledge is that Go is really bad at it.</p>
-<p>Creating DSL means creating custom terms and verbs developer can use. The resulting code should capture the essence of UI layout and interactions, and be flexible enough to allow designers' fantasy flow, but rigid enough to conform UI framework limitations. For example, you should be able to put buttons inside a container, then put icons and text widget inside buttons, and yet compiler should give you an error if you try to put the button into text.</p>
+<p>Creating DSL means creating custom terms and verbs developer can use. The resulting code should capture the essence of UI layout and interactions, and be flexible enough to allow designers&rsquo; fantasy flow, but rigid enough to conform UI framework limitations. For example, you should be able to put buttons inside a container, then put icons and text widget inside buttons, and yet compiler should give you an error if you try to put the button into text.</p>
 <p>UI specific language is also often declarative – which, in fact, means that you should be able to use code constructs (including things like space indentation!) to visually capture the structure of the UI widgets tree and then let UI framework figure out the code to run. Uff.</p>
 <p>Some languages are more suitable for such a feat and Go never been designed to accomplish this kind of tasks. So, writing Flutter code in Go should be quite a challenge!</p>
 <h2 id="ode-to-flutter">Ode to Flutter</h2>
@@ -139,117 +140,116 @@
 <p><img src="/images/flutter_hello.gif" alt="flutter hello world"></p>
 <p>I think it&rsquo;s a good example to rewrite in our imaginary Flutter in Go. It has everything relevant to our subject. Take a look at the code (it&rsquo;s one file):</p>
 <p>lib/main.dart:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#39;package:flutter/material.dart&#39;</span>;
-
-<span style="color:#66d9ef">void</span> main() <span style="color:#f92672">=&gt;</span> runApp(MyApp());
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">extends</span> StatelessWidget {
-  <span style="color:#960050;background-color:#1e0010">@</span>override
-  Widget build(BuildContext context) {
-    <span style="color:#66d9ef">return</span> MaterialApp(
-      title: <span style="color:#e6db74">&#39;Flutter Demo&#39;</span>,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: <span style="color:#e6db74">&#39;Flutter Demo Home Page&#39;</span>),
-    );
-  }
-}
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">extends</span> StatefulWidget {
-  MyHomePage({Key key, <span style="color:#66d9ef">this</span>.title}) <span style="color:#f92672">:</span> <span style="color:#66d9ef">super</span>(key: key);
-  <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">String</span> title;
-
-  <span style="color:#960050;background-color:#1e0010">@</span>override
-  _MyHomePageState createState() <span style="color:#f92672">=&gt;</span> _MyHomePageState();
-}
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">_MyHomePageState</span> <span style="color:#66d9ef">extends</span> State<span style="color:#f92672">&lt;</span>MyHomePage<span style="color:#f92672">&gt;</span> {
-  <span style="color:#66d9ef">int</span> _counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-
-  <span style="color:#66d9ef">void</span> _incrementCounter() {
-    setState(() {
-      _counter<span style="color:#f92672">++</span>;
-    });
-  }
-
-  <span style="color:#960050;background-color:#1e0010">@</span>override
-  Widget build(BuildContext context) {
-    <span style="color:#66d9ef">return</span> Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>[
-            Text(
-              <span style="color:#e6db74">&#39;You have pushed the button this many times:&#39;</span>,
-            ),
-            Text(
-              <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">$</span>_counter<span style="color:#e6db74">&#39;</span>,
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: <span style="color:#e6db74">&#39;Increment&#39;</span>,
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-</code></pre></div><p>Let&rsquo;s break down it to pieces, analyze what does and does not map well into Go, and explore the options we have.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dart" data-lang="dart"><span style="display:flex;"><span><span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#39;package:flutter/material.dart&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> main() <span style="color:#f92672">=&gt;</span> runApp(MyApp());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">extends</span> StatelessWidget {
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">@</span>override
+</span></span><span style="display:flex;"><span>  Widget build(BuildContext context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> MaterialApp(
+</span></span><span style="display:flex;"><span>      title: <span style="color:#e6db74">&#39;Flutter Demo&#39;</span>,
+</span></span><span style="display:flex;"><span>      theme: ThemeData(
+</span></span><span style="display:flex;"><span>        primarySwatch: Colors.blue,
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>      home: MyHomePage(title: <span style="color:#e6db74">&#39;Flutter Demo Home Page&#39;</span>),
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">extends</span> StatefulWidget {
+</span></span><span style="display:flex;"><span>  MyHomePage({Key key, <span style="color:#66d9ef">this</span>.title}) <span style="color:#f92672">:</span> <span style="color:#66d9ef">super</span>(key: key);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">String</span> title;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">@</span>override
+</span></span><span style="display:flex;"><span>  _MyHomePageState createState() <span style="color:#f92672">=&gt;</span> _MyHomePageState();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">_MyHomePageState</span> <span style="color:#66d9ef">extends</span> State<span style="color:#f92672">&lt;</span>MyHomePage<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> _counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">void</span> _incrementCounter() {
+</span></span><span style="display:flex;"><span>    setState(() {
+</span></span><span style="display:flex;"><span>      _counter<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">@</span>override
+</span></span><span style="display:flex;"><span>  Widget build(BuildContext context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> Scaffold(
+</span></span><span style="display:flex;"><span>      appBar: AppBar(
+</span></span><span style="display:flex;"><span>        title: Text(widget.title),
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>      body: Center(
+</span></span><span style="display:flex;"><span>        child: Column(
+</span></span><span style="display:flex;"><span>          mainAxisAlignment: MainAxisAlignment.center,
+</span></span><span style="display:flex;"><span>          children: <span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>[
+</span></span><span style="display:flex;"><span>            Text(
+</span></span><span style="display:flex;"><span>              <span style="color:#e6db74">&#39;You have pushed the button this many times:&#39;</span>,
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>            Text(
+</span></span><span style="display:flex;"><span>              <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">$</span>_counter<span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>              style: Theme.of(context).textTheme.display1,
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>          ],
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>      floatingActionButton: FloatingActionButton(
+</span></span><span style="display:flex;"><span>        onPressed: _incrementCounter,
+</span></span><span style="display:flex;"><span>        tooltip: <span style="color:#e6db74">&#39;Increment&#39;</span>,
+</span></span><span style="display:flex;"><span>        child: Icon(Icons.add),
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Let&rsquo;s break down it to pieces, analyze what does and does not map well into Go, and explore the options we have.</p>
 <h3 id="mapping-to-go">Mapping to Go</h3>
 <p>The start is relatively straightforward – importing the dependency and starting <code>main()</code> function. Nothing challenging or interesting here, purely syntactical change:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hello</span>
-
-<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewApp</span>()
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">app</span>)
-}
-</code></pre></div><p>The only change to note is that instead of using magical <code>MyApp()</code> function, which is constructor, which is a special function, which is hidden inside class called <code>MyApp</code>, we just call an explicitly defined function <code>NewApp()</code> – it does the same, but it&rsquo;s so much easier to read, understand and make sense of.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">hello</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewApp</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">app</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The only change to note is that instead of using magical <code>MyApp()</code> function, which is constructor, which is a special function, which is hidden inside class called <code>MyApp</code>, we just call an explicitly defined function <code>NewApp()</code> – it does the same, but it&rsquo;s so much easier to read, understand and make sense of.</p>
 <h3 id="widget-classes">Widget classes</h3>
 <p>In Flutter, everything is a widget. In Dart-version of a Flutter, every widget is represented with a class extending Flutter&rsquo;s special Widget classes.</p>
 <p>Go doesn&rsquo;t have classes and thus classes hierarchy, because the world is not object-oriented, let alone hierarchical. It may come as a hard truth to people familiar only with class-based OOP, but it&rsquo;s really not. The world is a huge interconnected graph of things and relationships. It&rsquo;s not chaotic, but neither perfectly structured and trying to fit everything into class hierarchies is a guaranteed way to make code unmaintainable, which is a most of world&rsquo;s codebases as of today.</p>
 <p><img src="/images/oop_truth.png" alt="OOP Truth"></p>
 <p>I love that Go designers put an effort to rethink this omnipresent concept of class-based OOP and came up with different OOP concept, which is, not accidentally, more closer to what OOP inventor, Alan Kay, <a href="https://www.quora.com/What-did-Alan-Kay-mean-by-I-made-up-the-term-object-oriented-and-I-can-tell-you-I-did-not-have-C++-in-mind">actually meant</a>.</p>
 <p>In Go, we represent any abstraction with a concrete type – a structure:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#75715e">// ...
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>In Dart-version of a Flutter, <code>MyApp</code> has to extend <code>StatelessWidget</code> class and override its <code>build</code> method, which serves two purposes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>In Dart-version of a Flutter, <code>MyApp</code> has to extend <code>StatelessWidget</code> class and override its <code>build</code> method, which serves two purposes:</p>
 <ol>
 <li>give our <code>MyApp</code> some widget properties/methods automagically</li>
 <li>allow Flutter to use our widget in its build/render pipeline by calling <code>build</code></li>
 </ol>
 <p>I don&rsquo;t know Flutter internals, so let&rsquo;s not question if we really need 1) and implement it in Go. For that, we have only one option – <a href="https://golang.org/doc/effective_go.html#embedding">embedding</a>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
-    <span style="color:#75715e">// ...
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>This will add all the <code>flutter.Core</code>&rsquo;s exported properties and methods to our type <code>MyApp</code>. I named it <code>Core</code> instead of <code>Widget</code>, because embedding this type doesn&rsquo;t make our <code>MyApp</code> a widget yet, and, plus, that&rsquo;s the choice of name I&rsquo;ve seen in a <a href="https://github.com/gopherjs/vecty">Vecty</a> GopherJS framework for the similar concept. I will briefly discuss similarities between Flutter and Vecty later.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>This will add all the <code>flutter.Core</code>&rsquo;s exported properties and methods to our type <code>MyApp</code>. I named it <code>Core</code> instead of <code>Widget</code>, because embedding this type doesn&rsquo;t make our <code>MyApp</code> a widget yet, and, plus, that&rsquo;s the choice of name I&rsquo;ve seen in a <a href="https://github.com/gopherjs/vecty">Vecty</a> GopherJS framework for the similar concept. I will briefly discuss similarities between Flutter and Vecty later.</p>
 <p>The second part – <code>build</code> method for Flutter&rsquo;s engine use – surely should be implemented  simply by adding method, satisfying some interface defined somewhere in Go-version of a Flutter:</p>
 <p>flutter.go:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Widget</span> <span style="color:#66d9ef">interface</span> {
-    <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span>
-}
-</code></pre></div><p>Our main.go:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
-    <span style="color:#75715e">// ...
-</span><span style="color:#75715e"></span>}
-
-<span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">MaterialApp</span>()
-}
-</code></pre></div><p>We might notice a few differences with Dart&rsquo;s Flutter here:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Widget</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Our main.go:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">MaterialApp</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We might notice a few differences with Dart&rsquo;s Flutter here:</p>
 <ul>
 <li>code is more verbose – <code>BuildContext</code>, <code>Widget</code> and <code>MaterialApp</code> all have <code>flutter</code> explicitly mentioned in front of them.</li>
 <li>code is less verbose – no <code>extends Widget</code> or <code>@override</code> clauses</li>
@@ -258,49 +258,49 @@
 <p>In order to make a Go&rsquo;s Flutter  <code>Widget</code> now we should embed <code>flutter.Core</code> and implement <code>flutter.Widget</code> interface. Okay, that&rsquo;s clear, let&rsquo;s go further.</p>
 <h2 id="the-state">The State</h2>
 <p>That was the first thing I found baffling with Dart&rsquo;s Flutter. There are two kinds of widgets in Flutter – <code>StatelessWidget</code> and <code>StatefulWidget</code>. Uhm, to me, the stateful widget is just a widget without a state, so why invent a new class here? Well, okay, I can live with it. But you can&rsquo;t just extend <code>StatefulWidget</code> in the same way, you should do the following magic (IDEs with Flutter plugin do it for you, but that&rsquo;s not the point):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">extends</span> StatefulWidget {
-  <span style="color:#960050;background-color:#1e0010">@</span>override
-  _MyHomePageState createState() <span style="color:#f92672">=&gt;</span> _MyHomePageState();
-}
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">_MyHomePageState</span> <span style="color:#66d9ef">extends</span> State<span style="color:#f92672">&lt;</span>MyHomePage<span style="color:#f92672">&gt;</span> {
-  <span style="color:#66d9ef">int</span> _counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-
-  <span style="color:#66d9ef">void</span> _incrementCounter() {
-    setState(() {
-      _counter<span style="color:#f92672">++</span>;
-    });
-  }
-
-  <span style="color:#960050;background-color:#1e0010">@</span>override
-  Widget build(BuildContext context) {
-      <span style="color:#66d9ef">return</span> Scaffold()
-  }
-}
-</code></pre></div><p>Uff, let&rsquo;s try to understand not only what is written here, but why?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dart" data-lang="dart"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">extends</span> StatefulWidget {
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">@</span>override
+</span></span><span style="display:flex;"><span>  _MyHomePageState createState() <span style="color:#f92672">=&gt;</span> _MyHomePageState();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">_MyHomePageState</span> <span style="color:#66d9ef">extends</span> State<span style="color:#f92672">&lt;</span>MyHomePage<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> _counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">void</span> _incrementCounter() {
+</span></span><span style="display:flex;"><span>    setState(() {
+</span></span><span style="display:flex;"><span>      _counter<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">@</span>override
+</span></span><span style="display:flex;"><span>  Widget build(BuildContext context) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> Scaffold()
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Uff, let&rsquo;s try to understand not only what is written here, but why?</p>
 <p>The task to solve here is to add state (<code>counter</code>) to the widget and allow Flutter to redraw widget when the state has changed. That&rsquo;s the essential complexity part.</p>
 <p><a href="https://www.quora.com/What-is-accidental-complexity">Accidental complexity</a> is all the rest. Dart&rsquo;s Flutter approach is to introduce a new class <code>State</code> which uses generics and takes a Widget as its parameter. So <code>_MyAppState</code> is a class that extends <code>State of a widget MyApp</code>. Okay, kinda makes sense&hellip; But why <code>build()</code> method is defined on a State instead of a Widget? This question <a href="https://flutter.io/docs/resources/faq#why-is-the-build-method-on-state-not-statefulwidget">is answered</a> in the Flutter&rsquo;s FAQ and discussed in detailed <a href="https://docs.flutter.io/flutter/widgets/State/build.html">here</a> and the short answer is: to avoid category of bugs when subclassing <code>StatefulWidget</code>. In other words, it&rsquo;s a workaround of the class-based OOP design.</p>
 <p>How would we design it in Go?</p>
 <p>First of all, I personally would try to avoid creating a new concept for <code>State</code> – we already implicitly have &ldquo;state&rdquo; in any concrete type – it&rsquo;s just the properties (fields) of the struct. Language already possesses this concept of a state, so to speak. So creating a new one will just puzzle developers – why can&rsquo;t we use a &ldquo;normal state&rdquo; of a type here.</p>
 <p>The challenge, of course, is to make Flutter engine track state changes and react on it (that&rsquo;s the gist of reactive programming, after all). And instead of creating &ldquo;special&rdquo; methods and wrappers around state changes, we can just ask the developer to manually tell Flutter when we want to update the widget. Not all state changes require immediate redrawing – there are plenty of valid cases to that. Let&rsquo;s see:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
-    <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
-}
-
-<span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Scaffold</span>()
-}
-
-<span style="color:#75715e">// incrementCounter increments widgets&#39;s counter by one.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
-    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Rerender</span>(<span style="color:#a6e22e">m</span>)
-    <span style="color:#75715e">// or m.Rerender()
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// or m.NeedsUpdate()
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>There is a number of options with naming and design here – I like <code>NeedsUpdate()</code> for explicitness and being a method of <code>flutter.Core</code> (so each widget has it), but <code>flutter.Rerender()</code> also works fine. It gives a false sense of immediate redraw, though – which is not always a case – it will be redrawn on the next frame redraw, and the frequency of state update might be much higher than frame redraw frequency.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Scaffold</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// incrementCounter increments widgets&#39;s counter by one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Rerender</span>(<span style="color:#a6e22e">m</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// or m.Rerender()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// or m.NeedsUpdate()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>There is a number of options with naming and design here – I like <code>NeedsUpdate()</code> for explicitness and being a method of <code>flutter.Core</code> (so each widget has it), but <code>flutter.Rerender()</code> also works fine. It gives a false sense of immediate redraw, though – which is not always a case – it will be redrawn on the next frame redraw, and the frequency of state update might be much higher than frame redraw frequency.</p>
 <p>But the point is we just implemented the same task of adding a reactive state to the widget, without adding:</p>
 <ul>
 <li>new type</li>
@@ -311,340 +311,340 @@
 <p>Plus, API is cleaner and more explicit – just increase the counter and ask flutter to re-render – something not really obvious when you asked to call special function <code>setState</code> that return another function with the actual state change. Again, hidden magic hurts readability, and we managed to avoid just that. As a result, the code is simpler and twice as short.</p>
 <h3 id="stateful-widgets-as-a-children">Stateful widgets as a children</h3>
 <p>As a logical continuation, let&rsquo;s take a closer look at how &ldquo;stateful widget&rdquo; is used within another widget in Flutter:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#960050;background-color:#1e0010">@</span>override
-Widget build(BuildContext context) {
-    <span style="color:#66d9ef">return</span> MaterialApp(
-        title: <span style="color:#e6db74">&#39;Flutter Demo&#39;</span>,
-        home: MyHomePage(title: <span style="color:#e6db74">&#39;Flutter Demo Home Page&#39;</span>),
-    );
-}
-</code></pre></div><p><code>MyHomePage</code> here is a &ldquo;stateful widget&rdquo; (it has a counter), and we&rsquo;re creating it by calling constructor <code>MyHomePage(title:&quot;...&quot;)</code> during the build&hellip; Wait, what?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dart" data-lang="dart"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">@</span>override
+</span></span><span style="display:flex;"><span>Widget build(BuildContext context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> MaterialApp(
+</span></span><span style="display:flex;"><span>        title: <span style="color:#e6db74">&#39;Flutter Demo&#39;</span>,
+</span></span><span style="display:flex;"><span>        home: MyHomePage(title: <span style="color:#e6db74">&#39;Flutter Demo Home Page&#39;</span>),
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>MyHomePage</code> here is a &ldquo;stateful widget&rdquo; (it has a counter), and we&rsquo;re creating it by calling constructor <code>MyHomePage(title:&quot;...&quot;)</code> during the build&hellip; Wait, what?</p>
 <p><code>build()</code> is called to redraw the widget, perhaps many times per second. Why would we create a widget, let alone stateful, during each render cycle?</p>
 <p><a href="https://flutter.io/docs/resources/technical-overview#handling-user-interaction">It turns out</a>, Flutter uses this separation between Widget and State to hide this initialization/state-bookkeeping flow from the developer. It does create a new <code>MyHomePage</code> widget every time, but it preserves the original state (in a singleton way) and automatically find &ldquo;orphaned&rdquo; state to attach to the newly created <code>MyHomePage</code> widget.</p>
 <p>To me it doesn&rsquo;t make much sense – more hidden stuff, more magic and more ambiguity (we still can add Widgets as class properties and instantiate them once upon widget creation). I understand why it feels nice (no need to keep track of widget&rsquo;s children) and it has the nice effect of simplifying refactoring (you have to delete constructor call in one place only to delete the child), but any developer attempting to really understand how does the whole thing works will be puzzled here.</p>
 <p>For Go version, I definitely would prefer explicit and clear initialization of widgets with the state, even if it means more verbose code. Dart&rsquo;s Flutter approach probably could be done as well, but I like Go for being non-magical, and that philosophy applies to Go frameworks as well. So, my code for stateful children widgets would look like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// MyApp is our top application widget.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
-    <span style="color:#a6e22e">homePage</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>
-}
-
-<span style="color:#75715e">// NewMyApp instantiates a new MyApp widget
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewMyApp</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span> {
-    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyApp</span>{}
-    <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">homePage</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyHomePage</span>{}
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">app</span>
-}
-
-<span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">homePage</span>
-}
-
-<span style="color:#75715e">// MyHomePage is a home page widget.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
-    <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
-}
-
-<span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Scaffold</span>()
-}
-
-<span style="color:#75715e">// incrementCounter increments app&#39;s counter by one.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
-    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Rerender</span>(<span style="color:#a6e22e">m</span>)
-}
-</code></pre></div><p>The code is more verbose, and if we had to change/replace MyHomeWidget in MyApp, we would have to touch code in 3 places, but a side effect is that we have a full and clear picture of what going on at each stage of the code execution. There is no hidden stuff happening behind the scene, we can reason about the code, about performance and dependencies of each of our types and functions with 100% confidence. And, for some, that&rsquo;s the ultimate goal of writing reliable and maintainable code.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// MyApp is our top application widget.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">homePage</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// NewMyApp instantiates a new MyApp widget
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewMyApp</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyApp</span>{}
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">homePage</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyHomePage</span>{}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">app</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">homePage</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// MyHomePage is a home page widget.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Scaffold</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// incrementCounter increments app&#39;s counter by one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Rerender</span>(<span style="color:#a6e22e">m</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The code is more verbose, and if we had to change/replace MyHomeWidget in MyApp, we would have to touch code in 3 places, but a side effect is that we have a full and clear picture of what going on at each stage of the code execution. There is no hidden stuff happening behind the scene, we can reason about the code, about performance and dependencies of each of our types and functions with 100% confidence. And, for some, that&rsquo;s the ultimate goal of writing reliable and maintainable code.</p>
 <p>By the way, Flutter has a special widget called <a href="https://medium.com/flutter-community/stateful-widgets-be-gone-stateful-builder-a67f139725a0">StatefulBuilder</a>, which adds even more magic for hiding state management.</p>
 <h2 id="dsl">DSL</h2>
 <p>Now, the fun part. How do we build a Flutter&rsquo;s widget tree in Go? We want to have our widgets tree concise, readable, easy to refactor and update, describe spatial relationship between widgets and add enough flexibility to plug in custom code like button press handlers and so on.</p>
 <p>I think Dart&rsquo;s Flutter version is quite beautiful and self-explanatory:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#66d9ef">return</span> Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>[
-            Text(<span style="color:#e6db74">&#39;You have pushed the button this many times:&#39;</span>),
-            Text(
-              <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">$</span>_counter<span style="color:#e6db74">&#39;</span>,
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: <span style="color:#e6db74">&#39;Increment&#39;</span>,
-        child: Icon(Icons.add),
-      ),
-    );
-</code></pre></div><p>Every widget has a constructor function, which accepts optional parameters, and the real trick that makes this declarative way really nice is <a href="https://en.wikipedia.org/wiki/Named_parameter">named function parameters</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dart" data-lang="dart"><span style="display:flex;"><span><span style="color:#66d9ef">return</span> Scaffold(
+</span></span><span style="display:flex;"><span>      appBar: AppBar(
+</span></span><span style="display:flex;"><span>        title: Text(widget.title),
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>      body: Center(
+</span></span><span style="display:flex;"><span>        child: Column(
+</span></span><span style="display:flex;"><span>          mainAxisAlignment: MainAxisAlignment.center,
+</span></span><span style="display:flex;"><span>          children: <span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>[
+</span></span><span style="display:flex;"><span>            Text(<span style="color:#e6db74">&#39;You have pushed the button this many times:&#39;</span>),
+</span></span><span style="display:flex;"><span>            Text(
+</span></span><span style="display:flex;"><span>              <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">$</span>_counter<span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>              style: Theme.of(context).textTheme.display1,
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>          ],
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>      floatingActionButton: FloatingActionButton(
+</span></span><span style="display:flex;"><span>        onPressed: _incrementCounter,
+</span></span><span style="display:flex;"><span>        tooltip: <span style="color:#e6db74">&#39;Increment&#39;</span>,
+</span></span><span style="display:flex;"><span>        child: Icon(Icons.add),
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div><p>Every widget has a constructor function, which accepts optional parameters, and the real trick that makes this declarative way really nice is <a href="https://en.wikipedia.org/wiki/Named_parameter">named function parameters</a>.</p>
 <h3 id="named-parameters">Named parameters</h3>
 <p>Just in case you&rsquo;re unfamiliar, in most languages parameters are called &ldquo;positional parameters&rdquo; because it&rsquo;s their position in the function call matters:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">Foo</span>(<span style="color:#a6e22e">arg1</span>, <span style="color:#a6e22e">arg2</span>, <span style="color:#a6e22e">arg3</span>)
-</code></pre></div><p>while with named parameters, you also write their name in the function call:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">Foo</span>(<span style="color:#a6e22e">name</span>: <span style="color:#a6e22e">arg1</span>, <span style="color:#a6e22e">description</span>: <span style="color:#a6e22e">arg2</span>, <span style="color:#a6e22e">size</span>: <span style="color:#a6e22e">arg3</span>)
-</code></pre></div><p>It adds verbosity, but it saves you clicks and jumps over the code to understand what are those parameters all about.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">Foo</span>(<span style="color:#a6e22e">arg1</span>, <span style="color:#a6e22e">arg2</span>, <span style="color:#a6e22e">arg3</span>)
+</span></span></code></pre></div><p>while with named parameters, you also write their name in the function call:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">Foo</span>(<span style="color:#a6e22e">name</span>: <span style="color:#a6e22e">arg1</span>, <span style="color:#a6e22e">description</span>: <span style="color:#a6e22e">arg2</span>, <span style="color:#a6e22e">size</span>: <span style="color:#a6e22e">arg3</span>)
+</span></span></code></pre></div><p>It adds verbosity, but it saves you clicks and jumps over the code to understand what are those parameters all about.</p>
 <p>In the case of UI widget tree, they play a crucial role in the readability. Consider the same code as above, without named parameters:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#66d9ef">return</span> Scaffold(
-      AppBar(
-          Text(widget.title),
-      ),
-      Center(
-        Column(
-          MainAxisAlignment.center,
-          <span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>[
-            Text(<span style="color:#e6db74">&#39;You have pushed the button this many times:&#39;</span>),
-            Text(
-              <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">$</span>_counter<span style="color:#e6db74">&#39;</span>,
-              Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      FloatingActionButton(
-        _incrementCounter,
-        <span style="color:#e6db74">&#39;Increment&#39;</span>,
-        Icon(Icons.add),
-      ),
-    );
-</code></pre></div><p>Meh, right? It&rsquo;s not only harder to read and understand (you need to keep in your memory what each parameter mean, what&rsquo;s its type and it&rsquo;s a huge cognitive burden), but also leaves us with no flexibility in what parameters we really want to pass. For example, you may not want to have <code>FloatingButton</code> for you Material App, so you simply don&rsquo;t pass the <code>floatingActionButton</code>. Without named parameters, you&rsquo;re forced to pass it (as <code>null</code>/<code>nil</code>, perhaps), or resort to some dirty magic with reflection to figure out what parameters user passed via the constructor.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dart" data-lang="dart"><span style="display:flex;"><span><span style="color:#66d9ef">return</span> Scaffold(
+</span></span><span style="display:flex;"><span>      AppBar(
+</span></span><span style="display:flex;"><span>          Text(widget.title),
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>      Center(
+</span></span><span style="display:flex;"><span>        Column(
+</span></span><span style="display:flex;"><span>          MainAxisAlignment.center,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>[
+</span></span><span style="display:flex;"><span>            Text(<span style="color:#e6db74">&#39;You have pushed the button this many times:&#39;</span>),
+</span></span><span style="display:flex;"><span>            Text(
+</span></span><span style="display:flex;"><span>              <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">$</span>_counter<span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>              Theme.of(context).textTheme.display1,
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>          ],
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>      FloatingActionButton(
+</span></span><span style="display:flex;"><span>        _incrementCounter,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Increment&#39;</span>,
+</span></span><span style="display:flex;"><span>        Icon(Icons.add),
+</span></span><span style="display:flex;"><span>      ),
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div><p>Meh, right? It&rsquo;s not only harder to read and understand (you need to keep in your memory what each parameter mean, what&rsquo;s its type and it&rsquo;s a huge cognitive burden), but also leaves us with no flexibility in what parameters we really want to pass. For example, you may not want to have <code>FloatingButton</code> for you Material App, so you simply don&rsquo;t pass the <code>floatingActionButton</code>. Without named parameters, you&rsquo;re forced to pass it (as <code>null</code>/<code>nil</code>, perhaps), or resort to some dirty magic with reflection to figure out what parameters user passed via the constructor.</p>
 <p>As Go doesn&rsquo;t have function overloading or named parameters, that&rsquo;s going to be a tough task.</p>
 <h2 id="widgets-tree-in-go">Widgets Tree in Go</h2>
 <h3 id="version-1">Version 1</h3>
 <p>The temptation here might be just to replicate Dart&rsquo;s way of expressing widgets tree, but what we really need is to step back and answer the question – which is the best way to represent this type of data within the constraints of the language?</p>
 <p>Let&rsquo;s take a closer look at the <a href="https://docs.flutter.io/flutter/material/Scaffold-class.html">Scaffold</a> object, which is a nice helper for building a decently looking modern UI. It has <em>properties</em> – appBar, drawer, home, bottomNavigationBar, floatingActionButton – all Widgets, by the way. And we&rsquo;re creating the object of the type <code>Scaffold</code> initializing some of those properties along the way. Well, it&rsquo;s not that different from any normal object instantiation, is it?</p>
 <p>Let&rsquo;s try the naïve approach:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewScaffold</span>(
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewAppBar</span>(
-        <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>, <span style="color:#66d9ef">nil</span>),
-    ),
-    <span style="color:#66d9ef">nil</span>,
-    <span style="color:#66d9ef">nil</span>,
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewCenter</span>(
-        <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewColumn</span>(
-            <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">MainAxisCenterAlignment</span>,
-            <span style="color:#66d9ef">nil</span>,
-            []<span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span>{
-                <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>, <span style="color:#66d9ef">nil</span>),
-                <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>), <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>),
-            },
-        ),
-    ),
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">FloatingActionButton</span>(
-        <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>),
-        <span style="color:#e6db74">&#34;Increment&#34;</span>,
-        <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>,
-        <span style="color:#66d9ef">nil</span>,
-        <span style="color:#66d9ef">nil</span>,
-    ),
-)
-</code></pre></div><p>Well, not the prettiest UI code, for sure. The word <code>flutter</code> is so abundant that it begs for hiding (actually, I should have named it <code>material</code>, not <code>flutter</code>), those nameless parameters are not clear, especially <code>nil</code>s.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewScaffold</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewAppBar</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>, <span style="color:#66d9ef">nil</span>),
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewCenter</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewColumn</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">MainAxisCenterAlignment</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>            []<span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span>{
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>, <span style="color:#66d9ef">nil</span>),
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>), <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>),
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">FloatingActionButton</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Increment&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>Well, not the prettiest UI code, for sure. The word <code>flutter</code> is so abundant that it begs for hiding (actually, I should have named it <code>material</code>, not <code>flutter</code>), those nameless parameters are not clear, especially <code>nil</code>s.</p>
 <h3 id="version-2">Version 2</h3>
 <p>As most of the code will use <code>flutter</code> import anyway, it&rsquo;s fine to import <code>flutter</code> into our namespace using the import dot notation:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">import</span> . <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
-</code></pre></div><p>Now, instead of writing <code>flutter.Text</code> it&rsquo;ll be just <code>Text</code>. It&rsquo;s usually a bad practice, but we&rsquo;re working with a framework, and use this import literally on every single line, so that&rsquo;s a perfect case where it&rsquo;s a good practice. Another valid use case is a Go tests with <a href="http://goconvey.co">GoConvey</a> framework, for example. To me, frameworks are the languages on top of other languages, so it&rsquo;s ok to use dot import with frameworks.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">import</span> . <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
+</span></span></code></pre></div><p>Now, instead of writing <code>flutter.Text</code> it&rsquo;ll be just <code>Text</code>. It&rsquo;s usually a bad practice, but we&rsquo;re working with a framework, and use this import literally on every single line, so that&rsquo;s a perfect case where it&rsquo;s a good practice. Another valid use case is a Go tests with <a href="http://goconvey.co">GoConvey</a> framework, for example. To me, frameworks are the languages on top of other languages, so it&rsquo;s ok to use dot import with frameworks.</p>
 <p>Let&rsquo;s rewrite our code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>(
-    <span style="color:#a6e22e">NewAppBar</span>(
-        <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>, <span style="color:#66d9ef">nil</span>),
-    ),
-    <span style="color:#66d9ef">nil</span>,
-    <span style="color:#66d9ef">nil</span>,
-    <span style="color:#a6e22e">NewCenter</span>(
-        <span style="color:#a6e22e">NewColumn</span>(
-            <span style="color:#a6e22e">MainAxisCenterAlignment</span>,
-            <span style="color:#66d9ef">nil</span>,
-            []<span style="color:#a6e22e">Widget</span>{
-                <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>, <span style="color:#66d9ef">nil</span>),
-                <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>), <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>),
-            },
-        ),
-    ),
-    <span style="color:#a6e22e">FloatingActionButton</span>(
-        <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>),
-        <span style="color:#e6db74">&#34;Increment&#34;</span>,
-        <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>,
-        <span style="color:#66d9ef">nil</span>,
-        <span style="color:#66d9ef">nil</span>,
-    ),
-)
-</code></pre></div><p>A bit cleaner, but those nils&hellip; How can we avoid requiring concrete parameters?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">NewAppBar</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>, <span style="color:#66d9ef">nil</span>),
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">NewCenter</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">NewColumn</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">MainAxisCenterAlignment</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>            []<span style="color:#a6e22e">Widget</span>{
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>, <span style="color:#66d9ef">nil</span>),
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>), <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>),
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">FloatingActionButton</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Increment&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">nil</span>,
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>A bit cleaner, but those nils&hellip; How can we avoid requiring concrete parameters?</p>
 <h3 id="version-3">Version 3</h3>
 <p>Maybe reflection? Some early Go HTTP frameworks used this approach (<a href="https://github.com/go-martini/martini">martini</a> for example) – you pass whatever you want via parameters, and runtime will figure out if this a known type/parameter. It&rsquo;s a bad practice from many points of view - it&rsquo;s unsafe, relatively slow, adds magic – but for the sake of exploration let&rsquo;s try it:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>(
-    <span style="color:#a6e22e">NewAppBar</span>(
-        <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>),
-    ),
-    <span style="color:#a6e22e">NewCenter</span>(
-        <span style="color:#a6e22e">NewColumn</span>(
-            <span style="color:#a6e22e">MainAxisCenterAlignment</span>,
-            []<span style="color:#a6e22e">Widget</span>{
-                <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>),
-                <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>), <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>),
-            },
-        ),
-    ),
-    <span style="color:#a6e22e">FloatingActionButton</span>(
-        <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>),
-        <span style="color:#e6db74">&#34;Increment&#34;</span>,
-        <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>,
-    ),
-)
-</code></pre></div><p>Okay, a bit cleaner and similar to Dart&rsquo;s original version, but lack of named parameters really hinder readability in such a case with &ldquo;optional&rdquo; parameters. Plus, it&rsquo;s the code that really smells with bad approaches.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">NewAppBar</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>),
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">NewCenter</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">NewColumn</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">MainAxisCenterAlignment</span>,
+</span></span><span style="display:flex;"><span>            []<span style="color:#a6e22e">Widget</span>{
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>),
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>), <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>),
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">FloatingActionButton</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Increment&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>,
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>Okay, a bit cleaner and similar to Dart&rsquo;s original version, but lack of named parameters really hinder readability in such a case with &ldquo;optional&rdquo; parameters. Plus, it&rsquo;s the code that really smells with bad approaches.</p>
 <h3 id="version-4">Version 4</h3>
 <p>Let&rsquo;s rethink what&rsquo;s exactly we&rsquo;re doing when creating new objects and optionally defining their properties? It&rsquo;s just a normal variable instantiation, so what if we try it in a different way:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">scaffold</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewScaffold</span>()
-<span style="color:#a6e22e">scaffold</span>.<span style="color:#a6e22e">AppBar</span> = <span style="color:#a6e22e">NewAppBar</span>(<span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>))
-
-<span style="color:#a6e22e">column</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewColumn</span>()
-<span style="color:#a6e22e">column</span>.<span style="color:#a6e22e">MainAxisAlignment</span> = <span style="color:#a6e22e">MainAxisCenterAlignment</span>
-
-<span style="color:#a6e22e">counterText</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>))
-<span style="color:#a6e22e">counterText</span>.<span style="color:#a6e22e">Style</span> = <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>
-<span style="color:#a6e22e">column</span>.<span style="color:#a6e22e">Children</span> = []<span style="color:#a6e22e">Widget</span>{
-  <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>),
-  <span style="color:#a6e22e">counterText</span>,
-}
-
-<span style="color:#a6e22e">center</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewCenter</span>()
-<span style="color:#a6e22e">center</span>.<span style="color:#a6e22e">Child</span> = <span style="color:#a6e22e">column</span>
-<span style="color:#a6e22e">scaffold</span>.<span style="color:#a6e22e">Home</span> = <span style="color:#a6e22e">center</span>
-
-<span style="color:#a6e22e">icon</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>),
-<span style="color:#a6e22e">fab</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewFloatingActionButton</span>()
-<span style="color:#a6e22e">fab</span>.<span style="color:#a6e22e">Icon</span> = <span style="color:#a6e22e">icon</span>
-<span style="color:#a6e22e">fab</span>.<span style="color:#a6e22e">Text</span> = <span style="color:#e6db74">&#34;Increment&#34;</span>
-<span style="color:#a6e22e">fab</span>.<span style="color:#a6e22e">Handler</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>
-
-<span style="color:#a6e22e">scaffold</span>.<span style="color:#a6e22e">FloatingActionButton</span> = <span style="color:#a6e22e">fab</span>
-
-<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">scaffold</span>
-</code></pre></div><p>This approach will work, and while it solves the &ldquo;named parameters issue&rdquo;, it really messes up the understanding of widgets tree. First of all, it reversed the order of creating widgets – the deeper the widget, the earlier it should be defined. Second, we lost our indentation-based spatial layout of code, which is a great helper of quickly building a high-level overview of the widgets tree.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">scaffold</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewScaffold</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">scaffold</span>.<span style="color:#a6e22e">AppBar</span> = <span style="color:#a6e22e">NewAppBar</span>(<span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">column</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewColumn</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">column</span>.<span style="color:#a6e22e">MainAxisAlignment</span> = <span style="color:#a6e22e">MainAxisCenterAlignment</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">counterText</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>))
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">counterText</span>.<span style="color:#a6e22e">Style</span> = <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">column</span>.<span style="color:#a6e22e">Children</span> = []<span style="color:#a6e22e">Widget</span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>),
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">counterText</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">center</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewCenter</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">center</span>.<span style="color:#a6e22e">Child</span> = <span style="color:#a6e22e">column</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">scaffold</span>.<span style="color:#a6e22e">Home</span> = <span style="color:#a6e22e">center</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">icon</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>),
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fab</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewFloatingActionButton</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fab</span>.<span style="color:#a6e22e">Icon</span> = <span style="color:#a6e22e">icon</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fab</span>.<span style="color:#a6e22e">Text</span> = <span style="color:#e6db74">&#34;Increment&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fab</span>.<span style="color:#a6e22e">Handler</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">scaffold</span>.<span style="color:#a6e22e">FloatingActionButton</span> = <span style="color:#a6e22e">fab</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">scaffold</span>
+</span></span></code></pre></div><p>This approach will work, and while it solves the &ldquo;named parameters issue&rdquo;, it really messes up the understanding of widgets tree. First of all, it reversed the order of creating widgets – the deeper the widget, the earlier it should be defined. Second, we lost our indentation-based spatial layout of code, which is a great helper of quickly building a high-level overview of the widgets tree.</p>
 <p>By the way, this approach has been used for ages with UI frameworks such as <a href="https://www.gtk.org">GTK</a> and <a href="https://www.qt.io">Qt</a>.  Take a look at the <a href="http://doc.qt.io/qt-5/qtwidgets-mainwindows-mainwindow-mainwindow-cpp.html">code example from the documentation</a> to the latest Qt 5 framework.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">    QGridLayout <span style="color:#f92672">*</span>layout <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> QGridLayout(<span style="color:#66d9ef">this</span>);
-
-    layout<span style="color:#f92672">-&gt;</span>addWidget(<span style="color:#66d9ef">new</span> QLabel(tr(<span style="color:#e6db74">&#34;Object name:&#34;</span>)), <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>);
-    layout<span style="color:#f92672">-&gt;</span>addWidget(m_objectName, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>);
-
-    layout<span style="color:#f92672">-&gt;</span>addWidget(<span style="color:#66d9ef">new</span> QLabel(tr(<span style="color:#e6db74">&#34;Location:&#34;</span>)), <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>);
-    m_location<span style="color:#f92672">-&gt;</span>setEditable(false);
-    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Top&#34;</span>));
-    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Left&#34;</span>));
-    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Right&#34;</span>));
-    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Bottom&#34;</span>));
-    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Restore&#34;</span>));
-    layout<span style="color:#f92672">-&gt;</span>addWidget(m_location, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>);
-
-    QDialogButtonBox <span style="color:#f92672">*</span>buttonBox <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> QDialogButtonBox(QDialogButtonBox<span style="color:#f92672">::</span>Ok <span style="color:#f92672">|</span> QDialogButtonBox<span style="color:#f92672">::</span>Cancel, <span style="color:#66d9ef">this</span>);
-    connect(buttonBox, <span style="color:#f92672">&amp;</span>QDialogButtonBox<span style="color:#f92672">::</span>rejected, <span style="color:#66d9ef">this</span>, <span style="color:#f92672">&amp;</span>QDialog<span style="color:#f92672">::</span>reject);
-    connect(buttonBox, <span style="color:#f92672">&amp;</span>QDialogButtonBox<span style="color:#f92672">::</span>accepted, <span style="color:#66d9ef">this</span>, <span style="color:#f92672">&amp;</span>QDialog<span style="color:#f92672">::</span>accept);
-    layout<span style="color:#f92672">-&gt;</span>addWidget(buttonBox, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>);
-</code></pre></div><p>So for some people, it might be a more natural way to describe UI as a code. But it&rsquo;s hard to deny that it&rsquo;s definitely not the best option.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>    QGridLayout <span style="color:#f92672">*</span>layout <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> QGridLayout(<span style="color:#66d9ef">this</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    layout<span style="color:#f92672">-&gt;</span>addWidget(<span style="color:#66d9ef">new</span> QLabel(tr(<span style="color:#e6db74">&#34;Object name:&#34;</span>)), <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    layout<span style="color:#f92672">-&gt;</span>addWidget(m_objectName, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    layout<span style="color:#f92672">-&gt;</span>addWidget(<span style="color:#66d9ef">new</span> QLabel(tr(<span style="color:#e6db74">&#34;Location:&#34;</span>)), <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    m_location<span style="color:#f92672">-&gt;</span>setEditable(false);
+</span></span><span style="display:flex;"><span>    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Top&#34;</span>));
+</span></span><span style="display:flex;"><span>    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Left&#34;</span>));
+</span></span><span style="display:flex;"><span>    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Right&#34;</span>));
+</span></span><span style="display:flex;"><span>    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Bottom&#34;</span>));
+</span></span><span style="display:flex;"><span>    m_location<span style="color:#f92672">-&gt;</span>addItem(tr(<span style="color:#e6db74">&#34;Restore&#34;</span>));
+</span></span><span style="display:flex;"><span>    layout<span style="color:#f92672">-&gt;</span>addWidget(m_location, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    QDialogButtonBox <span style="color:#f92672">*</span>buttonBox <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> QDialogButtonBox(QDialogButtonBox<span style="color:#f92672">::</span>Ok <span style="color:#f92672">|</span> QDialogButtonBox<span style="color:#f92672">::</span>Cancel, <span style="color:#66d9ef">this</span>);
+</span></span><span style="display:flex;"><span>    connect(buttonBox, <span style="color:#f92672">&amp;</span>QDialogButtonBox<span style="color:#f92672">::</span>rejected, <span style="color:#66d9ef">this</span>, <span style="color:#f92672">&amp;</span>QDialog<span style="color:#f92672">::</span>reject);
+</span></span><span style="display:flex;"><span>    connect(buttonBox, <span style="color:#f92672">&amp;</span>QDialogButtonBox<span style="color:#f92672">::</span>accepted, <span style="color:#66d9ef">this</span>, <span style="color:#f92672">&amp;</span>QDialog<span style="color:#f92672">::</span>accept);
+</span></span><span style="display:flex;"><span>    layout<span style="color:#f92672">-&gt;</span>addWidget(buttonBox, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>);
+</span></span></code></pre></div><p>So for some people, it might be a more natural way to describe UI as a code. But it&rsquo;s hard to deny that it&rsquo;s definitely not the best option.</p>
 <h3 id="version-5">Version 5</h3>
 <p>One more option I considered is creating a separate type for constructor parameters. For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Build</span>() <span style="color:#a6e22e">Widget</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>(<span style="color:#a6e22e">ScaffoldParams</span>{
-        <span style="color:#a6e22e">AppBar</span>: <span style="color:#a6e22e">NewAppBar</span>(<span style="color:#a6e22e">AppBarParams</span>{
-            <span style="color:#a6e22e">Title</span>: <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
-                <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;My Home Page&#34;</span>,
-            }),
-        }),
-        <span style="color:#a6e22e">Body</span>: <span style="color:#a6e22e">NewCenter</span>(<span style="color:#a6e22e">CenterParams</span>{
-            <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewColumn</span>(<span style="color:#a6e22e">ColumnParams</span>{
-                <span style="color:#a6e22e">MainAxisAlignment</span>: <span style="color:#a6e22e">MainAxisAlignment</span>.<span style="color:#a6e22e">center</span>,
-                <span style="color:#a6e22e">Children</span>: []<span style="color:#a6e22e">Widget</span>{
-                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
-                        <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>,
-                    }),
-                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
-                        <span style="color:#a6e22e">Text</span>:  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>),
-                        <span style="color:#a6e22e">Style</span>: <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>,
-                    }),
-                },
-            }),
-        }),
-        <span style="color:#a6e22e">FloatingActionButton</span>: <span style="color:#a6e22e">NewFloatingActionButton</span>(
-            <span style="color:#a6e22e">FloatingActionButtonParams</span>{
-                <span style="color:#a6e22e">OnPressed</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">incrementCounter</span>,
-                <span style="color:#a6e22e">Tooltip</span>:   <span style="color:#e6db74">&#34;Increment&#34;</span>,
-                <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">IconParams</span>{
-                    <span style="color:#a6e22e">Icon</span>: <span style="color:#a6e22e">Icons</span>.<span style="color:#a6e22e">add</span>,
-                }),
-            },
-        ),
-    })
-}
-</code></pre></div><p>Not bad, actually! Those <code>..Params</code> are verbose, but it&rsquo;s not a deal breaker. In fact, this approach I encounter quite often in Go libs. It works especially fine when you have just a couple of objects need to be instantiated this way.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Build</span>() <span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>(<span style="color:#a6e22e">ScaffoldParams</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">AppBar</span>: <span style="color:#a6e22e">NewAppBar</span>(<span style="color:#a6e22e">AppBarParams</span>{
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Title</span>: <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;My Home Page&#34;</span>,
+</span></span><span style="display:flex;"><span>            }),
+</span></span><span style="display:flex;"><span>        }),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Body</span>: <span style="color:#a6e22e">NewCenter</span>(<span style="color:#a6e22e">CenterParams</span>{
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewColumn</span>(<span style="color:#a6e22e">ColumnParams</span>{
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">MainAxisAlignment</span>: <span style="color:#a6e22e">MainAxisAlignment</span>.<span style="color:#a6e22e">center</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Children</span>: []<span style="color:#a6e22e">Widget</span>{
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>,
+</span></span><span style="display:flex;"><span>                    }),
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Text</span>:  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>),
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Style</span>: <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>,
+</span></span><span style="display:flex;"><span>                    }),
+</span></span><span style="display:flex;"><span>                },
+</span></span><span style="display:flex;"><span>            }),
+</span></span><span style="display:flex;"><span>        }),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">FloatingActionButton</span>: <span style="color:#a6e22e">NewFloatingActionButton</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">FloatingActionButtonParams</span>{
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">OnPressed</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">incrementCounter</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Tooltip</span>:   <span style="color:#e6db74">&#34;Increment&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">IconParams</span>{
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Icon</span>: <span style="color:#a6e22e">Icons</span>.<span style="color:#a6e22e">add</span>,
+</span></span><span style="display:flex;"><span>                }),
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    })
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Not bad, actually! Those <code>..Params</code> are verbose, but it&rsquo;s not a deal breaker. In fact, this approach I encounter quite often in Go libs. It works especially fine when you have just a couple of objects need to be instantiated this way.</p>
 <p>There is a way to remove <code>...Params</code> verbosity, but it&rsquo;ll require language change. There  a Go proposal exists that aims to achieve exactly that - <a href="https://github.com/golang/go/issues/12854">untyped composite literals</a>. Basically, it means we should be able to shorten <code>FloattingActionButtonParameters{...}</code> to just <code>{...}</code>, so our code could look like that:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Build</span>() <span style="color:#a6e22e">Widget</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>({
-        <span style="color:#a6e22e">AppBar</span>: <span style="color:#a6e22e">NewAppBar</span>({
-            <span style="color:#a6e22e">Title</span>: <span style="color:#a6e22e">Text</span>({
-                <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;My Home Page&#34;</span>,
-            }),
-        }),
-        <span style="color:#a6e22e">Body</span>: <span style="color:#a6e22e">NewCenter</span>({
-            <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewColumn</span>({
-                <span style="color:#a6e22e">MainAxisAlignment</span>: <span style="color:#a6e22e">MainAxisAlignment</span>.<span style="color:#a6e22e">center</span>,
-                <span style="color:#a6e22e">Children</span>: []<span style="color:#a6e22e">Widget</span>{
-                    <span style="color:#a6e22e">Text</span>({
-                        <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>,
-                    }),
-                    <span style="color:#a6e22e">Text</span>({
-                        <span style="color:#a6e22e">Text</span>:  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>),
-                        <span style="color:#a6e22e">Style</span>: <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>,
-                    }),
-                },
-            }),
-        }),
-        <span style="color:#a6e22e">FloatingActionButton</span>: <span style="color:#a6e22e">NewFloatingActionButton</span>({
-                <span style="color:#a6e22e">OnPressed</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">incrementCounter</span>,
-                <span style="color:#a6e22e">Tooltip</span>:   <span style="color:#e6db74">&#34;Increment&#34;</span>,
-                <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewIcon</span>({
-                    <span style="color:#a6e22e">Icon</span>: <span style="color:#a6e22e">Icons</span>.<span style="color:#a6e22e">add</span>,
-                }),
-            },
-        ),
-    })
-}
-</code></pre></div><p>That&rsquo;s an almost perfect similarity with Dart&rsquo;s version! It will, however, require creating those parameters types for each widget.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Build</span>() <span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>({
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">AppBar</span>: <span style="color:#a6e22e">NewAppBar</span>({
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Title</span>: <span style="color:#a6e22e">Text</span>({
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;My Home Page&#34;</span>,
+</span></span><span style="display:flex;"><span>            }),
+</span></span><span style="display:flex;"><span>        }),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Body</span>: <span style="color:#a6e22e">NewCenter</span>({
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewColumn</span>({
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">MainAxisAlignment</span>: <span style="color:#a6e22e">MainAxisAlignment</span>.<span style="color:#a6e22e">center</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Children</span>: []<span style="color:#a6e22e">Widget</span>{
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Text</span>({
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>,
+</span></span><span style="display:flex;"><span>                    }),
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Text</span>({
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Text</span>:  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>),
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Style</span>: <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>,
+</span></span><span style="display:flex;"><span>                    }),
+</span></span><span style="display:flex;"><span>                },
+</span></span><span style="display:flex;"><span>            }),
+</span></span><span style="display:flex;"><span>        }),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">FloatingActionButton</span>: <span style="color:#a6e22e">NewFloatingActionButton</span>({
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">OnPressed</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">incrementCounter</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Tooltip</span>:   <span style="color:#e6db74">&#34;Increment&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewIcon</span>({
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Icon</span>: <span style="color:#a6e22e">Icons</span>.<span style="color:#a6e22e">add</span>,
+</span></span><span style="display:flex;"><span>                }),
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    })
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>That&rsquo;s an almost perfect similarity with Dart&rsquo;s version! It will, however, require creating those parameters types for each widget.</p>
 <h3 id="version-6">Version 6</h3>
 <p>Another option to explore is to use chaining of widget&rsquo;s methods. I forgot the name of this pattern, but it&rsquo;s not important because patterns should emerge from code, not the opposite way.</p>
 <p>The basic idea is that upon creating a widget – say <code>NewButton()</code> – we immediately call a method like <code>WithStyle(...)</code>, which returns the same object so that we can call more and more methods, in a row (or a column):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">button</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewButton</span>().
-    <span style="color:#a6e22e">WithText</span>(<span style="color:#e6db74">&#34;Click me&#34;</span>).
-    <span style="color:#a6e22e">WithStyle</span>(<span style="color:#a6e22e">MyButtonStyle1</span>)
-</code></pre></div><p>or</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">button</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewButton</span>().
-    <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Click me&#34;</span>).
-    <span style="color:#a6e22e">Style</span>(<span style="color:#a6e22e">MyButtonStyle1</span>)
-</code></pre></div><p>Let&rsquo;s try to rewrite our Scaffold-based widget that way:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>().
-        <span style="color:#a6e22e">AppBar</span>(<span style="color:#a6e22e">NewAppBar</span>().
-            <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>)).
-        <span style="color:#a6e22e">Child</span>(<span style="color:#a6e22e">NewCenter</span>().
-            <span style="color:#a6e22e">Child</span>(<span style="color:#a6e22e">NewColumn</span>().
-                <span style="color:#a6e22e">MainAxisAlignment</span>(<span style="color:#a6e22e">MainAxisCenterAlignment</span>).
-                <span style="color:#a6e22e">Children</span>([]<span style="color:#a6e22e">Widget</span>{
-                    <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>),
-                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>)).
-                        <span style="color:#a6e22e">Style</span>(<span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>),
-                }))).
-        <span style="color:#a6e22e">FloatingActionButton</span>(<span style="color:#a6e22e">NewFloatingActionButton</span>().
-            <span style="color:#a6e22e">Icon</span>(<span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>)).
-            <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Increment&#34;</span>).
-            <span style="color:#a6e22e">Handler</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>))
-}
-</code></pre></div><p>It&rsquo;s not an alien concept – many Go libraries use a similar approach for the configuration options, for example. It&rsquo;s a little bit different from original Dart&rsquo;s one, but holds most of the desired properties:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">button</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewButton</span>().
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">WithText</span>(<span style="color:#e6db74">&#34;Click me&#34;</span>).
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">WithStyle</span>(<span style="color:#a6e22e">MyButtonStyle1</span>)
+</span></span></code></pre></div><p>or</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">button</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewButton</span>().
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Click me&#34;</span>).
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Style</span>(<span style="color:#a6e22e">MyButtonStyle1</span>)
+</span></span></code></pre></div><p>Let&rsquo;s try to rewrite our Scaffold-based widget that way:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>().
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">AppBar</span>(<span style="color:#a6e22e">NewAppBar</span>().
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>)).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Child</span>(<span style="color:#a6e22e">NewCenter</span>().
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Child</span>(<span style="color:#a6e22e">NewColumn</span>().
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">MainAxisAlignment</span>(<span style="color:#a6e22e">MainAxisCenterAlignment</span>).
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Children</span>([]<span style="color:#a6e22e">Widget</span>{
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>),
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>)).
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Style</span>(<span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Theme</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>),
+</span></span><span style="display:flex;"><span>                }))).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">FloatingActionButton</span>(<span style="color:#a6e22e">NewFloatingActionButton</span>().
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Icon</span>(<span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">icons</span>.<span style="color:#a6e22e">Add</span>)).
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Increment&#34;</span>).
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Handler</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">onPressed</span>))
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>It&rsquo;s not an alien concept – many Go libraries use a similar approach for the configuration options, for example. It&rsquo;s a little bit different from original Dart&rsquo;s one, but holds most of the desired properties:</p>
 <ul>
 <li>explicit building of widget tree</li>
 <li>named &ldquo;parameters.&rdquo;</li>
@@ -656,96 +656,96 @@ Widget build(BuildContext context) {
 <h3 id="final-version">Final version</h3>
 <p>Now, assembling all pieces together, that&rsquo;s how I would say Flutter&rsquo;s &ldquo;hello, world&rdquo; app  looks like:</p>
 <p>main.go</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hello</span>
-
-<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">NewMyApp</span>())
-}
-</code></pre></div><p>app.go:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hello</span>
-
-<span style="color:#f92672">import</span> . <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
-
-<span style="color:#75715e">// MyApp is our top application widget.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">Core</span>
-    <span style="color:#a6e22e">homePage</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>
-}
-
-<span style="color:#75715e">// NewMyApp instantiates a new MyApp widget
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewMyApp</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span> {
-    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyApp</span>{}
-    <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">homePage</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyHomePage</span>{}
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">app</span>
-}
-
-<span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">homePage</span>
-}
-</code></pre></div><p>home_page.go:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hello</span>
-
-<span style="color:#f92672">import</span> (
-    <span style="color:#e6db74">&#34;fmt&#34;</span>
-    . <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
-)
-
-<span style="color:#75715e">// MyHomePage is a home page widget.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">Core</span>
-    <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
-}
-
-<span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>(<span style="color:#a6e22e">ScaffoldParams</span>{
-        <span style="color:#a6e22e">AppBar</span>: <span style="color:#a6e22e">NewAppBar</span>(<span style="color:#a6e22e">AppBarParams</span>{
-            <span style="color:#a6e22e">Title</span>: <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
-                <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;My Home Page&#34;</span>,
-            }),
-        }),
-        <span style="color:#a6e22e">Body</span>: <span style="color:#a6e22e">NewCenter</span>(<span style="color:#a6e22e">CenterParams</span>{
-            <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewColumn</span>(<span style="color:#a6e22e">ColumnParams</span>{
-                <span style="color:#a6e22e">MainAxisAlignment</span>: <span style="color:#a6e22e">MainAxisAlignment</span>.<span style="color:#a6e22e">center</span>,
-                <span style="color:#a6e22e">Children</span>: []<span style="color:#a6e22e">Widget</span>{
-                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
-                        <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>,
-                    }),
-                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
-                        <span style="color:#a6e22e">Text</span>:  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>),
-                        <span style="color:#a6e22e">Style</span>: <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>,
-                    }),
-                },
-            }),
-        }),
-        <span style="color:#a6e22e">FloatingActionButton</span>: <span style="color:#a6e22e">NewFloatingActionButton</span>(
-            <span style="color:#a6e22e">FloatingActionButtonParameters</span>{
-                <span style="color:#a6e22e">OnPressed</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">incrementCounter</span>,
-                <span style="color:#a6e22e">Tooltip</span>:   <span style="color:#e6db74">&#34;Increment&#34;</span>,
-                <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">IconParams</span>{
-                    <span style="color:#a6e22e">Icon</span>: <span style="color:#a6e22e">Icons</span>.<span style="color:#a6e22e">add</span>,
-                }),
-            },
-        ),
-    })
-}
-
-<span style="color:#75715e">// incrementCounter increments app&#39;s counter by one.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
-    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
-    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Rerender</span>(<span style="color:#a6e22e">m</span>)
-}
-</code></pre></div><p>I actually quite like it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">hello</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">NewMyApp</span>())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>app.go:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">hello</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> . <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// MyApp is our top application widget.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Core</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">homePage</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// NewMyApp instantiates a new MyApp widget
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewMyApp</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyApp</span>{}
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">homePage</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyHomePage</span>{}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">app</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">homePage</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>home_page.go:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">hello</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    . <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// MyHomePage is a home page widget.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Core</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>(<span style="color:#a6e22e">ScaffoldParams</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">AppBar</span>: <span style="color:#a6e22e">NewAppBar</span>(<span style="color:#a6e22e">AppBarParams</span>{
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Title</span>: <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;My Home Page&#34;</span>,
+</span></span><span style="display:flex;"><span>            }),
+</span></span><span style="display:flex;"><span>        }),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Body</span>: <span style="color:#a6e22e">NewCenter</span>(<span style="color:#a6e22e">CenterParams</span>{
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewColumn</span>(<span style="color:#a6e22e">ColumnParams</span>{
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">MainAxisAlignment</span>: <span style="color:#a6e22e">MainAxisAlignment</span>.<span style="color:#a6e22e">center</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Children</span>: []<span style="color:#a6e22e">Widget</span>{
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Text</span>: <span style="color:#e6db74">&#34;You have pushed the button this many times:&#34;</span>,
+</span></span><span style="display:flex;"><span>                    }),
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Text</span>:  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span>),
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">Style</span>: <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">textTheme</span>.<span style="color:#a6e22e">display1</span>,
+</span></span><span style="display:flex;"><span>                    }),
+</span></span><span style="display:flex;"><span>                },
+</span></span><span style="display:flex;"><span>            }),
+</span></span><span style="display:flex;"><span>        }),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">FloatingActionButton</span>: <span style="color:#a6e22e">NewFloatingActionButton</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">FloatingActionButtonParameters</span>{
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">OnPressed</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">incrementCounter</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Tooltip</span>:   <span style="color:#e6db74">&#34;Increment&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">Child</span>: <span style="color:#a6e22e">NewIcon</span>(<span style="color:#a6e22e">IconParams</span>{
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">Icon</span>: <span style="color:#a6e22e">Icons</span>.<span style="color:#a6e22e">add</span>,
+</span></span><span style="display:flex;"><span>                }),
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    })
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// incrementCounter increments app&#39;s counter by one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Rerender</span>(<span style="color:#a6e22e">m</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>I actually quite like it.</p>
 <h1 id="conclusions">Conclusions</h1>
 <h4 id="similarity-with-vecty">Similarity with Vecty</h4>
 <p>I could not help but notice how similar my final result to what <a href="https://github.com/gopherjs/vecty">Vecty</a> framework provides. Basically, the general design is almost the same, it&rsquo;s just Vecty outputs into DOM/CSS, while Flutter goes deeper into fully-fledged native rendering layers for providing crazy smooth 120fps experience with beautiful widgets (and solves a bunch of other problems). I think Vecty design is exemplary here, and no wonder my result ended up being a &ldquo;Vecty adaptation for Flutter&rdquo; :)</p>
 <h4 id="understanding-flutters-design-better">Understanding Flutter&rsquo;s design better</h4>
 <p>This thought experiment has been interesting by itself – not every day you have to write (and explore!) code for the library/framework that has never been written. But it also helped me to dissect Flutter&rsquo;s design a little bit deeper, read some technical docs, and uncover layers of hidden magic behind Flutter.</p>
 <h4 id="gos-shortcomings">Go&rsquo;s shortcomings</h4>
-<p>My verdict to the question &ldquo;<strong>Can Flutter be written in Go?&quot;</strong> is definitely <strong>yes</strong>, but I&rsquo;m biased, not aware of many design constraints and this question has no right answer anyway. What I was more interested in is to explore where Go do or doesn&rsquo;t fail to provide the same experience as a Dart in Flutter.</p>
+<p>My verdict to the question &ldquo;<strong>Can Flutter be written in Go?&rdquo;</strong> is definitely <strong>yes</strong>, but I&rsquo;m biased, not aware of many design constraints and this question has no right answer anyway. What I was more interested in is to explore where Go do or doesn&rsquo;t fail to provide the same experience as a Dart in Flutter.</p>
 <p>This thought experiment demonstrated that the <strong>major issue Go has is purely syntactical</strong>. Inability to call a function and pass either named parameters or untyped literals made it a bit harder and verbose to achieve clean and well-structured DSL-like widget tree creation. There are actually <a href="https://github.com/golang/go/issues/12296">Go proposals to add named parameters</a> in a future Go versions, and it&rsquo;s probably a backwards-compatible change. Having named parameters would definitely help for UI frameworks in Go, but it also introduces yet another thing to learn, yet another choice to make on each function definition or invocation, so the cumulative benefit is unclear.</p>
 <p>There obviously were no issues with the absence of user-defined generics in Go or lack of exceptions. I would be happy to hear about another way to achieve cleaner and more readable Go implementation of Flutter with generics – I&rsquo;m genuinely curious how it would help here. Feel free to post your thoughts and code in comments.</p>
 <h4 id="thoughts-about-flutter-future">Thoughts about Flutter future</h4>
@@ -786,19 +786,6 @@ Widget build(BuildContext context) {
       </div>
       
     </section>
-    
-    <hr/>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_shortname = 'divanblog';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/webgl_go/"><span aria-hidden="true">&larr;</span> Older</a></li>
