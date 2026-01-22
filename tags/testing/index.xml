@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>testing on divan&#39;s blog</title>
+    <title>Testing on divan&#39;s blog</title>
     <link>https://divan.dev/tags/testing/</link>
-    <description>Recent content in testing on divan&#39;s blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Testing on divan&#39;s blog</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Dec 2015 08:36:54 -0700</lastBuildDate><atom:link href="https://divan.dev/tags/testing/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Dec 2015 08:36:54 -0700</lastBuildDate>
+    <atom:link href="https://divan.dev/tags/testing/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Integration testing in Go using Docker</title>
       <link>https://divan.dev/posts/integration_testing/</link>
       <pubDate>Mon, 07 Dec 2015 08:36:54 -0700</pubDate>
-      
       <guid>https://divan.dev/posts/integration_testing/</guid>
-      <description>Note: this post was originally written for the Go Advent 2015 series, but I discovered that a post with almost exactly the same subject (and even similar code!) already planned :) That&amp;rsquo;s amazing.
-Golang is often used for writing microservices and various backends. Often these type of software do some computation, read/write data on external storage and expose it&amp;rsquo;s API via http handlers. All this functionality is remarkably easy to implement in Go and, especially if you&amp;rsquo;re creating 12factor-compatible app, Go is your friend here.</description>
+      <description>&lt;p&gt;&lt;em&gt;Note: this post was originally written for the &lt;a href=&#34;https://blog.gopheracademy.com/advent-2015/introduction/&#34;&gt;Go Advent 2015&lt;/a&gt; series, but I discovered that a post with almost exactly the same subject (and even similar code!) already planned :) That&amp;rsquo;s amazing.&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;Golang is often used for writing microservices and various backends. Often these type of software do some computation, read/write data on external storage and expose it&amp;rsquo;s API via http handlers. All this functionality is remarkably easy to implement in Go and, especially if you&amp;rsquo;re creating &lt;a href=&#34;http://12factor.net&#34;&gt;12factor&lt;/a&gt;-compatible app, Go is your friend here.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

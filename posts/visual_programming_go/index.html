@@ -35,7 +35,6 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
-  
 </head>
 <body>
     <header class="global-header">
@@ -200,7 +199,7 @@
 <p>To make things exponentially worse, this process should be reversible also for other brains. And that&rsquo;s a way more challenging task than you might think because now you can&rsquo;t rely only on your mental models – but also account for other brains&rsquo; mental models. You have to build a <strong>mental model of mental models</strong> of other programmers and validate your map through it and decide if something is obvious or should be extensively commented.  That&rsquo;s where the social aspect of programming comes to play.</p>
 <blockquote>
 <p>Programming is a social activity.</p>
-<p><!-- raw HTML omitted -->(Robert C. Martin)<!-- raw HTML omitted --></p>
+<p><sub>(Robert C. Martin)</sub></p>
 </blockquote>
 <p>Programming then is a <strong>purely mapping process</strong>, with the programming language being a primary mapping tool. Good code is almost always structured in such a way that it resembles the structure of the problem domain (and you can see here a glimpse of the Conway law around the corner, can&rsquo;t you?).</p>
 <p>You know those moments when a new, absolutely unanticipated requirement to your program comes in, and you realize that it simply fits well into the code design and requires a minor change? A bit exaggerating, but I live for those moments.</p>
@@ -326,7 +325,7 @@
 <p>I&rsquo;m currently at like 20% of what I planned to implement, and while working on it, I go deeper into my head and discover some non-obvious things, which pile up in the backlog. For example, I realized, that I have different zoom levels where I care about different connections – if I&rsquo;m overviewing a package, I&rsquo;m interested in one sort of connections, but when I read functions code, I don&rsquo;t care much about the rest and want more detailization of links coming out of this function.</p>
 <p>So, some early previews (small window and low fps, because to save traffic, sorry):</p>
 <ol>
-<li>Intro screen and <code>container/list</code> stdlib package: <!-- raw HTML omitted --></li>
+<li>Intro screen and <code>container/list</code> stdlib package: <img src="/images/vpl_demo0.gif" width="800px"/></li>
 <li>Navigating larger Go package – <code>github.com/divan/expvarmon</code>: <img src="/images/vpl_demo1.gif" alt="demo1"></li>
 <li>Visualizing itself: <img src="/images/vpl_demo.gif" alt="demo"></li>
 <li>Visualization of package dependencies. With text, adding new dependency is just a single <code>import</code> line, no matter if it&rsquo;s a leftpad-like small package or huge 200K LoC elephant. With the visual approach, you&rsquo;re immediately &ldquo;feel&rdquo; the weight of that import line and almost instinctively forced to think twice before using that dependency. <img src="/images/vpl_demo2.gif" alt="demo2"></li>
@@ -409,6 +408,19 @@
       </div>
       
     </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/flutter_go/"><span aria-hidden="true">&larr;</span> Older</a></li>

@@ -31,7 +31,6 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
-  
 </head>
 <body>
     <header class="global-header">
@@ -119,7 +118,7 @@
 <p>In fact, I like EdgeQL so much that I&rsquo;d love it to be a standalone standard. It would be cool to have implementations of, say, EdgeDBLite - file-based database that talks EdgeQL. :)</p>
 <h2 id="tooling">Tooling</h2>
 <p>If you work with some technology daily, every bit of convenience or inconvenience sums up over time and forms your overall experience. I often use a satisfaction-money analogy - every minute spent using service/app/device is either +0.1$ or -0.1$ depending on how you feel using it. Well, EdgeDB experience translates to just earning money non-stop.</p>
-<p>It follows the already popular pattern of one binary that does everything (think <code>go</code> or <code>flutter</code> commands). Install or update servers, create/destroy database, repl, manage migrations, backups and projects – all in one package, and most of the time, &ldquo;it just works&rdquo;. EdgeDB reinvents a bit the way how you interact with the database - the concept of &ldquo;project&rdquo; links the database to your project automagically, so you don&rsquo;t need to bother with DSNs or configurations. It &ldquo;just works&rdquo;.</p>
+<p>It follows the already popular pattern of one binary that does everything (think <code>go</code> or <code>flutter</code> commands). Install or update servers, create/destroy database, repl, manage migrations, backups and projects – all in one package, and most of the time, &ldquo;it just works&rdquo;. EdgeDB reinvents a bit the way how you interact with the database - the concept of &ldquo;project&rdquo; links the database to your project automagically, so you don&rsquo;t need to bother with DSNs or configurations. It &ldquo;just works&rdquo;.</p>
 <p>After decades of constant googling the exact SQL command for granting root access for localhost, that&rsquo;s very refreshing.</p>
 <h1 id="features">Features</h1>
 <p>Some of the features you might find interesting:</p>
@@ -180,8 +179,8 @@
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>As you can see, it&rsquo;s relatively low-level and expressive. If you have projects where the database layer is adequately isolated, rewriting client code from, say, MySQL to EdgeDB is fairly straightforward (in terms of using the library, not the queries).</p>
 <p>My only trouble with Go implementation is the implementation of optional values. EdgeQL has a concept of <code>optional</code>, which is similar to NULL in SQL. In many Go database drivers, we used to have <code>sql.Null&lt;Type&gt;</code> and EdgeDB Go library introduced <code>edgedb.Optional&lt;Type&gt;</code>. While I agree that this approach is expressive and correct, I often find myself wishing it was just using pointers for optional values. Switching field from required to optional sometimes means rewriting too many lines of code just to allow that, and it often looks ugly.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Club is used to read Club from EdgeDB.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Club</span> <span style="color:#66d9ef">struct</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Club is used to read Club from EdgeDB.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Club</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ID</span>     <span style="color:#a6e22e">edgedb</span>.<span style="color:#a6e22e">UUID</span> <span style="color:#e6db74">`edgedb:&#34;id&#34;`</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Name</span>   <span style="color:#66d9ef">string</span>      <span style="color:#e6db74">`edgedb:&#34;name&#34;`</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">City</span>   <span style="color:#a6e22e">City</span>        <span style="color:#e6db74">`edgedb:&#34;city&#34;`</span>
@@ -191,21 +190,21 @@
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">edgedb</span>.<span style="color:#a6e22e">Optional</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Get, Set and Unser implement OptionalMarshaller for edgedb.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Club</span>) <span style="color:#a6e22e">Get</span>() (<span style="color:#a6e22e">Club</span>, <span style="color:#66d9ef">bool</span>) { <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">b</span>, !<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Missing</span>() }
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Get, Set and Unser implement OptionalMarshaller for edgedb.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Club</span>) <span style="color:#a6e22e">Get</span>() (<span style="color:#a6e22e">Club</span>, <span style="color:#66d9ef">bool</span>) { <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">b</span>, !<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Missing</span>() }
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Club</span>) <span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">club</span> <span style="color:#a6e22e">Club</span>)     { <span style="color:#f92672">*</span><span style="color:#a6e22e">b</span> = <span style="color:#a6e22e">club</span>; <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">SetMissing</span>(<span style="color:#66d9ef">false</span>) }
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Club</span>) <span style="color:#a6e22e">Unset</span>()            { <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">SetMissing</span>(<span style="color:#66d9ef">true</span>) }
-</span></span></code></pre></div><p>For example, in the code that converts data model structure to protobuf, now optional <code>City</code> field requires 5 more lines instead of 1. I have most of this code autogenerated, but still – it takes time to figure out how to deal with optionals in EdgeDB Go library.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// clubToPB converts DB Club to the protobuf structure.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">clubToPB</span>(<span style="color:#a6e22e">club</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">Club</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">Club</span> {
+</span></span></code></pre></div><p>For example, in the code that converts data model structure to protobuf, now optional <code>City</code> field requires 5 more lines instead of 1. I have most of this code autogenerated, but still – it takes time to figure out how to deal with optionals in EdgeDB Go library.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// clubToPB converts DB Club to the protobuf structure.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">clubToPB</span>(<span style="color:#a6e22e">club</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">Club</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">Club</span> {
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ret</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">Club</span>{
 </span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Id</span>:     <span style="color:#a6e22e">club</span>.<span style="color:#a6e22e">ID</span>.<span style="color:#a6e22e">String</span>(),
 </span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Name</span>:   <span style="color:#a6e22e">club</span>.<span style="color:#a6e22e">Name</span>,
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// City:   cityToPB(club.City),
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	}
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// City:   cityToPB(club.City),</span>
+</span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// optional fields
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">val</span>, <span style="color:#a6e22e">set</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">club</span>.<span style="color:#a6e22e">City</span>.<span style="color:#a6e22e">Get</span>(); <span style="color:#a6e22e">set</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// optional fields</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">val</span>, <span style="color:#a6e22e">set</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">club</span>.<span style="color:#a6e22e">City</span>.<span style="color:#a6e22e">Get</span>(); <span style="color:#a6e22e">set</span> {
 </span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ret</span>.<span style="color:#a6e22e">City</span> = <span style="color:#a6e22e">cityToPB</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">val</span>)
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
@@ -226,7 +225,7 @@
 </ul>
 <p><img src="/images/edgedb_ui.png" alt="UI"></p>
 <ul>
-<li><a href="https://www.edgedb.com/docs/changelog/2_x"> New stuff</a> like group query, global schema variables, object-level security, new deletion policies (and long-awaited &ldquo;on delete delete target&rdquo;), direct EdgeQL over HTTP, and others.</li>
+<li><a href="https://www.edgedb.com/docs/changelog/2_x">New stuff</a> like group query, global schema variables, object-level security, new deletion policies (and long-awaited &ldquo;on delete delete target&rdquo;), direct EdgeQL over HTTP, and others.</li>
 </ul>
 <h1 id="things-i-dont-like-or-worried-about">Things I don&rsquo;t like or worried about</h1>
 <p>I have two major concerns with EdgeDB and using it as a go-to DB for all the projects.</p>
@@ -236,7 +235,7 @@
 <p>EdgeDB already has way more features than I need, and the set seems to be growing. The more powerful EdgeQL becomes, the more it blurs the line between database and server, and the more choices I, as a developer, have to make - &ldquo;should this be in a backend logic or this super-smart database schema?&rdquo;. Those are day-to-day practical questions, and they keep adding cognitive load.</p>
 <p>With an embedded HTTP server, it makes sense to push EdgeDB in the direction where it can replace the backend server completely for most projects. Still, I&rsquo;d love to have just a good, reliable database that has this awesome query language and engine.</p>
 <p>I tried to use inheritance, for example, but it doesn&rsquo;t really map onto the Go types, so I had to model schema accordingly. Polymorphic fields are something I&rsquo;ll probably never use. Or another example, in EdgeDB 2.0, there is a new <code>cal::date_duration</code> type, but is it justified? <code>cal::local_date</code> and <code>cal::relative_duration</code> are both super helpful types, but duration in days can be easily expressed in integers. Why another type? To simplify +/- operators in EdgeQL? Why not add <code>meters_distance</code> then? At some point, we&rsquo;ll start to have libraries inside EdgeQL?</p>
-<p>I know I&rsquo;m a minority here – most people welcome more features – but I see a feature set as a vector space, with features being basis vectors. Every new feature increases the dimensionality and complexity of the optimal solution search within the feature set, which increases cognitive load. I&rsquo;m not saying that finding the right balance for the feature set is easy, but it is worth the effort in the long run..</p>
+<p>I know I&rsquo;m a minority here – most people welcome more features – but I see a feature set as a vector space, with features being basis vectors. Every new feature increases the dimensionality and complexity of the optimal solution search within the feature set, which increases cognitive load. I&rsquo;m not saying that finding the right balance for the feature set is easy, but it is worth the effort in the long run..</p>
 <p>Anyway, let&rsquo;s hope EdgeDB will be stable and consistent and won&rsquo;t grow too much. So far, its feature set is just right.</p>
 <h1 id="conclusion">Conclusion</h1>
 <p>In short, I don&rsquo;t even consider conventional relational databases for future projects anymore. Switching back to SQL feels like changing from Flutter to Ncurses or Go to Assembler.</p>
@@ -272,6 +271,19 @@
       </div>
       
     </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/war/"><span aria-hidden="true">&larr;</span> Older</a></li>

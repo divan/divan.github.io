@@ -1,133 +1,96 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>golang on divan&#39;s blog</title>
+    <title>Golang on divan&#39;s blog</title>
     <link>https://divan.dev/tags/golang/</link>
-    <description>Recent content in golang on divan&#39;s blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Golang on divan&#39;s blog</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 30 Sep 2019 09:04:59 +0200</lastBuildDate><atom:link href="https://divan.dev/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 30 Sep 2019 09:04:59 +0200</lastBuildDate>
+    <atom:link href="https://divan.dev/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>I still ❤️ you, GOPATH</title>
       <link>https://divan.dev/posts/gopath/</link>
       <pubDate>Mon, 30 Sep 2019 09:04:59 +0200</pubDate>
-      
       <guid>https://divan.dev/posts/gopath/</guid>
-      <description>The newest release of Go – Go 1.13 – finally introduced full support for Go Modules – brilliant and long-awaited solution for built-in dependency versioning problem. Modules now enabled by default, and virtually make GOPATH obsolete.
-Technically speaking, GOPATH is still supported, and Go 1.13 Release Notes uses term &amp;ldquo;GOPATH mode&amp;rdquo; (as being opposite to the &amp;ldquo;modules mode&amp;rdquo;), but still, to me this is a tectonic shift in the Go development ecosystem evolution.</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://divan.dev/images/gopath.png&#34; alt=&#34;gopath&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;The newest release of Go – &lt;a href=&#34;https://golang.org/doc/go1.13&#34;&gt;Go 1.13&lt;/a&gt; – finally introduced full support for &lt;a href=&#34;https://blog.golang.org/using-go-modules&#34;&gt;Go Modules&lt;/a&gt; – brilliant and long-awaited solution for built-in dependency versioning problem. Modules now enabled by default, and virtually make GOPATH obsolete.&lt;/p&gt;&#xA;&lt;p&gt;Technically speaking, GOPATH is still supported, and &lt;a href=&#34;https://golang.org/doc/go1.13&#34;&gt;Go 1.13 Release Notes&lt;/a&gt; uses term &amp;ldquo;&lt;em&gt;GOPATH mode&lt;/em&gt;&amp;rdquo; (as being opposite to the &amp;ldquo;&lt;em&gt;modules mode&lt;/em&gt;&amp;rdquo;), but still, to me this is a tectonic shift in the Go development ecosystem evolution. Now you or your static analysis tools no longer can assume that all code lives in one large directory.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Rethinking Visual Programming with Go</title>
       <link>https://divan.dev/posts/visual_programming_go/</link>
       <pubDate>Sat, 01 Jun 2019 14:55:00 +0200</pubDate>
-      
       <guid>https://divan.dev/posts/visual_programming_go/</guid>
-      <description>This is a blog version of the talk I gave at GopherCon Europe 2019 (Canary Islands Edition), where I shared my thoughts on why Visual Programming Languages have failed and revealed for the first time my experiment on visualizing Go code.
-I could dive in straight into the project, but I do believe to truly appreciate it, I have to explain the thought line behind it first.
-It starts with an almost existential frustration of working with code as a text.</description>
+      <description>&lt;p&gt;This is a blog version of the talk I gave at &lt;a href=&#34;https://www.gophercon.es&#34;&gt;GopherCon Europe 2019 (Canary Islands Edition)&lt;/a&gt;, where I shared my thoughts on why Visual Programming Languages have failed and revealed for the first time my experiment on visualizing Go code.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://divan.dev/images/vpl_cover.png&#34; alt=&#34;cover&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;I could dive in straight into the project, but I do believe to truly appreciate it, I have to explain the thought line behind it first.&lt;/p&gt;&#xA;&lt;p&gt;It starts with an almost existential frustration of working with code as a text.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Thought Experiment: Flutter in Go</title>
       <link>https://divan.dev/posts/flutter_go/</link>
       <pubDate>Sat, 12 Jan 2019 14:55:00 +0200</pubDate>
-      
       <guid>https://divan.dev/posts/flutter_go/</guid>
-      <description>I&amp;rsquo;ve recently discovered Flutter – a new Google&amp;rsquo;s framework for mobile development – for myself and even had an experience of teaching Flutter basics to the person who has never been doing programming at all. Flutter is written in Dart – programming language born in a Chrome browser and then escaped to the console land – and that made me think &amp;ldquo;hey, Flutter could have been easily implemented in Go as well&amp;rdquo;!</description>
+      <description>&lt;p&gt;I&amp;rsquo;ve recently discovered &lt;a href=&#34;https://flutter.io&#34;&gt;Flutter&lt;/a&gt; – a new Google&amp;rsquo;s framework for mobile development – for myself and even had an experience of teaching Flutter basics to the person who has never been doing programming at all. Flutter is written in Dart – programming language born in a Chrome browser and then escaped to the console land – and that made me think &amp;ldquo;hey, Flutter could have been easily implemented in Go as well&amp;rdquo;!&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Creating WebGL apps with Go</title>
       <link>https://divan.dev/posts/webgl_go/</link>
       <pubDate>Mon, 10 Dec 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://divan.dev/posts/webgl_go/</guid>
-      <description>TL;DR In this article I&amp;rsquo;ll share my experience building an interactive 3D WebGL-based application for peer-to-peer messaging protocol simulation without writing any single line in JS. You&amp;rsquo;ll learn how GopherJS and Vecty framework can dramatically lower the complexity of building WebGL-enabled web apps in Go.
-It&amp;rsquo;s often said &amp;ldquo;A picture is worth a thousand words&amp;rdquo;, but in the era of high-DPI screens and big data, the new idiom is now truer – &amp;ldquo;3D interactive visualization is worth a thousand pictures&amp;rdquo;.</description>
+      <description>&lt;p&gt;&lt;em&gt;TL;DR In this article I&amp;rsquo;ll share my experience building an interactive 3D WebGL-based application for peer-to-peer messaging protocol simulation without writing any single line in JS. You&amp;rsquo;ll learn how GopherJS and Vecty framework can dramatically lower the complexity of building WebGL-enabled web apps in Go.&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://divan.dev/images/go-webgl/demo.gif&#34; alt=&#34;demo&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;It&amp;rsquo;s often said &amp;ldquo;A &lt;em&gt;picture&lt;/em&gt; is &lt;em&gt;worth a thousand&lt;/em&gt; words&amp;rdquo;, but in the era of high-DPI screens and big data, the new idiom is now truer – &lt;em&gt;&amp;ldquo;3D interactive visualization is worth a thousand pictures&amp;rdquo;&lt;/em&gt;.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Fountain codes and animated QR</title>
       <link>https://divan.dev/posts/fountaincodes/</link>
       <pubDate>Sat, 01 Dec 2018 16:55:00 +0200</pubDate>
-      
       <guid>https://divan.dev/posts/fountaincodes/</guid>
-      <description>(source: Anders Sune Berg)
-In the previous article I&amp;rsquo;ve described a weekend project called txqr for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame.</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://divan.dev/images/fountain.jpg&#34; alt=&#34;fountain&#34;&gt; &lt;sup&gt;(source: &lt;a href=&#34;https://olafureliasson.net/archive/artwork/WEK110140/waterfall&#34;&gt;Anders Sune Berg&lt;/a&gt;)&lt;/sup&gt;&lt;/p&gt;&#xA;&lt;p&gt;In the &lt;a href=&#34;https://divan.dev/posts/animatedqr/&#34;&gt;previous article&lt;/a&gt; I&amp;rsquo;ve described a weekend project called &lt;a href=&#34;https://github.com/divan/txqr&#34;&gt;txqr&lt;/a&gt; for unidirectional data transfer using animated sequence of QR codes. The straightforward approach was to repeat the encoded sequence over and over until the receiver gets complete data. This simple repetition code was good enough for starter and trivial to implement, but also introduced long delays in case the receiver missed at least one frame. And in practice, it often did, of course.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>How to avoid Go gotchas</title>
       <link>https://divan.dev/posts/avoid_gotchas/</link>
       <pubDate>Fri, 04 Nov 2016 13:25:35 +0100</pubDate>
-      
       <guid>https://divan.dev/posts/avoid_gotchas/</guid>
-      <description>TL;DR by learning internals a gotcha is a valid construct in a system, program or programming language that works as documented but is counter-intuitive and almost invites mistakes because it is both easy to invoke and unexpected or unreasonable in its outcome (source: wikipedia)
-Go programming language has some gotchas and there is a number of good articles explaining them. I find those articles very important, especially for the newcomers in Go, as I see people run into those gotchas every now and then.</description>
+      <description>&lt;h5 id=&#34;tldr--by-learning-internals&#34;&gt;TL;DR  by learning internals&lt;/h5&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;a gotcha is a valid construct in a system, program or programming language that works as documented but is counter-intuitive and almost invites mistakes because it is both easy to invoke and unexpected or unreasonable in its outcome&#xA;(source: &lt;a href=&#34;https://en.wikipedia.org/wiki/Gotcha_(programming)&#34;&gt;wikipedia&lt;/a&gt;)&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;Go programming language has some gotchas and there is a &lt;a href=&#34;https://go-traps.appspot.com&#34;&gt;number&lt;/a&gt; of &lt;a href=&#34;http://devs.cloudimmunity.com/gotchas-and-common-mistakes-in-go-golang/index.html&#34;&gt;good articles&lt;/a&gt; &lt;a href=&#34;https://medium.com/@Jarema./golang-slice-append-gotcha-e9020ff37374#.xvfl7r4ti&#34;&gt;explaining&lt;/a&gt; them. I find those articles very important, especially for the newcomers in Go, as I see people run into those gotchas every now and then.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>My GopherCon experience</title>
       <link>https://divan.dev/posts/gophercon16/</link>
       <pubDate>Wed, 03 Aug 2016 19:28:46 +0200</pubDate>
-      
       <guid>https://divan.dev/posts/gophercon16/</guid>
-      <description>A couple of weeks ago I gave a talk at the largest Go conference, GopherCon, in Denver. It was the first time I attended GopherCon at all, and the first time ever I spoke in English in front of 1400+ people, and it was an absolutely incredible experience. Here is my story.
-My journey to GopherCon started on a cold winter day in the apartments in the center of Odessa, Ukraine, where I was living at that time.</description>
+      <description>&lt;p&gt;A couple of weeks ago I gave a talk at the largest Go conference, &lt;a href=&#34;http://gophercon.com&#34;&gt;GopherCon&lt;/a&gt;, in Denver. It was the first time I attended GopherCon at all, and the first time ever I spoke in English in front of 1400+ people, and it was an absolutely incredible experience. Here is my story.&lt;/p&gt;&#xA;&lt;p&gt;My journey to GopherCon started on a cold winter day in the apartments in the center of Odessa, Ukraine, where I was living at that time. I was one of the organizers of the first Go meetup in Lviv (Ukraine) and have prepared one general talk about Go. We targeted mainly newcomers, so I wanted to make another talk that would share my passion and admiration of some of the coolest aspects of Go - concurrency.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>go get for private repos in docker</title>
       <link>https://divan.dev/posts/go_get_private/</link>
       <pubDate>Wed, 01 Jun 2016 19:28:46 +0200</pubDate>
-      
       <guid>https://divan.dev/posts/go_get_private/</guid>
-      <description>As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing moments. One of them is automating repeatable build process using containers along with using dependencies in private repositories.
-Private repositories on Github are often is a source of confusion when using go get, but it has easy workaround by adding two lines to your .gitconfig:
-[url &amp;#34;git@github.com:&amp;#34;] insteadOf = https://github.</description>
+      <description>&lt;p&gt;As Go community slowly moving towards established and well understood patterns and practices of dependency management, there are still some confusing moments. One of them is automating repeatable build process using containers along with using dependencies in private repositories.&lt;/p&gt;&#xA;&lt;p&gt;Private repositories on Github are often is a &lt;a href=&#34;https://github.com/golang/go/issues/9697&#34;&gt;source of confusion&lt;/a&gt; when using &lt;code&gt;go get&lt;/code&gt;, but it has easy workaround by adding two lines to your &lt;code&gt;.gitconfig&lt;/code&gt;:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[url &amp;#34;git@github.com:&amp;#34;]&#xA;&#x9;insteadOf = https://github.com/&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;or as a oneliner:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Visualizing Concurrency in Go</title>
       <link>https://divan.dev/posts/go_concurrency_visualize/</link>
       <pubDate>Sun, 24 Jan 2016 18:31:12 -0300</pubDate>
-      
       <guid>https://divan.dev/posts/go_concurrency_visualize/</guid>
-      <description>If you prefer video over blog posts, here is my talk on this at GopherCon 2016: https://www.youtube.com/watch?v=KyuFeiG3Y60
-One of the strongest sides of Go programming language is a built-in concurrency based on Tony Hoare&amp;rsquo;s CSP paper. Go is designed with concurrency in mind and allows us to build complex concurrent pipelines. But have you ever wondered - how various concurrency patterns look like?
-Of course, you have. We&amp;rsquo;re all thinking mostly by visualization in one form or another.</description>
+      <description>&lt;p&gt;&lt;em&gt;If you prefer video over blog posts, here is my talk on this at GopherCon 2016:&lt;/em&gt;&#xA;&lt;a href=&#34;https://www.youtube.com/watch?v=KyuFeiG3Y60&#34;&gt;https://www.youtube.com/watch?v=KyuFeiG3Y60&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;One of the strongest sides of Go programming language is a built-in concurrency based on &lt;a href=&#34;https://en.wikipedia.org/wiki/Communicating_sequential_processes&#34;&gt;Tony Hoare&amp;rsquo;s CSP&lt;/a&gt; paper. Go is designed with concurrency in mind and allows us to build complex concurrent pipelines. But have you ever wondered - how various concurrency patterns look like?&lt;/p&gt;&#xA;&lt;p&gt;Of course, you have. We&amp;rsquo;re all thinking mostly by visualization in one form or another. If I ask you something involving &amp;ldquo;numbers from 1 to 100&amp;rdquo; you will have your own image of the series in your head, even without realizing it. For example, I imagine it as a line going from me with numbers from 1 to 20, then it turns 90 degrees to the right and continues to the 1000+. I recall from very young period of my life that in our kindergarten there were numbers in a cloakroom, written along the wall, and number 20 was exactly at the corner. You probably have your own image of numbers. Another common example is the visual representation of the full year with four seasons - some people see it as a box, other - as a circle.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>How to complain about Go</title>
       <link>https://divan.dev/posts/go_complain_howto/</link>
       <pubDate>Mon, 14 Dec 2015 08:36:54 -0300</pubDate>
-      
       <guid>https://divan.dev/posts/go_complain_howto/</guid>
-      <description>Over the years of existence of Go programming language, the articles with its critique was always popular, bringing a lot of discussion from both sides. Recently, Maksim Kochkin even created GitHub repo with curated list of articles complaining about golang&amp;rsquo;s imperfection.
-So, is it true that ranting about Go flaws is a trend nowadays? With carefully gathered links in the repository above, we can check this! :) Unfortunately, there are only 17 articles in the list, which is a bit disappointing because it&amp;rsquo;s not enough for fine statistical analysis, but we can use this anyway.</description>
+      <description>&lt;p&gt;Over the years of existence of Go programming language, the articles with its critique was always popular, bringing a lot of discussion from both sides. Recently, &lt;a href=&#34;https://github.com/ksimka&#34;&gt;Maksim Kochkin&lt;/a&gt; even created GitHub repo with &lt;a href=&#34;https://github.com/ksimka/go-is-not-good&#34;&gt;curated list&lt;/a&gt; of articles complaining about golang&amp;rsquo;s imperfection.&lt;/p&gt;&#xA;&lt;p&gt;So, is it true that ranting about Go flaws is a trend nowadays? With carefully gathered links in the repository above, we can check this! :) Unfortunately, there are only 17 articles in the list, which is a bit disappointing because it&amp;rsquo;s not enough for fine statistical analysis, but we can use this anyway.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Integration testing in Go using Docker</title>
       <link>https://divan.dev/posts/integration_testing/</link>
       <pubDate>Mon, 07 Dec 2015 08:36:54 -0700</pubDate>
-      
       <guid>https://divan.dev/posts/integration_testing/</guid>
-      <description>Note: this post was originally written for the Go Advent 2015 series, but I discovered that a post with almost exactly the same subject (and even similar code!) already planned :) That&amp;rsquo;s amazing.
-Golang is often used for writing microservices and various backends. Often these type of software do some computation, read/write data on external storage and expose it&amp;rsquo;s API via http handlers. All this functionality is remarkably easy to implement in Go and, especially if you&amp;rsquo;re creating 12factor-compatible app, Go is your friend here.</description>
+      <description>&lt;p&gt;&lt;em&gt;Note: this post was originally written for the &lt;a href=&#34;https://blog.gopheracademy.com/advent-2015/introduction/&#34;&gt;Go Advent 2015&lt;/a&gt; series, but I discovered that a post with almost exactly the same subject (and even similar code!) already planned :) That&amp;rsquo;s amazing.&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;Golang is often used for writing microservices and various backends. Often these type of software do some computation, read/write data on external storage and expose it&amp;rsquo;s API via http handlers. All this functionality is remarkably easy to implement in Go and, especially if you&amp;rsquo;re creating &lt;a href=&#34;http://12factor.net&#34;&gt;12factor&lt;/a&gt;-compatible app, Go is your friend here.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Explaining Go error handling</title>
       <link>https://divan.dev/posts/go_errors/</link>
       <pubDate>Mon, 02 Nov 2015 08:36:54 -0700</pubDate>
-      
       <guid>https://divan.dev/posts/go_errors/</guid>
-      <description>I recently translated great article — Errors are values by Rob Pike — and we discussed it in our podcast Golangshow (in russian). One thing I was surprised about is that even experienced Go developers sometimes do not understand the core idea of that article.
-Looking back, I remember my first impressions when I read it for the first time. It was similar to “It looks like Pike just adds some complexity to what could’ve been solved gracefully with exceptions”.</description>
+      <description>&lt;p&gt;I recently translated great article — &lt;a href=&#34;https://blog.golang.org/errors-are-values&#34;&gt;Errors are values&lt;/a&gt; by Rob Pike — and we discussed it in our &lt;a href=&#34;https://golangshow.com/&#34;&gt;podcast Golangshow&lt;/a&gt; (in russian). One thing I was surprised about is that even experienced Go developers sometimes do not understand the core idea of that article.&lt;/p&gt;&#xA;&lt;p&gt;Looking back, I remember my first impressions when I read it for the first time. It was similar to &lt;em&gt;“It looks like Pike just adds some complexity to what could’ve been solved gracefully with exceptions”&lt;/em&gt;. I have never been fond of exceptions, but that’s the first thought I remember. The example in the article was clearly asking for comparison with exceptions’ way to deal with errors and it didn’t look like a winner here.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -37,7 +37,6 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
-  
 </head>
 <body>
     <header class="global-header">
@@ -221,8 +220,8 @@
 <p>I love that Go designers put an effort to rethink this omnipresent concept of class-based OOP and came up with different OOP concept, which is, not accidentally, more closer to what OOP inventor, Alan Kay, <a href="https://www.quora.com/What-did-Alan-Kay-mean-by-I-made-up-the-term-object-oriented-and-I-can-tell-you-I-did-not-have-C++-in-mind">actually meant</a>.</p>
 <p>In Go, we represent any abstraction with a concrete type – a structure:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...</span>
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>In Dart-version of a Flutter, <code>MyApp</code> has to extend <code>StatelessWidget</code> class and override its <code>build</code> method, which serves two purposes:</p>
 <ol>
 <li>give our <code>MyApp</code> some widget properties/methods automagically</li>
@@ -231,8 +230,8 @@
 <p>I don&rsquo;t know Flutter internals, so let&rsquo;s not question if we really need 1) and implement it in Go. For that, we have only one option – <a href="https://golang.org/doc/effective_go.html#embedding">embedding</a>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...</span>
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This will add all the <code>flutter.Core</code>&rsquo;s exported properties and methods to our type <code>MyApp</code>. I named it <code>Core</code> instead of <code>Widget</code>, because embedding this type doesn&rsquo;t make our <code>MyApp</code> a widget yet, and, plus, that&rsquo;s the choice of name I&rsquo;ve seen in a <a href="https://github.com/gopherjs/vecty">Vecty</a> GopherJS framework for the similar concept. I will briefly discuss similarities between Flutter and Vecty later.</p>
 <p>The second part – <code>build</code> method for Flutter&rsquo;s engine use – surely should be implemented  simply by adding method, satisfying some interface defined somewhere in Go-version of a Flutter:</p>
 <p>flutter.go:</p>
@@ -242,11 +241,11 @@
 </span></span></code></pre></div><p>Our main.go:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...</span>
+</span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">MaterialApp</span>()
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>We might notice a few differences with Dart&rsquo;s Flutter here:</p>
@@ -288,18 +287,18 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Scaffold</span>()
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// incrementCounter increments widgets&#39;s counter by one.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// incrementCounter increments widgets&#39;s counter by one.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Rerender</span>(<span style="color:#a6e22e">m</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// or m.Rerender()
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// or m.NeedsUpdate()
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// or m.Rerender()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// or m.NeedsUpdate()</span>
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>There is a number of options with naming and design here – I like <code>NeedsUpdate()</code> for explicitness and being a method of <code>flutter.Core</code> (so each widget has it), but <code>flutter.Rerender()</code> also works fine. It gives a false sense of immediate redraw, though – which is not always a case – it will be redrawn on the next frame redraw, and the frequency of state update might be much higher than frame redraw frequency.</p>
 <p>But the point is we just implemented the same task of adding a reactive state to the widget, without adding:</p>
 <ul>
@@ -323,37 +322,37 @@
 <p><a href="https://flutter.io/docs/resources/technical-overview#handling-user-interaction">It turns out</a>, Flutter uses this separation between Widget and State to hide this initialization/state-bookkeeping flow from the developer. It does create a new <code>MyHomePage</code> widget every time, but it preserves the original state (in a singleton way) and automatically find &ldquo;orphaned&rdquo; state to attach to the newly created <code>MyHomePage</code> widget.</p>
 <p>To me it doesn&rsquo;t make much sense – more hidden stuff, more magic and more ambiguity (we still can add Widgets as class properties and instantiate them once upon widget creation). I understand why it feels nice (no need to keep track of widget&rsquo;s children) and it has the nice effect of simplifying refactoring (you have to delete constructor call in one place only to delete the child), but any developer attempting to really understand how does the whole thing works will be puzzled here.</p>
 <p>For Go version, I definitely would prefer explicit and clear initialization of widgets with the state, even if it means more verbose code. Dart&rsquo;s Flutter approach probably could be done as well, but I like Go for being non-magical, and that philosophy applies to Go frameworks as well. So, my code for stateful children widgets would look like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// MyApp is our top application widget.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// MyApp is our top application widget.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">homePage</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// NewMyApp instantiates a new MyApp widget
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewMyApp</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// NewMyApp instantiates a new MyApp widget</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewMyApp</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyApp</span>{}
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">homePage</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyHomePage</span>{}
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">app</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">homePage</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// MyHomePage is a home page widget.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// MyHomePage is a home page widget.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Core</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Scaffold</span>()
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// incrementCounter increments app&#39;s counter by one.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// incrementCounter increments app&#39;s counter by one.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Rerender</span>(<span style="color:#a6e22e">m</span>)
 </span></span><span style="display:flex;"><span>}
@@ -626,8 +625,8 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Click me&#34;</span>).
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Style</span>(<span style="color:#a6e22e">MyButtonStyle1</span>)
 </span></span></code></pre></div><p>Let&rsquo;s try to rewrite our Scaffold-based widget that way:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Widget</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>().
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">AppBar</span>(<span style="color:#a6e22e">NewAppBar</span>().
 </span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Text</span>(<span style="color:#e6db74">&#34;Flutter Go app&#34;</span>)).
@@ -668,21 +667,21 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> . <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// MyApp is our top application widget.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// MyApp is our top application widget.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyApp</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Core</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">homePage</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// NewMyApp instantiates a new MyApp widget
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewMyApp</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// NewMyApp instantiates a new MyApp widget</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewMyApp</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyApp</span>{}
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">homePage</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">MyHomePage</span>{}
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">app</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyApp widget. Implements Widget interface.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyApp</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">homePage</span>
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>home_page.go:</p>
@@ -693,14 +692,14 @@
 </span></span><span style="display:flex;"><span>    . <span style="color:#e6db74">&#34;github.com/flutter/flutter&#34;</span>
 </span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// MyHomePage is a home page widget.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// MyHomePage is a home page widget.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Core</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Build renders the MyHomePage widget. Implements Widget interface.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">Build</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">BuildContext</span>) <span style="color:#a6e22e">Widget</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewScaffold</span>(<span style="color:#a6e22e">ScaffoldParams</span>{
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">AppBar</span>: <span style="color:#a6e22e">NewAppBar</span>(<span style="color:#a6e22e">AppBarParams</span>{
 </span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Title</span>: <span style="color:#a6e22e">Text</span>(<span style="color:#a6e22e">TextParams</span>{
@@ -733,8 +732,8 @@
 </span></span><span style="display:flex;"><span>    })
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// incrementCounter increments app&#39;s counter by one.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// incrementCounter increments app&#39;s counter by one.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MyHomePage</span>) <span style="color:#a6e22e">incrementCounter</span>() {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flutter</span>.<span style="color:#a6e22e">Rerender</span>(<span style="color:#a6e22e">m</span>)
 </span></span><span style="display:flex;"><span>}
@@ -786,6 +785,19 @@
       </div>
       
     </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/webgl_go/"><span aria-hidden="true">&larr;</span> Older</a></li>

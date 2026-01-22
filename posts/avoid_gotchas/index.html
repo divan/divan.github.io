@@ -30,7 +30,6 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
-  
 </head>
 <body>
     <header class="global-header">
@@ -143,8 +142,8 @@ In a first case, you copy all those blocks of memory - and in reality, it&rsquo;
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">arr</span> [<span style="color:#ae81ff">5</span>]<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>}
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">arr</span> [<span style="color:#f92672">...</span>]<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>}
 </span></span></code></pre></div><p>Arrays are just continuous  blocks of memory, and if you check the Go runtime source code (<a href="https://golang.org/src/runtime/malloc.go#L793">src/runtime/malloc.go</a>), you may see that creating an array is essentially an allocating a piece of memory of the given size. Old good malloc, just smarter :)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// newarray allocates an array of n elements of type typ.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">newarray</span>(<span style="color:#a6e22e">typ</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span>, <span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) <span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// newarray allocates an array of n elements of type typ.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">newarray</span>(<span style="color:#a6e22e">typ</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span>, <span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) <span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">n</span> &lt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> uintptr(<span style="color:#a6e22e">n</span>) &gt; <span style="color:#a6e22e">maxSliceCap</span>(<span style="color:#a6e22e">typ</span>.<span style="color:#a6e22e">size</span>) {
 </span></span><span style="display:flex;"><span>        panic(<span style="color:#a6e22e">plainError</span>(<span style="color:#e6db74">&#34;runtime: allocation size out of range&#34;</span>))
 </span></span><span style="display:flex;"><span>    }
@@ -232,28 +231,28 @@ Yes, you&rsquo;ll have two different underlying arrays and it may be quite contr
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">link</span>   <span style="color:#f92672">*</span><span style="color:#a6e22e">itab</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bad</span>    <span style="color:#66d9ef">int32</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">unused</span> <span style="color:#66d9ef">int32</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fun</span>    [<span style="color:#ae81ff">1</span>]<span style="color:#66d9ef">uintptr</span> <span style="color:#75715e">// variable sized
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fun</span>    [<span style="color:#ae81ff">1</span>]<span style="color:#66d9ef">uintptr</span> <span style="color:#75715e">// variable sized</span>
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>We&rsquo;re not going to learn the logic of how interface type assertion works, but what is important is to understand that <em>interface</em> is a compound of interface and static type information plus pointer to the actual variable (field <code>data</code> in <code>iface</code>). Let&rsquo;s create variable <code>err</code> of interface type <code>error</code> and represent it visually:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>
 </span></span></code></pre></div><p><img src="/images/iface1.png" alt="Interface1"></p>
 <p>In fact, what you see in this picture is the thing called <em>nil interface</em>. When you return nil in the function with return type <code>error</code>, you are returning this object. It has information about interface (<code>itab.inter</code>), but has <code>nil</code> in <code>data</code> and <code>itab.type</code> fields. This object will evaluate to true in the <code>if err == nil {}</code>  condition.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">foo</span>() <span style="color:#66d9ef">error</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span> <span style="color:#75715e">// nil
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span> <span style="color:#75715e">// nil</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">foo</span>()
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {<span style="color:#f92672">...</span>} <span style="color:#75715e">// true
-</span></span></span></code></pre></div><p>Now, famous gotcha is to return a <code>*os.PathError</code> variable which is <code>nil</code>.</p>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {<span style="color:#f92672">...</span>} <span style="color:#75715e">// true</span>
+</span></span></code></pre></div><p>Now, famous gotcha is to return a <code>*os.PathError</code> variable which is <code>nil</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">foo</span>() <span style="color:#66d9ef">error</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">PathError</span> <span style="color:#75715e">// nil
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">PathError</span> <span style="color:#75715e">// nil</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">foo</span>()
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {<span style="color:#f92672">...</span>} <span style="color:#75715e">// false
-</span></span></span></code></pre></div><p>Those two pieces of code are similar unless you know how the interface looks like inside. Let&rsquo;s represent this <code>nil</code> variable of type <code>*os.PathError</code> being wrapped in an <code>error</code> interface:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {<span style="color:#f92672">...</span>} <span style="color:#75715e">// false</span>
+</span></span></code></pre></div><p>Those two pieces of code are similar unless you know how the interface looks like inside. Let&rsquo;s represent this <code>nil</code> variable of type <code>*os.PathError</code> being wrapped in an <code>error</code> interface:
 <img src="/images/iface2.png" alt="Interface2">
 You can clearly see the <code>*os.PathError</code> variable - it&rsquo;s just a block of memory holding <code>nil</code> value because it&rsquo;s the zero value for pointers. But the actual <code>error</code> that we return from <code>foo()</code> is a much complex structure with information about the interface, about the underlying type and the memory address of that block of memory, holding <code>nil</code> pointer. Feel the difference?</p>
 <p>In both cases, we have <code>nil</code>, but there is a huge difference between <em>&ldquo;have an interface with a variable which value equals to nil&rdquo;</em> and <em>&ldquo;interface without variable&rdquo;</em>. Having this knowledge of internal structure of interfaces, try to confuse these two examples now:
@@ -326,6 +325,19 @@ Hopefully, it makes sense to you now as well.</p>
       </div>
       
     </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/gophercon16/"><span aria-hidden="true">&larr;</span> Older</a></li>

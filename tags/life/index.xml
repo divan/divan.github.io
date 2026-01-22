@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>life on divan&#39;s blog</title>
+    <title>Life on divan&#39;s blog</title>
     <link>https://divan.dev/tags/life/</link>
-    <description>Recent content in life on divan&#39;s blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Life on divan&#39;s blog</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 03 Aug 2016 19:28:46 +0200</lastBuildDate><atom:link href="https://divan.dev/tags/life/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 03 Aug 2016 19:28:46 +0200</lastBuildDate>
+    <atom:link href="https://divan.dev/tags/life/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>My GopherCon experience</title>
       <link>https://divan.dev/posts/gophercon16/</link>
       <pubDate>Wed, 03 Aug 2016 19:28:46 +0200</pubDate>
-      
       <guid>https://divan.dev/posts/gophercon16/</guid>
-      <description>A couple of weeks ago I gave a talk at the largest Go conference, GopherCon, in Denver. It was the first time I attended GopherCon at all, and the first time ever I spoke in English in front of 1400+ people, and it was an absolutely incredible experience. Here is my story.
-My journey to GopherCon started on a cold winter day in the apartments in the center of Odessa, Ukraine, where I was living at that time.</description>
+      <description>&lt;p&gt;A couple of weeks ago I gave a talk at the largest Go conference, &lt;a href=&#34;http://gophercon.com&#34;&gt;GopherCon&lt;/a&gt;, in Denver. It was the first time I attended GopherCon at all, and the first time ever I spoke in English in front of 1400+ people, and it was an absolutely incredible experience. Here is my story.&lt;/p&gt;&#xA;&lt;p&gt;My journey to GopherCon started on a cold winter day in the apartments in the center of Odessa, Ukraine, where I was living at that time. I was one of the organizers of the first Go meetup in Lviv (Ukraine) and have prepared one general talk about Go. We targeted mainly newcomers, so I wanted to make another talk that would share my passion and admiration of some of the coolest aspects of Go - concurrency.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

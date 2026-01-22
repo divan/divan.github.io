@@ -28,7 +28,6 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
-  
 </head>
 <body>
     <header class="global-header">
@@ -105,14 +104,14 @@
 <p>But it didn&rsquo;t work. Variable <code>ok</code> was always true.</p>
 <p>First, I checked <code>SomeFunc()</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SomeFunc</span>() <span style="color:#66d9ef">error</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// case 1: we want caller to print this error
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#a6e22e">data</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">v</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// case 1: we want caller to print this error</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#a6e22e">data</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">v</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// case 2: we want caller to ignore this error
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;my error&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// case 2: we want caller to ignore this error</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;my error&#34;</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">MyError</span>(<span style="color:#a6e22e">err</span>)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Well, it&rsquo;s a bit smelly, but looks kinda ok. In the first case, we definitely do not return <code>MyError</code>, so type assertion should reflect this. Why was <code>ok</code> true in this case?</p>
@@ -177,6 +176,19 @@ If you haven&rsquo;t read it yet, <a href="https://divan.dev/posts/avoid_gotchas
       </div>
       
     </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/avoid_gotchas/"><span aria-hidden="true">&larr;</span> Older</a></li>

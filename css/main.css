@@ -282,7 +282,14 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-family: "Helvetica Neue", "Source Sans Pro", "Kozuka Gothic Pr6N", Meiryo, sans-serif !important;
 }
 
-article section img {
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+article img,
+.article-list img {
+    display: block;
     max-width: 100%;
     height: auto;
     margin: 13px auto;

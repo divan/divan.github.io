@@ -30,7 +30,6 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
-  
 </head>
 <body>
     <header class="global-header">
@@ -176,24 +175,24 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">SetSize</span>(<span style="color:#a6e22e">width</span>, <span style="color:#a6e22e">height</span>, <span style="color:#66d9ef">true</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;document&#34;</span>).<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;body&#34;</span>).<span style="color:#a6e22e">Call</span>(<span style="color:#e6db74">&#34;appendChild&#34;</span>, <span style="color:#a6e22e">renderer</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;domElement&#34;</span>))
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// setup camera and scene
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">camera</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewPerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">width</span><span style="color:#f92672">/</span><span style="color:#a6e22e">height</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// setup camera and scene</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">camera</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewPerspectiveCamera</span>(<span style="color:#ae81ff">70</span>, <span style="color:#a6e22e">width</span><span style="color:#f92672">/</span><span style="color:#a6e22e">height</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1000</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">camera</span>.<span style="color:#a6e22e">Position</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">500</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">scene</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewScene</span>()
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// lights
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">light</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewDirectionalLight</span>(<span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;white&#34;</span>), <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// lights</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">light</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewDirectionalLight</span>(<span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;white&#34;</span>), <span style="color:#ae81ff">1</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">light</span>.<span style="color:#a6e22e">Position</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">256</span>, <span style="color:#ae81ff">256</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">light</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// material
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">params</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMaterialParameters</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// material</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">params</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMaterialParameters</span>()
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">Color</span> = <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewColor</span>(<span style="color:#e6db74">&#34;blue&#34;</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mat</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMeshLambertMaterial</span>(<span style="color:#a6e22e">params</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// cube object
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">geom</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewBoxGeometry</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">BoxGeometryParameters</span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// cube object</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">geom</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewBoxGeometry</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">BoxGeometryParameters</span>{
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Width</span>:  <span style="color:#ae81ff">200</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Height</span>: <span style="color:#ae81ff">200</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Depth</span>:  <span style="color:#ae81ff">200</span>,
@@ -201,8 +200,8 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mesh</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">three</span>.<span style="color:#a6e22e">NewMesh</span>(<span style="color:#a6e22e">geom</span>, <span style="color:#a6e22e">mat</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">scene</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">mesh</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// start animation
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">animate</span> <span style="color:#66d9ef">func</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// start animation</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">animate</span> <span style="color:#66d9ef">func</span>()
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">animate</span> = <span style="color:#66d9ef">func</span>() {
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">js</span>.<span style="color:#a6e22e">Global</span>.<span style="color:#a6e22e">Call</span>(<span style="color:#e6db74">&#34;requestAnimationFrame&#34;</span>, <span style="color:#a6e22e">animate</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">mesh</span>.<span style="color:#a6e22e">Rotation</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#a6e22e">mesh</span>.<span style="color:#a6e22e">Rotation</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;y&#34;</span>).<span style="color:#a6e22e">Float</span>()<span style="color:#f92672">+</span><span style="color:#ae81ff">0.01</span>)
@@ -221,7 +220,7 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 <p><img src="/images/go-webgl/vecty.png" alt="vecty"></p>
 <p><a href="https://github.com/gopherjs/vecty">Vecty</a> is a library for GopherJS that allows you to build frontend apps using high-level components (or widgets) and providing the abstraction layer over DOM and many browser&rsquo;s JS APIs. In a way, it&rsquo;s similar to React (and even advertised as a React-like library), but I&rsquo;m happy to disagree with this – it is way simpler and much more pleasant to work with.</p>
 <p>The basic concept in Vecty is the <a href="https://godoc.org/github.com/gopherjs/vecty#Component">Component</a> interface - any type implementing it can represent a visual component within a Vecty application. To define new Component, you simply create a type that embeds <code>vecty.Core</code> and implement <code>Render()</code> method.</p>
-<p><!-- raw HTML omitted -->page.go<!-- raw HTML omitted --></p>
+<p><sub>page.go</sub></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
@@ -229,14 +228,14 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;github.com/gopherjs/vecty/elem&#34;</span>
 </span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Page is a top-level app component.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Page</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Page is a top-level app component.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Page</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Core</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">article</span> <span style="color:#66d9ef">string</span>
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Render implements vecty.Component for Page.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">p</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Page</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Render implements vecty.Component for Page.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">p</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Page</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Body</span>(
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
 </span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Heading1</span>(
@@ -246,7 +245,7 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 </span></span><span style="display:flex;"><span>    )
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Don&rsquo;t be scared by those verbose lines in <code>Render()</code> method. As soon as you start building DOM tree that way you realize how incredibly useful it is: no open/closing tags, super easy copy/paste operation (if you need to move some DOM nodes around), the structure is clear and makes sense, and it’s all strongly typed!</p>
-<p><!-- raw HTML omitted -->main.go<!-- raw HTML omitted --></p>
+<p><sub>main.go</sub></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;github.com/gopherjs/vecty&#34;</span>
@@ -281,8 +280,8 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 <p>The first thing you realize is that you&rsquo;ll have to write your own widgets. Luckily there are no special rules for that – just create your widgets as types in separate .go files, and move them into the separate package when it makes sense.</p>
 <p>The whole UI for the app consisted from sidebar with a bunch of configuration selectors and file uploads handling, and three tabs with different screens – first one is WebGL canvas with visualization.</p>
 <p>Each widget is just a Vecty component, created and rendered from within the other component. You specify the layout, classes, CSS styles right there in <code>Render()</code> method. Here is a code for a network selector widget with custom upload option, for example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Render implements the vecty.Component interface for NetworkSelector.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">NetworkSelector</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Render implements the vecty.Component interface for NetworkSelector.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">NetworkSelector</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Widget</span>(
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Header</span>(<span style="color:#e6db74">&#34;Network graph:&#34;</span>),
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
@@ -336,9 +335,11 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
 <p><img src="/images/go-webgl/p2psim.png" alt="p2p sim"></p>
 <p>The result, while still being a work in progress, is so much more than I had imagined when I started to work on it.</p>
 <p>You can see a demo of the app here:</p>
-
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-  <iframe src="https://www.youtube.com/embed/z2Zrfz6xxng" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+<div class="embed video-player">
+	<center>
+		<iframe class="youtube-player" type="text/html" width="760" height="457" src="http://www.youtube.com/embed/z2Zrfz6xxng" allowfullscreen frameborder="0">
+		</iframe>
+	</center>
 </div>
 
 <p>You can try it right now online as well (without the simulation part):</p>
@@ -393,6 +394,19 @@ cd $(go env GOPATH)/src/github.com/divan/go-webgl-example
       </div>
       
     </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/fountaincodes/"><span aria-hidden="true">&larr;</span> Older</a></li>

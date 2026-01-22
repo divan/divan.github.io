@@ -28,7 +28,6 @@
   <link rel="shortcut icon" href="https://divan.dev/images/favicon.ico" />
   <link rel="apple-touch-icon" href="https://divan.dev/images/apple-touch-icon.png" />
   
-  
 </head>
 <body>
     <header class="global-header">
@@ -101,7 +100,7 @@
 <h1 id="the-problem">The problem</h1>
 <p>One day I was trying to find a viable solution for the following scenario:</p>
 <p><em>Imagine you&rsquo;re in the crowded place and suddenly your messenger stop working because your authoritarian government blocked it. Maybe they just banned IP addresses of bootnodes for the messenger, or restricted access to some hosts via state-controlled DNS providers, or cut off yet another VPN or proxy service – it doesn&rsquo;t actually relevant here. The question is – how to re-enable connectivity if at least one device has a working connection and willing to share connectivity information with others.</em></p>
-<p>Now, that&rsquo;s rather a long introduction, but one important concept has to be understood here – <a href="https://en.wikipedia.org/wiki/Percolation_threshold">percolation threshold</a>. The simplified idea is that if you connect nodes in lattice or graph (or people in the crowd) with probability <em>p</em>, then at some critical probability <em>p</em><!-- raw HTML omitted -->0<!-- raw HTML omitted --> large clusters and long-range connectivity will appear. In even simpler words, if everyone in a crowd will share information with <em>n</em> people around them, you can guarantee with mathematical precision that everyone will get this information.</p>
+<p>Now, that&rsquo;s rather a long introduction, but one important concept has to be understood here – <a href="https://en.wikipedia.org/wiki/Percolation_threshold">percolation threshold</a>. The simplified idea is that if you connect nodes in lattice or graph (or people in the crowd) with probability <em>p</em>, then at some critical probability <em>p</em><sub>0</sub> large clusters and long-range connectivity will appear. In even simpler words, if everyone in a crowd will share information with <em>n</em> people around them, you can guarantee with mathematical precision that everyone will get this information.</p>
 <p>In the case of bootnodes IPs, for example, that means, that connectivity of the app will be restored for everyone.</p>
 <p>Ok, now the question – how do you quickly send an arbitrary piece of small data from one app to another, when you&rsquo;re in the adversarial environment, with the partly blocked internet? Bluetooth comes to mind first, but that requires a long and tedious process of discovering the device, figuring out its device name, and in many cases, it just &ldquo;doesn&rsquo;t connect, don&rsquo;t know why&rdquo; type of problems. Next, NFC is a good idea – just tap one phone to another – but the major drawback is that there are still plenty of phones and tablets out there without or with limited NFC support. How about QR codes?</p>
 <h1 id="qr-codes">QR Codes</h1>
@@ -150,33 +149,33 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">RenderBody</span>(<span style="color:#a6e22e">app</span>)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>The app is just a type – a struct that embeds <code>vecty.Core</code> type – and it has to implement <code>vecty.Component</code> interface. That&rsquo;s it! Constructing DOM objects seems a bit verbose at start, but you fully appreciate how actually great it is only when start refactoring the code:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// App is a top-level app component.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">App</span> <span style="color:#66d9ef">struct</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// App is a top-level app component.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">App</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Core</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">session</span>      <span style="color:#f92672">*</span><span style="color:#a6e22e">Session</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">settings</span>     <span style="color:#f92672">*</span><span style="color:#a6e22e">Settings</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// any other stuff you need,
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// it&#39;s just a struct
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// any other stuff you need,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// it&#39;s just a struct</span>
+</span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Render implements the vecty.Component interface.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">a</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">App</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Render implements the vecty.Component interface.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">a</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">App</span>) <span style="color:#a6e22e">Render</span>() <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">ComponentOrHTML</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Body</span>(
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">header</span>(),
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
 </span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
 </span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;columns&#34;</span>),
 </span></span><span style="display:flex;"><span>            ),
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Left half
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Left half</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
 </span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
 </span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;column&#34;</span>, <span style="color:#e6db74">&#34;is-half&#34;</span>),
 </span></span><span style="display:flex;"><span>                ),
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">QR</span>()), <span style="color:#75715e">// QR display zone
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            ),
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Right half
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(<span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">QR</span>()), <span style="color:#75715e">// QR display zone</span>
+</span></span><span style="display:flex;"><span>            ),
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Right half</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">elem</span>.<span style="color:#a6e22e">Div</span>(
 </span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Markup</span>(
 </span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">vecty</span>.<span style="color:#a6e22e">Class</span>(<span style="color:#e6db74">&#34;column&#34;</span>, <span style="color:#e6db74">&#34;is-half&#34;</span>),
 </span></span><span style="display:flex;"><span>                ),
@@ -292,6 +291,19 @@
       </div>
       
     </section>
+    
+    <hr/>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'divanblog';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
     <ul class="pager">
       
       <li class="previous"><a href="https://divan.dev/posts/wakemeupinthemiddleofthenight/"><span aria-hidden="true">&larr;</span> Older</a></li>
